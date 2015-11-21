@@ -12,6 +12,7 @@
 	<body>
 		<h1>Harlo world!</h1>
 		<?php
+			//Testing 123
 			$dbCon = new Connection;
 			$dbCon->OpenConnection();
 			$dbCon->CloseConnection();
