@@ -1,0 +1,49 @@
+{
+	"TableName": "RoleLeave",
+	"Properties":[
+		{
+			"Name": "Id",
+			"Type": "int",
+			"Attributes":[
+				"UNSIGNED",
+				"AUTO_INCREMENT",
+				"PRIMARY KEY"
+			]
+		},
+		{
+			"Name": "RoleName",
+			"Type": "varchar(100)",
+			"Attributes":[
+				"NOT NULL"
+			]
+		},
+		{
+			"Name": "CreatedDate",
+			"Type": "TIMESTAMP",
+			"Attributes":[
+				"NOT NULL"
+			]
+		},
+		{
+			"Name": "CreatedBy",
+			"Type": "varchar(100)",
+			"Attributes":[
+				"NOT NULL"
+			]
+		},
+		{
+			"Name": "UpdatedDate",
+			"Type": "TIMESTAMP",
+			"Attributes":[
+				"NOT NULL"
+			]
+		},
+		{
+			"Name": "UpdatedBy",
+			"Type": "varchar(100)",
+			"Attributes":[
+				"NOT NULL"
+			]
+		}
+	]
+}

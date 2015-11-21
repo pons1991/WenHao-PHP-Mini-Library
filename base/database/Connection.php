@@ -27,13 +27,15 @@
 		}
 		
 		function OpenConnection(){
-			$DbLink = new PDO($this->GetHost(), $this->UserName, $this->Password);
-			echo '<p>Connection established</p>';
+			$this->DbLink = new PDO($this->GetHost(), $this->UserName, $this->Password);
 		}
 		
 		function CloseConnection(){
-			$DbLink = null;
-			echo '<p>Connection terminated</p>';
+			$this->DbLink = null;
+		}
+		
+		function IsConnectionEstablished(){
+			return $this->DbLink != null ? true : false;
 		}
 	}
 
