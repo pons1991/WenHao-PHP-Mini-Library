@@ -18,6 +18,13 @@
 			]
 		},
 		{
+			"Name": "IsActive",
+			"Type": "BOOLEAN",
+			"Attributes":[
+				"NOT NULL"
+			]
+		},
+		{
 			"Name": "CreatedDate",
 			"Type": "TIMESTAMP",
 			"Attributes":[

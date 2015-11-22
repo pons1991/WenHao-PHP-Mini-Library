@@ -27,7 +27,20 @@
 		}
 		
 		function OpenConnection(){
-			$this->DbLink = new PDO($this->GetHost(), $this->UserName, $this->Password);
+			try{
+				$this->DbLink = new PDO($this->GetHost(), $this->UserName, $this->Password);
+				$this->DbLink->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			}catch(PDOException $e){
+				//Log this exception into log file
+			}
+		}
+		
+		function ExecuteQuery($sqlQuery){
+			if( $this->DbLink != null ){
+				$this->DbLink->exec($sqlQuery);
+			}else{
+				return false;
+			}
 		}
 		
 		function CloseConnection(){

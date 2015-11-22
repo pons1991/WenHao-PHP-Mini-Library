@@ -12,10 +12,21 @@
 	<body>
 		<h1>Harlo world!</h1>
 		<?php
+		
+			$dbConn = new Connection();
+			$dbConn->OpenConnection();
+			
 			//Testing 123
-			$dbCon = new Connection;
-			$dbCon->OpenConnection();
-			$dbCon->CloseConnection();
+			$newRole = new Role;
+			$newRole->RoleName = "Hello worlld";
+			$newRole->IsActive = true;
+			$newRole->CreatedDate = date("Y-m-d H:i:s", time());
+			$newRole->CreatedBy = "wenhao";
+			$newRole->UpdatedDate = date("Y-m-d H:i:s", time());
+			$newRole->UpdatedBy = "wenhao";
+			$newRole->Add($dbConn, $newRole);
+			
+			$dbConn->CloseConnection();
 		?>
 	</body>
 </html>
