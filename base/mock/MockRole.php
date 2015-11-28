@@ -1,6 +1,6 @@
 <?php
 
-	//Testing 123
+	//Add new role
 			$newRole = new Role;
 			
 			$newRole->RoleName = "Another Hello worlld 123";
@@ -13,5 +13,15 @@
 			
 			echo 'Status:'. ($dbOpt->OptStatus == true ? 'true': 'false') ."<br/>";
 			echo 'Message:'.$dbOpt->OptMessage;
+
+	//Get list of roles
+			$newRole = new Role;
+			$roleList = $newRole->Gets($dbConn,3,2, null);
+			print_r($roleList);
+			
+	//Get single role
+			$newRole = new Role;
+			$roleList = $newRole->Get($dbConn,1);
+			print_r($roleList);
 
 ?>

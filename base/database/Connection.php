@@ -45,9 +45,17 @@
 			}
 			
 			$prepareStatement->execute();
-			$prepareStatement->setFetchMode(PDO::FETCH_ASSOC);
-			$result = $prepareStatement->fetchAll();
-			return $result;
+			return $prepareStatement;
+			
+		}
+		
+		function ExecuteSelectPrepare($sqlQuery,$sqlMap){
+			$prepareStatement = $this->ExecutePrepare($sqlQuery,$sqlMap);
+			if( $prepareStatement != null ){
+				$prepareStatement->setFetchMode(PDO::FETCH_ASSOC);
+				$result = $prepareStatement->fetchAll();
+				return $result;
+			}
 		}
 		
 		function ExecuteQuery($sqlQuery){

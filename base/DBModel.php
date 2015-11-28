@@ -33,9 +33,42 @@
 			return $isTrue;
 		}
 		
+		//To check constraint is take place
+		//Default: return true
+		//If contraint checking is required, extends child class by overriding this method
+		public function ConstraintValid(){
+			return true;
+		}
+		
 		//To delete
 		public function Delete($dbConn, $obj){
 			
+			$dbOptResponse = new DbOpt;
+			$dbOptResponse->OptStatus = true;
+			$dbOptResponse->OptMessage = "Success";
+			
+			if( $this->ConstraintValid()){
+				try{
+					$currentObjInst = new ReflectionClass($obj);
+					$className = $currentObjInst->getName();
+					$queryParamValue = array(
+						':IsActive' => array('value' => $obj->IsActive, 'type' => PDO::PARAM_BOOL),
+						':Id' => array('value' => $obj->Id, 'type' => PDO::PARAM_INT)
+					);
+					$updateSql = "Update ".$className." set IsActive=:IsActive where Id=:Id";
+					
+					$dbConn->ExecutePrepare($updateSql,$queryParamValue);
+				}catch(Exception $e){
+					$dbOptResponse->OptStatus = false;
+					$dbOptResponse->OptMessage = "Error when deleting. Message:".$e->getMessage();
+				}
+			}else{
+				$dbOptResponse->OptStatus = false;
+				$dbOptResponse->OptMessage = "Error: Can't delete this item due to constraint takes place.";
+			}
+			
+			
+			return $dbOptResponse;
 		}
 		
 		//To update
@@ -92,33 +125,45 @@
 		
 		//Get single
 		public function Get($dbConn, $objId){
-			$currentObjInst = new ReflectionClass($this);
-			$selectQuery = "select * from ".$currentObjInst->getName();
-			echo $selectQuery;
-			$result = $dbConn->ExecutePrepare($selectQuery);
-			
-			if ($result->num_rows > 0) {
-				echo 'Number of record:'.$result->num_rows.'<br/>';
-			}else{
-				echo 'No record <br/>';
-			}
+			$additionalParams = array(
+				':Id' => array('value' => $objId, 'type' => PDO::PARAM_INT, 'condition' => 'and'),
+			);
+			return $this->Gets($dbConn,0, 1, $additionalParams);
 		}
 		
 		//Get list
-		public function Gets($dbConn, $start, $recordPerPage){
+		public function Gets($dbConn, $startPage, $recordPerPage, $additionalParams){
 			$arrayObject = array();
 			
 			$currentObjInst = new ReflectionClass($this);
 			$className = $currentObjInst->getName();
 			
 			$queryParamValue = array(
-				':start' => array('value' => 0, 'type' => PDO::PARAM_INT),
-				':end' => array('value' => 2, 'type' => PDO::PARAM_INT)
+				':start' => array('value' => ($startPage * $recordPerPage), 'type' => PDO::PARAM_INT),
+				':end' => array('value' => ($recordPerPage ), 'type' => PDO::PARAM_INT)
 			);
 			
-			$selectQuery = "select * from ".$className." limit :start , :end";
+			$selectQuery = "select * from ".$className; //select statement
+			//Select query's where constraint.
+			if( $additionalParams != null ){
+				$additionalParamIndex = 0;
+				foreach($additionalParams as $key => $valueArr ){
+					$queryParamValue[$key] = $valueArr; //Add additional params into query param value
+					$columnKey = str_replace(":","",$key); //Get column key from key by removing ':'
+					
+					if( $additionalParamIndex == 0 ){
+						$selectQuery = $selectQuery." where ".$columnKey."=".$key; //update select query
+					}else{
+						$condition = $valueArr["condition"]; //where statement condition (and/or)
+						$selectQuery = $selectQuery." ".$condition." ".$columnKey."=".$key; //update select query
+					}
+					
+					$additionalParamIndex++;
+				}
+			}
+			$selectQuery = $selectQuery." limit :start , :end"; //limit constraint
 			
-			$result = $dbConn->ExecutePrepare($selectQuery,$queryParamValue);
+			$result = $dbConn->ExecuteSelectPrepare($selectQuery,$queryParamValue);
 			if( $result != null ){
 				//Loop through the array of records
 				foreach($result as $k=>$v){
@@ -126,7 +171,7 @@
 					array_push($arrayObject, $tempObj);
 				}
 			}
-			print_r($arrayObject);
+			
 			return $arrayObject;
 		}
 		

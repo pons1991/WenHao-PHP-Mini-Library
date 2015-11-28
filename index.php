@@ -16,16 +16,19 @@
 			$dbConn = new Connection();
 			$dbConn->OpenConnection();
 			
+			/*
+			$newRole = new Role;
+			$roleList = $newRole->Gets($dbConn,0,2, null);
+			print_r($roleList);
+			*/
 			
 			$newRole = new Role;
-			$newRole->Gets($dbConn,0,0);
-			
-			
-			/*$classname = "Role";
-			$role = new $classname();
-			print_r($role);*/
+			$newRole->IsActive = false;
+			$newRole->Id = 2;
+			$newRole->Delete($dbConn,$newRole);
 			
 			$dbConn->CloseConnection();
+			
 		?>
 	</body>
 </html>
