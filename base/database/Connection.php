@@ -35,6 +35,21 @@
 			}
 		}
 		
+		function ExecutePrepare($sqlQuery,$sqlMap){
+			$prepareStatement = $this->DbLink->prepare($sqlQuery);
+			
+			if( count($sqlMap) > 0 ){
+				foreach($sqlMap as $key => $valueArr ){
+					$prepareStatement->bindParam($key, $valueArr["value"], $valueArr["type"]);
+				}
+			}
+			
+			$prepareStatement->execute();
+			$prepareStatement->setFetchMode(PDO::FETCH_ASSOC);
+			$result = $prepareStatement->fetchAll();
+			return $result;
+		}
+		
 		function ExecuteQuery($sqlQuery){
 			if( $this->DbLink != null ){
 				$this->DbLink->exec($sqlQuery);

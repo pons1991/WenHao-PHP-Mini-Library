@@ -16,15 +16,14 @@
 			$dbConn = new Connection();
 			$dbConn->OpenConnection();
 			
-			//Testing 123
+			
 			$newRole = new Role;
-			$newRole->RoleName = "Hello worlld";
-			$newRole->IsActive = true;
-			$newRole->CreatedDate = date("Y-m-d H:i:s", time());
-			$newRole->CreatedBy = "wenhao";
-			$newRole->UpdatedDate = date("Y-m-d H:i:s", time());
-			$newRole->UpdatedBy = "wenhao";
-			$newRole->Add($dbConn, $newRole);
+			$newRole->Gets($dbConn,0,0);
+			
+			
+			/*$classname = "Role";
+			$role = new $classname();
+			print_r($role);*/
 			
 			$dbConn->CloseConnection();
 		?>
