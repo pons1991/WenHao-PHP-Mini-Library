@@ -11,6 +11,7 @@
 			$newRole->UpdatedBy = "wenhao";
 			$dbOpt = $newRole->Add($dbConn, $newRole);
 			
+			echo 'Role <br/>';
 			echo 'Status:'. ($dbOpt->OptStatus == true ? 'true': 'false') ."<br/>";
 			echo 'Message:'.$dbOpt->OptMessage;
 
