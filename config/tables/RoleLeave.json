@@ -8,42 +8,59 @@
 				"UNSIGNED",
 				"AUTO_INCREMENT",
 				"PRIMARY KEY"
+			],
+			"Constraints":[]
+		},
+		{
+			"Name": "RoleId",
+			"Type": "int",
+			"Attributes":[
+				"UNSIGNED",
+				"NOT NULL"
+			],
+			"Constraints":[
+				"constraint fk_role_id FOREIGN KEY (RoleId) REFERENCES Role(Id)"
 			]
 		},
 		{
-			"Name": "RoleName",
-			"Type": "varchar(100)",
+			"Name": "NumberOfLeave",
+			"Type": "int",
 			"Attributes":[
 				"NOT NULL"
-			]
+			],
+			"Constraints":[]
 		},
 		{
 			"Name": "CreatedDate",
 			"Type": "TIMESTAMP",
 			"Attributes":[
 				"NOT NULL"
-			]
+			],
+			"Constraints":[]
 		},
 		{
 			"Name": "CreatedBy",
 			"Type": "varchar(100)",
 			"Attributes":[
 				"NOT NULL"
-			]
+			],
+			"Constraints":[]
 		},
 		{
 			"Name": "UpdatedDate",
 			"Type": "TIMESTAMP",
 			"Attributes":[
 				"NOT NULL"
-			]
+			],
+			"Constraints":[]
 		},
 		{
 			"Name": "UpdatedBy",
 			"Type": "varchar(100)",
 			"Attributes":[
 				"NOT NULL"
-			]
+			],
+			"Constraints":[]
 		}
 	]
 }
