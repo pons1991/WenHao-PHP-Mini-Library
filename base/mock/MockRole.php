@@ -24,4 +24,22 @@
 			$roleList = $newRole->Get($dbConn,1);
 			print_r($roleList);
 
+	//Soft delete role
+			$newRole = new Role;
+			$newRole->IsActive = false;
+			$newRole->Id = 2;
+			$newRole->Delete($dbConn,$newRole);
+			
+	//Update role
+			$newRole = new Role;
+			
+			$newRole->Id = 1;
+			$newRole->RoleName = "hehehe";
+			$newRole->IsActive = true;
+			$newRole->CreatedDate = date("Y-m-d H:i:s", time());
+			$newRole->CreatedBy = "wenhao";
+			$newRole->UpdatedDate = date("Y-m-d H:i:s", time());
+			$newRole->UpdatedBy = "wenhao";
+			$newRole->Update($dbConn, $newRole);
+
 ?>

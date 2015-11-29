@@ -73,7 +73,44 @@
 		
 		//To update
 		public function Update($dbConn, $obj){
+			$dbOptResponse = new DbOpt;
+			$dbOptResponse->OptStatus = true;
+			$dbOptResponse->OptMessage = "Success";
 			
+			$isValidated = $this->Validate($obj);
+			if( $isValidated ){
+				if( $dbConn != null && $obj != null  ){
+					$currentObjInst = new ReflectionClass($obj);
+					$props  = $currentObjInst->getProperties();
+					$updateSqlStr = "update ".$currentObjInst->getName()." set ";
+					$updateSqlFieldStr = "";
+					
+					for ($i = 0 ; $i < count($props); $i++) {
+						$prop = $props[$i];
+						if( $prop->getName() == "Id" ){
+							//skip
+						}else{
+							if( !empty($updateSqlFieldStr)){
+								$updateSqlFieldStr = $updateSqlFieldStr.",";
+							}
+							$updateSqlFieldStr = $updateSqlFieldStr." ".$prop->getName()."='".$prop->getValue($obj)."'";
+						}
+					}
+					
+					//Combine update query with field query
+					$updateSqlStr = $updateSqlStr.$updateSqlFieldStr." where Id=".$obj->Id;
+					
+					if( $dbConn->IsConnectionEstablished()){
+						$dbConn->ExecuteQuery($updateSqlStr);
+					}
+					
+				}
+			}else{
+				$dbOptResponse->OptStatus = false;
+				$dbOptResponse->OptMessage = "The record has emtpy record";
+			}
+			
+			return $dbOptResponse;
 		}
 		
 		//To add

@@ -16,16 +16,16 @@
 			$dbConn = new Connection();
 			$dbConn->OpenConnection();
 			
-			/*
 			$newRole = new Role;
-			$roleList = $newRole->Gets($dbConn,0,2, null);
-			print_r($roleList);
-			*/
 			
-			$newRole = new Role;
-			$newRole->IsActive = false;
-			$newRole->Id = 2;
-			$newRole->Delete($dbConn,$newRole);
+			$newRole->Id = 1;
+			$newRole->RoleName = "hehehe";
+			$newRole->IsActive = true;
+			$newRole->CreatedDate = date("Y-m-d H:i:s", time());
+			$newRole->CreatedBy = "wenhao";
+			$newRole->UpdatedDate = date("Y-m-d H:i:s", time());
+			$newRole->UpdatedBy = "wenhao";
+			$newRole->Update($dbConn, $newRole);
 			
 			$dbConn->CloseConnection();
 			
