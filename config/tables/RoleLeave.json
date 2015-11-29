@@ -31,6 +31,14 @@
 			"Constraints":[]
 		},
 		{
+			"Name": "IsActive",
+			"Type": "BOOLEAN",
+			"Attributes":[
+				"NOT NULL"
+			],
+			"Constraints":[]
+		},
+		{
 			"Name": "CreatedDate",
 			"Type": "TIMESTAMP",
 			"Attributes":[
