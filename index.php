@@ -1,15 +1,10 @@
 <?php 
 	include "base/Base.php";
-	
 	EnableError();
 ?>
 
-<!doctype>
-<html>
-	<head>
-		<title>Wenhao Mini Library</title>
-	</head>
-	<body>
+<?php include_once "header.php"; ?>
+
 		<h1>Harlo world!</h1>
 		<?php
 		
@@ -22,5 +17,4 @@
 			$dbConn->CloseConnection();
 			
 		?>
-	</body>
-</html>
+<?php include_once "footer.php"; ?>
