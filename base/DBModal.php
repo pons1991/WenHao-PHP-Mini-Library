@@ -145,6 +145,7 @@
 					
 					if( !empty($insertSqlStr) && $dbConn->IsConnectionEstablished()){
 						$dbConn->ExecuteQuery($insertSqlStr);
+						$obj->Id = $dbConn->GetLastInsertedId();
 					}
 				}
 			}else{

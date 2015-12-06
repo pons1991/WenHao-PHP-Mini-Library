@@ -26,9 +26,9 @@
 				
 				$accessUser->IsActive = true;
 				$accessUser->CreatedDate = date("Y-m-d H:i:s", time());
-				$accessUser->CreatedBy = "wenhao";
+				$accessUser->CreatedBy = $email;
 				$accessUser->UpdatedDate = date("Y-m-d H:i:s", time());
-				$accessUser->UpdatedBy = "wenhao";
+				$accessUser->UpdatedBy = $email;
 				
 				$dbOpt = $accessUser->Add($this->dbConnection, $accessUser);
 			}else{

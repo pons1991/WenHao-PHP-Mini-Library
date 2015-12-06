@@ -17,8 +17,11 @@
 	//Load controller
 	include_once "controller/login.php";
 	include_once "controller/register.php";
+	include_once "controller/role.php";
+	include_once "controller/roleleave.php";
 	
 	//Load pipeline function
+	include_once "pipeline/GetQueryString.php";
 	include_once "pipeline/Redirection.php";
 	include_once "pipeline/RequiredLogin.php";
 	
@@ -28,4 +31,6 @@
 		session_start();
 	}
 	
+	//Enable error
+	EnableError();
 ?>

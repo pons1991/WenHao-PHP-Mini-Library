@@ -73,6 +73,10 @@
 		function IsConnectionEstablished(){
 			return $this->DbLink != null ? true : false;
 		}
+		
+		function GetLastInsertedId(){
+			return $this->DbLink->lastInsertId();
+		}
 	}
 
 ?>

@@ -66,7 +66,7 @@
 		public function GetUserName(){
 			$accessUser = $this->GetUserSession();
 			if( $accessUser != null ){
-				return $accessUser->UserName;
+				return $accessUser->Email;
 			}
 		}
 	}
