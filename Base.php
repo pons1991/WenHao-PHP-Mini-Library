@@ -13,12 +13,15 @@
 	include_once "base/modal/AccessRole.php";
 	include_once "base/modal/Role.php";
 	include_once "base/modal/RoleLeave.php";
+	include_once "base/modal/UserRole.php";
+	include_once "base/modal/AccessUserRole.php";
 	
 	//Load controller
 	include_once "controller/login.php";
 	include_once "controller/register.php";
 	include_once "controller/role.php";
 	include_once "controller/roleleave.php";
+	include_once "controller/access.php";
 	
 	//Load pipeline function
 	include_once "pipeline/GetQueryString.php";

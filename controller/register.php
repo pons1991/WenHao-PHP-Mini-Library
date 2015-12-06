@@ -31,6 +31,7 @@
 				$accessUser->UpdatedBy = $email;
 				
 				$dbOpt = $accessUser->Add($this->dbConnection, $accessUser);
+				$dbOpt->OptObj = $accessUser;
 			}else{
 				$dbOpt->OptStatus = false;
 				$dbOpt->OptMessage = "The email has been registered. Please use other email.";

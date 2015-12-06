@@ -1,5 +1,5 @@
 {
-	"TableName": "RoleLeave",
+	"TableName": "AccessUserRole",
 	"Properties":[
 		{
 			"Name": "Id",
@@ -19,16 +19,19 @@
 				"NOT NULL"
 			],
 			"Constraints":[
-				"constraint RoleLeave_fk_role_id FOREIGN KEY (RoleId) REFERENCES Role(Id)"
+				"constraint AccessUserRole_fk_role_id FOREIGN KEY (RoleId) REFERENCES AccessRole(Id)"
 			]
 		},
 		{
-			"Name": "NumberOfLeave",
+			"Name": "UserId",
 			"Type": "int",
 			"Attributes":[
+				"UNSIGNED",
 				"NOT NULL"
 			],
-			"Constraints":[]
+			"Constraints":[
+				"constraint AccessUserRole_fk_user_id FOREIGN KEY (UserId) REFERENCES AccessUser(Id)"
+			]
 		},
 		{
 			"Name": "IsActive",

@@ -27,5 +27,23 @@
 			return $dbOpt;
 		}
 		
+		public function AssignRoleToUser($userid, $roleid, $createdby){
+			$userRole = new UserRole;
+			$userRole->RoleId = $roleid;
+			$userRole->UserId = $userid;
+			$userRole->IsActive = true;
+			$userRole->CreatedDate = date("Y-m-d H:i:s", time());
+			$userRole->CreatedBy = $createdby;
+			$userRole->UpdatedDate = date("Y-m-d H:i:s", time());
+			$userRole->UpdatedBy = $createdby;
+			$dbOpt = $userRole->Add($this->dbConnection, $userRole);
+			
+			return $dbOpt;
+		}
+		
+		public function GetRoles(){
+			$newRole = new Role;
+			return $newRole->Gets($this->dbConnection, 0, 999, null);
+		}
 	}
 ?>

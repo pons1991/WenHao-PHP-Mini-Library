@@ -1,5 +1,5 @@
 <?php
-	include "../base/Base.php";
+	include "../Base.php";
 	EnableError();
 	
 	$tableConfigFolder = "/config/tables/";
