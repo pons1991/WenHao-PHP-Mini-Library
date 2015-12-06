@@ -1,5 +1,5 @@
 <?php 
-	include "base/Base.php";
+	include "Base.php";
 	EnableError();
 	
 	$loginCtrl = null;
@@ -13,6 +13,9 @@
 			$dbConn->OpenConnection();
 			$loginCtrl = new LoginController($dbConn);
 			$loginCtrl->VerifyUser($email,$password);
+			
+			Redirection($GLOBALS["DOMAIN_NAME"]);
+			
 			$dbConn->CloseConnection();
 		}else{
 			echo 'verify data ! please';

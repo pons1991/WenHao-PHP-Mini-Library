@@ -17,10 +17,10 @@
 			if( $this->dbConnection != null ){
 				$accessUser = new AccessUser;
 				
-				$accessUser->UserName = $username;
+				$accessUser->Email = $username;
 				$accessUser->Password = $password;
-				$returnUser = $accessUser->IsUserVerified($this->dbConnection, $accessUser);
 				
+				$returnUser = $accessUser->IsUserVerified($this->dbConnection, $accessUser);
 				$countUser = count($returnUser);
 				if( $countUser == 1 ){
 					//Email and password is matched
@@ -35,6 +35,8 @@
 				$resp->OptStatus = false;
 				$resp->OptMessage = "Unable to contact to database";
 			}
+			
+			return $resp;
 		}
 		
 		public function RegisterUserInSession($userObj){

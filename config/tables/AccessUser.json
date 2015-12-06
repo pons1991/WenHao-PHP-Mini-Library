@@ -12,7 +12,7 @@
 			"Constraints":[]
 		},
 		{
-			"Name": "UserName",
+			"Name": "Email",
 			"Type": "varchar(100)",
 			"Attributes":[
 				"NOT NULL"

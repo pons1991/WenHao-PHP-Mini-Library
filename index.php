@@ -1,13 +1,11 @@
 <?php 
-	include "base/Base.php";
-	EnableError();
+	include_once "header.php"; 
+	RequiredLogin();
 ?>
-
-<?php include_once "header.php"; ?>
 
 		<h1>Harlo world!</h1>
 		<?php
-		
+			
 			$dbConn = new Connection();
 			$dbConn->OpenConnection();
 			
