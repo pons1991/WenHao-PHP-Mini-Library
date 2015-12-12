@@ -22,6 +22,7 @@
 	include_once "controller/role.php";
 	include_once "controller/roleleave.php";
 	include_once "controller/access.php";
+	include_once "controller/user.php";
 	
 	//Load pipeline function
 	include_once "pipeline/GetQueryString.php";

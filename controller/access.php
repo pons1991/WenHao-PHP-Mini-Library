@@ -41,6 +41,34 @@
 			$accessRole = new AccessRole;
 			return $accessRole->Gets($this->dbConnection, 0, 999, null);
 		}
+		
+		public function GetAccessByUserId($id){
+			$additionalParams = array(
+				':UserId' => array('value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and'),
+			);
+			$accessUserRole = new AccessUserRole;
+			return $accessUserRole->Gets($this->dbConnection, 0, 999, $additionalParams);
+		}
+		
+		public function UpdateAccess($accObj, $roleId, $currentUser){
+			$dbOpt = new DbOpt;
+			$dbOpt->OptStatus = true;
+			$dbOpt->OptMessage = "Done";
+			
+			if( $accObj != null ){
+				$accObj->RoleId = $roleId;
+				
+				$accObj->UpdatedDate = date("Y-m-d H:i:s", time());
+				$accObj->UpdatedBy = $currentUser;
+				
+				$dbOpt = $accObj->Update($this->dbConnection, $accObj);
+			}else{
+				$dbOpt->OptStatus = false;
+				$dbOpt->OptMessage = "Error when updating the user";
+			}
+			
+			return $dbOpt;
+		}
 	}
 
 ?>
