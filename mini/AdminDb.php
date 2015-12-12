@@ -3,6 +3,7 @@
 	EnableError();
 	
 	$tableConfigFolder = "/config/tables/";
+	$dataJson = "/config/data/DbData.json";
 ?>
 <!doctype>
 <html>
@@ -72,6 +73,17 @@
 						}
 					}
 				}
+				
+				//Prepopulate data !
+				$dataJsonString = file_get_contents($GLOBALS["DOMAIN_NAME"].$dataJson);
+				$dataJson = json_decode($dataJsonString, true);
+				$dataSqlQueryArray = $dataJson["SqlQueries"];
+				echo '<p>Executing pre-data sql query ... </p>';
+				foreach( $dataSqlQueryArray as $sql ){
+					echo '<p>'.$sql.'</p>';
+					$dbConnection->ExecuteQuery($sql);
+				}
+				echo '<p>Complete executing pre-data sql query ... </p>';
 				
 			}else{
 				echo "<p>Database Connection が悪いですよ。<b>後で再試行よ！</b></p>";

@@ -1,0 +1,16 @@
+{
+	"SqlQueries": [
+		"insert into AccessUser (Email,Password,CustomAttribute,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('admin@gmail.com','admin','',1,now(),'admin',now(),'admin')",
+		"insert into AccessRole (RoleName,IsAdmin,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('admin',1,1,now(),'admin',now(),'admin')",
+		"insert into AccessRole (RoleName,IsAdmin,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('normal',1,1,now(),'admin',now(),'admin')",
+		"insert into AccessUserRole (RoleId,UserId,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (1,1,1,now(),'admin',now(),'admin')",
+		"insert into Role (RoleName,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('staff',1,now(),'admin',now(),'admin')",
+		"insert into Role (RoleName,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('assistant manager',1,now(),'admin',now(),'admin')",
+		"insert into Role (RoleName,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('manager',1,now(),'admin',now(),'admin')",
+		"insert into Role (RoleName,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('admin',1,now(),'admin',now(),'admin')",
+		"insert into RoleLeave (RoleId,NumberOfLeave,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (1, 20,1,now(),'admin',now(),'admin')",
+		"insert into RoleLeave (RoleId,NumberOfLeave,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (2, 20,1,now(),'admin',now(),'admin')",
+		"insert into RoleLeave (RoleId,NumberOfLeave,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (3, 20,1,now(),'admin',now(),'admin')",
+		"insert into UserRole (RoleId,UserId,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (4,1,1,now(),'admin',now(),'admin')"
+	]
+}
