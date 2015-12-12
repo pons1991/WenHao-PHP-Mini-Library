@@ -18,7 +18,6 @@
 	
 	//Load controller
 	include_once "controller/login.php";
-	include_once "controller/register.php";
 	include_once "controller/role.php";
 	include_once "controller/roleleave.php";
 	include_once "controller/access.php";

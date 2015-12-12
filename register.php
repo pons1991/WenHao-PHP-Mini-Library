@@ -13,8 +13,8 @@
 			$dbConn = new Connection();
 			$dbConn->OpenConnection();
 			
-			$registerCtrl = new RegisterController($dbConn);
-			$dbOpt = $registerCtrl->RegisterNewUser($email, $password, $userid);
+			$usrCtrl = new UserController($dbConn);
+			$dbOpt = $usrCtrl->RegisterNewUser($email, $password, $userid);
 			
 			if( $dbOpt->OptStatus ){
 				//Redirect to login user

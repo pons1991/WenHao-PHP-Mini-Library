@@ -65,8 +65,7 @@
 				
 				
 			}else{
-				$registerCtrl = new RegisterController($dbConn);
-				$dbOpt = $registerCtrl->RegisterNewUser($email, $password, $userid);
+				$dbOpt = $userCtrl->RegisterNewUser($email, $password, $userid);
 				
 				if( $dbOpt->OptStatus ){
 					//Assign role to users
