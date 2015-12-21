@@ -3,7 +3,8 @@
 	EnableError();
 	
 	$loginCtrl = null;
-	
+	$loginPageErrorMessage = '';
+    
 	if (isset($_POST["submit"])){
 		$email = $_POST["email"];
 		$password = $_POST["password"];
@@ -12,31 +13,52 @@
 			$dbConn = new Connection();
 			$dbConn->OpenConnection();
 			$loginCtrl = new LoginController($dbConn);
-			$loginCtrl->VerifyUser($email,$password);
+			$loginResp = $loginCtrl->VerifyUser($email,$password);
 			
-			Redirection($GLOBALS["DOMAIN_NAME"]);
+            if( $loginResp-> OptStatus){
+                Redirection($GLOBALS["DOMAIN_NAME"]);
+            }else{
+                $loginPageErrorMessage = $loginResp->OptMessage;
+            }
 			
 			$dbConn->CloseConnection();
 		}else{
-			echo 'verify data ! please';
+			$loginPageErrorMessage = 'Invalid credential';
 		}
-		
 	}
 	
 	if( $loginCtrl == null ){
 		$loginCtrl = new LoginController(null);
-		echo $loginCtrl->GetUserName();
+		//echo $loginCtrl->GetUserName();
 	}
 ?>
 
 <?php include_once "header.php"; ?>
 
-		<h1>Login page</h1>
-		<form method="post" action="login.php">
-			<input type="text" name="email" id="email" />
-			<input type="password" name="password" id="password" />
-			<input type="submit" name="submit" id="submit" value="Login" />
-		</form>
-		
+<div class="container">
+      <form class="form-signin" method="post" action="login.php">
+        <h2 class="form-signin-heading">Login</h2>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="email" id="email" name="email" class="form-control" placeholder="Email address" required="" autofocus="">
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" name="password" id="password" class="form-control" placeholder="Password" required="">
+        
+        <?php
+            if( !empty($loginPageErrorMessage) ){
+                ?>
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    <?php echo $loginPageErrorMessage; ?>
+                </div>
+                <?php
+            }
+        ?>
+        
+
+        <button class="btn btn-lg btn-primary btn-block" name="submit" id="submit" type="submit">Sign in</button>
+      </form>
+
+    </div>
 		
 <?php include_once "footer.php"; ?>
