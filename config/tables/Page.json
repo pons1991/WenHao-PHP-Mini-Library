@@ -36,6 +36,14 @@
 			"Constraints":[]
 		},
 		{
+			"Name": "ShowInSideNavi",
+			"Type": "BOOLEAN",
+			"Attributes":[
+				"NOT NULL"
+			],
+			"Constraints":[]
+		},
+		{
 			"Name": "IsActive",
 			"Type": "BOOLEAN",
 			"Attributes":[

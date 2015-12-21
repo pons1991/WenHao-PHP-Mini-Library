@@ -4,6 +4,7 @@
 		var $PageName;
         var $Path;
         var $IsCRUD;
+        var $ShowInSideNavi;
 		
 	}
 ?>

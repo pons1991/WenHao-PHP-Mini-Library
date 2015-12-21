@@ -29,6 +29,7 @@
 	include_once "controller/roleleave.php";
 	include_once "controller/access.php";
 	include_once "controller/user.php";
+    include_once "controller/page.php";
 	
 	//initialize session
 	if (session_status() == PHP_SESSION_NONE || session_id() == '') {

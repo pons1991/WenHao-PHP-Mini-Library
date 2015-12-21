@@ -1,10 +1,10 @@
 {
 	"SqlQueries": [
-        "insert into Pages (PageName,Path,IsCRUD,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Dashboard','/index.php',0,1,now(),'admin',now(),'admin')",
-        "insert into Pages (PageName,Path,IsCRUD,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Login','/login',1,now(),0,'admin',now(),'admin')",
-        "insert into Pages (PageName,Path,IsCRUD,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Users','/shell/user/users.php',1,1,now(),'admin',now(),'admin')",
-        "insert into Pages (PageName,Path,IsCRUD,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Roles','/shell/role/roles',1,1,now(),'admin',now(),'admin')",
-        "insert into Pages (PageName,Path,IsCRUD,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Access','/shell/access/access',1,1,now(),'admin',now(),'admin')",
+        "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Dashboard','/index.php',0,1,1,now(),'admin',now(),'admin')",
+        "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Login','/login',1,now(),0,0,'admin',now(),'admin')",
+        "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Users','/shell/user/users.php',1,1,1,now(),'admin',now(),'admin')",
+        "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Roles','/shell/role/roles',1,1,1,now(),'admin',now(),'admin')",
+        "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Access','/shell/access/access',1,1,1,now(),'admin',now(),'admin')",
 		"insert into AccessUser (Email,Password,CustomAttribute,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('admin@gmail.com','admin','',1,now(),'admin',now(),'admin')",
 		"insert into AccessRole (RoleName,IsAdmin,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('admin',1,1,now(),'admin',now(),'admin')",
 		"insert into AccessRole (RoleName,IsAdmin,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('normal',1,1,now(),'admin',now(),'admin')",
