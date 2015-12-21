@@ -21,6 +21,7 @@
 	include_once "base/modal/RoleLeave.php";
 	include_once "base/modal/UserRole.php";
 	include_once "base/modal/AccessUserRole.php";
+    include_once "base/modal/Page.php";
 	
 	//Load controller
 	include_once "controller/login.php";
