@@ -4,6 +4,7 @@
 	include_once "base/Const.php";
 	include_once "base/DbOpt.php";
 	include_once "base/DBModal.php";
+    include_once "controller/base.php";
 	
 	//Load db connection
 	include_once "base/database/Connection.php";
@@ -14,6 +15,7 @@
 	include_once "pipeline/RequiredLogin.php";
     include_once "pipeline/PHPSelf.php";
     include_once "pipeline/LinkManager.php";
+    include_once "pipeline/SessionHelper.php";
     
 	//Load modal
 	include_once "base/modal/AccessUser.php";

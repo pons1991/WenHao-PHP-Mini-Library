@@ -1,5 +1,5 @@
 <?php 
-    if( GetCurrentPage() != 'login.php' ){
+    if( GetCurrentPage() != 'login.php' &&  GetCurrentPage() != 'logout.php'){
         ?>
             <nav class="navbar navbar-inverse navbar-fixed-top">
                 <div class="container-fluid">
@@ -10,14 +10,15 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#">Project name</a>
+                        <a class="navbar-brand" href="<?php echo GetFriendlyUrl(""); ?>">Leave Application</a>
                     </div>
                     <div id="navbar" class="navbar-collapse collapse">
                         <ul class="nav navbar-nav navbar-right">
-                            <li><a href="#">Dashboard</a></li>
-                            <li><a href="#">Settings</a></li>
-                            <li><a href="#">Profile</a></li>
-                            <li><a href="#">Help</a></li>
+                            <?php 
+                                $loginCtrl = new LoginController(null);
+                                echo '<li><a href="#">Welcome back, '.$loginCtrl->GetUserName().'</a></li>';
+                                echo '<li><a href="'.GetFriendlyUrl("/logout.php").'">Logout</a></li>';
+                            ?>
                         </ul>
                     </div>
                 </div>
