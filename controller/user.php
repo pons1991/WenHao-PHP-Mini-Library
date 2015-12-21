@@ -67,25 +67,26 @@
 			$dbOpt->OptMessage = "Done";
 			
 			if( $usrObj != null ){
+                $usrObj->Password = $password;
+			    $outputArray = array();
+                $outputArray["userid"] = $userid;
+                $jsonEncodedArray = json_encode($outputArray);
+                $usrObj->CustomAttribute = $jsonEncodedArray;
+						
+                $usrObj->UpdatedDate = date("Y-m-d H:i:s", time());
+                $usrObj->UpdatedBy = $currentUser;
+                
 				if( $usrObj->Email != $email ){
 					if( !$this->CheckEmailExist($email) ){
 						$usrObj->Email = $email;
-						$usrObj->Password = $password;
-						
-						$outputArray = array();
-						$outputArray["userid"] = $userid;
-						$jsonEncodedArray = json_encode($outputArray);
-						$usrObj->CustomAttribute = $jsonEncodedArray;
-						
-						$usrObj->UpdatedDate = date("Y-m-d H:i:s", time());
-						$usrObj->UpdatedBy = $currentUser;
-						
 						$dbOpt = $usrObj->Update($this->dbConnection, $usrObj);
 					}else{
 						$dbOpt->OptStatus = false;
 						$dbOpt->OptMessage = "The email has been registered. Please use other email.";
 					}
-				}
+				}else{
+                    $dbOpt = $usrObj->Update($this->dbConnection, $usrObj);
+                }
 			}else{
 				$dbOpt->OptStatus = false;
 				$dbOpt->OptMessage = "Error when updating the user";

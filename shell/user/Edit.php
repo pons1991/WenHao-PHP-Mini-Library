@@ -93,7 +93,6 @@
 	}
 ?>
 
-<h1>User</h1>
 <form method="post" >
 			<label for="email">Email</label>
 			<input type="email" name="email" id="email" 
@@ -148,6 +147,12 @@
 				?>
 			</select>
 			<br/>
-			<input type="submit" name="submit" id="submit" value="Register" />
+            <?php 
+                if( isset($_GET["id"]) && $_GET["id"] !== '0' ){
+                    echo '<input type="submit" name="submit" id="submit" value="Update" />';
+                }else{
+                    echo '<input type="submit" name="submit" id="submit" value="Register" />';
+                }
+            ?>
 			<a href="?action=list">Cancel</a>
 		</form>
