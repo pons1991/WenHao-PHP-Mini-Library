@@ -1,18 +1,9 @@
-<?php 
-	include_once "header.php"; 
+<?php
+    include_once "header.php"; 
 	RequiredLogin();
 ?>
-
-		<h1>Harlo world!</h1>
-		<?php
-			
-			$dbConn = new Connection();
-			$dbConn->OpenConnection();
-			
-			
-			
-			
-			$dbConn->CloseConnection();
-			
-		?>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">Dashboard</h1>
+        </div>
+      
 <?php include_once "footer.php"; ?>

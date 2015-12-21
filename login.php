@@ -10,8 +10,7 @@
 		$password = $_POST["password"];
 		
 		if( !empty($email) && !empty($password)){
-			$dbConn = new Connection();
-			$dbConn->OpenConnection();
+			
 			$loginCtrl = new LoginController($dbConn);
 			$loginResp = $loginCtrl->VerifyUser($email,$password);
 			
@@ -20,8 +19,6 @@
             }else{
                 $loginPageErrorMessage = $loginResp->OptMessage;
             }
-			
-			$dbConn->CloseConnection();
 		}else{
 			$loginPageErrorMessage = 'Invalid credential';
 		}

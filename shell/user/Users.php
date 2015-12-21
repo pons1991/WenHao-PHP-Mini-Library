@@ -1,7 +1,8 @@
 <?php
-	include_once "../../Base.php";
+    include_once "../../header.php"; 
 	RequiredLogin();
-	$action = '';
+    
+    $action = '';
 
 	$qsArray = GetQueryString();
 	if( $qsArray != null && count($qsArray) > 0 ){
@@ -9,20 +10,20 @@
 	}else{
 		$action = 'list';
 	}
-	
-	
-	$dbConn = new Connection();
-	$dbConn->OpenConnection();
 	$loginCtrl = new LoginController($dbConn);
 	$roleCtrl = new RoleController($dbConn);
 	$accessCtrl = new AccessController($dbConn);
 	$userCtrl = new UserController($dbConn);
-	
-	if( $action == "edit" ){
+?>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">Dashboard</h1>
+          <?php 
+            if( $action == "edit" ){
 		include_once "edit.php";
 	}else{
 		include_once "list.php";
 	}
-	
-	$dbConn->CloseConnection();
-?>
+          ?>
+        </div>
+      
+<?php include_once "../../footer.php"; ?>

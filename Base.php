@@ -8,6 +8,12 @@
 	//Load db connection
 	include_once "base/database/Connection.php";
 	
+    //Load pipeline function
+	include_once "pipeline/GetQueryString.php";
+	include_once "pipeline/Redirection.php";
+	include_once "pipeline/RequiredLogin.php";
+    include_once "pipeline/PHPSelf.php";
+    
 	//Load modal
 	include_once "base/modal/AccessUser.php";
 	include_once "base/modal/AccessRole.php";
@@ -23,11 +29,6 @@
 	include_once "controller/access.php";
 	include_once "controller/user.php";
 	
-	//Load pipeline function
-	include_once "pipeline/GetQueryString.php";
-	include_once "pipeline/Redirection.php";
-	include_once "pipeline/RequiredLogin.php";
-	
 	//initialize session
 	if (session_status() == PHP_SESSION_NONE || session_id() == '') {
 		//start the session is not yet start
@@ -36,4 +37,9 @@
 	
 	//Enable error
 	EnableError();
+    
+    //Global variable - start
+    $dbConn = new Connection();
+    $dbConn->OpenConnection();
+    //Global variable - end
 ?>

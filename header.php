@@ -14,5 +14,15 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 	
         <link rel="stylesheet" href="/whLibrary/Themes/css/signin.css" />
+        <link rel="stylesheet" href="/whLibrary/Themes/css/dashboard.css" />
     </head>
 	<body>
+        
+    <?php 
+        include "TopNavigation.php";
+    ?>
+    
+    <!-- boostrap placeholder - start -->
+<div class="container-fluid">
+      <div class="row">
+          <?php include_once "SideNavigation.php"; ?>
