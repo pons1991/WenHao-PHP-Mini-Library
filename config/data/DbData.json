@@ -6,16 +6,19 @@
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Roles','/shell/role/roles.php',1,1,1,now(),'admin',now(),'admin')",
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Access','/shell/access/access.php',1,1,1,now(),'admin',now(),'admin')",
 		"insert into AccessUser (Email,Password,CustomAttribute,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('admin@gmail.com','admin','',1,now(),'admin',now(),'admin')",
+        "insert into AccessUser (Email,Password,CustomAttribute,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('wenhao.mui@gmail.com','wenhao','',1,now(),'admin',now(),'admin')",
 		"insert into AccessRole (RoleName,IsAdmin,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('admin',1,1,now(),'admin',now(),'admin')",
 		"insert into AccessRole (RoleName,IsAdmin,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('normal',1,1,now(),'admin',now(),'admin')",
 		"insert into AccessUserRole (RoleId,UserId,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (1,1,1,now(),'admin',now(),'admin')",
-		"insert into Role (RoleName,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('staff',1,now(),'admin',now(),'admin')",
-		"insert into Role (RoleName,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('assistant manager',1,now(),'admin',now(),'admin')",
-		"insert into Role (RoleName,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('manager',1,now(),'admin',now(),'admin')",
-		"insert into Role (RoleName,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('admin',1,now(),'admin',now(),'admin')",
+        "insert into AccessUserRole (RoleId,UserId,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (2,2,1,now(),'admin',now(),'admin')",
+		"insert into Role (RoleName,RolePriority,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('staff',1,1,now(),'admin',now(),'admin')",
+		"insert into Role (RoleName,RolePriority,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('assistant manager',2,1,now(),'admin',now(),'admin')",
+		"insert into Role (RoleName,RolePriority,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('manager',3,1,now(),'admin',now(),'admin')",
+		"insert into Role (RoleName,RolePriority,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('admin',4,1,now(),'admin',now(),'admin')",
 		"insert into RoleLeave (RoleId,NumberOfLeave,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (1, 20,1,now(),'admin',now(),'admin')",
 		"insert into RoleLeave (RoleId,NumberOfLeave,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (2, 20,1,now(),'admin',now(),'admin')",
 		"insert into RoleLeave (RoleId,NumberOfLeave,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (3, 20,1,now(),'admin',now(),'admin')",
-		"insert into UserRole (RoleId,UserId,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (4,1,1,now(),'admin',now(),'admin')"
+		"insert into UserRole (RoleId,UserId,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (4,1,1,now(),'admin',now(),'admin')",
+        "insert into UserRole (RoleId,UserId,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (1,2,1,now(),'admin',now(),'admin')"
 	]
 }
