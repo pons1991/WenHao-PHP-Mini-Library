@@ -19,6 +19,7 @@
 		"insert into RoleLeave (RoleId,NumberOfLeave,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (2, 20,1,now(),'admin',now(),'admin')",
 		"insert into RoleLeave (RoleId,NumberOfLeave,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (3, 20,1,now(),'admin',now(),'admin')",
 		"insert into UserRole (RoleId,UserId,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (4,1,1,now(),'admin',now(),'admin')",
-        "insert into UserRole (RoleId,UserId,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (1,2,1,now(),'admin',now(),'admin')"
+        "insert into UserRole (RoleId,UserId,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (1,2,1,now(),'admin',now(),'admin')",
+        "insert into OrgRel (SuperiorUserId,UserId,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (1,2,1,now(),'admin',now(),'admin')"
 	]
 }
