@@ -13,6 +13,7 @@
 	include_once "pipeline/Redirection.php";
 	include_once "pipeline/RequiredLogin.php";
     include_once "pipeline/PHPSelf.php";
+    include_once "pipeline/LinkManager.php";
     
 	//Load modal
 	include_once "base/modal/AccessUser.php";
