@@ -10,12 +10,12 @@
                         echo '<ul class="nav nav-sidebar">';
                         foreach( $pageListing as $pg ){
                             if( $pg->ShowInSideNavi == 1){
-                                if (strpos($pg->Path, $currentPageName) !== false) {
-                                    echo '<li class="active"><a href="'.GetFriendlyUrl($pg->Path).'">'.$pg->PageName.'</a></li>';
-                                }else{
-                                    echo '<li><a href="'.GetFriendlyUrl($pg->Path).'">'.$pg->PageName.'</a></li>';
-                                }
-                                
+                                // if (strpos($pg->Path, $currentPageName) !== false) {
+                                //     echo '<li class="active"><a href="'.GetFriendlyUrl($pg->Path).'">'.$pg->PageName.'</a></li>';
+                                // }else{
+                                //     echo '<li><a href="'.GetFriendlyUrl($pg->Path).'">'.$pg->PageName.'</a></li>';
+                                // }
+                                echo '<li><a href="'.GetFriendlyUrl($pg->Path).'">'.$pg->PageName.'</a></li>';
                             }
                         }
                         echo '</ul>';

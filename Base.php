@@ -26,7 +26,9 @@
 	include_once "base/modal/AccessUserRole.php";
     include_once "base/modal/Page.php";
     include_once "base/modal/OrgRel.php";
-	
+    include_once "base/modal/LeaveType.php";
+	include_once "base/modal/LeaveApplication.php";
+    
 	//Load controller
 	include_once "controller/login.php";
 	include_once "controller/role.php";
@@ -34,6 +36,8 @@
 	include_once "controller/access.php";
 	include_once "controller/user.php";
     include_once "controller/page.php";
+    include_once "controller/leave.php";
+    include_once "controller/leaveapplication.php";
 	
 	//initialize session
 	if (session_status() == PHP_SESSION_NONE || session_id() == '') {

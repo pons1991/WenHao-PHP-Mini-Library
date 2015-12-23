@@ -1,5 +1,5 @@
 {
-	"TableName": "RoleLeave",
+	"TableName": "LeaveType",
 	"Properties":[
 		{
 			"Name": "Id",
@@ -12,30 +12,16 @@
 			"Constraints":[]
 		},
 		{
-			"Name": "RoleId",
-			"Type": "int",
+			"Name": "LeaveName",
+			"Type": "varchar(100)",
 			"Attributes":[
-				"UNSIGNED",
 				"NOT NULL"
 			],
-			"Constraints":[
-				"constraint RoleLeave_fk_role_id FOREIGN KEY (RoleId) REFERENCES Role(Id)"
-			]
+			"Constraints":[]
 		},
 		{
-			"Name": "LeaveTypeId",
-			"Type": "int",
-			"Attributes":[
-				"UNSIGNED",
-				"NOT NULL"
-			],
-			"Constraints":[
-				"constraint RoleLeave_fk_leave_type_id FOREIGN KEY (LeaveTypeId) REFERENCES LeaveType(Id)"
-			]
-		},
-		{
-			"Name": "NumberOfLeave",
-			"Type": "int",
+			"Name": "IsAllowToBringForward",
+			"Type": "BOOLEAN",
 			"Attributes":[
 				"NOT NULL"
 			],

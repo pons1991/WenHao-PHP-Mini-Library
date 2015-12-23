@@ -1,5 +1,5 @@
 {
-	"TableName": "RoleLeave",
+	"TableName": "LeaveApplication",
 	"Properties":[
 		{
 			"Name": "Id",
@@ -12,30 +12,43 @@
 			"Constraints":[]
 		},
 		{
-			"Name": "RoleId",
+			"Name": "UserId",
 			"Type": "int",
 			"Attributes":[
 				"UNSIGNED",
 				"NOT NULL"
 			],
 			"Constraints":[
-				"constraint RoleLeave_fk_role_id FOREIGN KEY (RoleId) REFERENCES Role(Id)"
+				"constraint LeaveApplication_fk_user_id FOREIGN KEY (UserId) REFERENCES AccessRole(Id)"
 			]
 		},
 		{
-			"Name": "LeaveTypeId",
-			"Type": "int",
+			"Name": "IsFullDay",
+			"Type": "BOOLEAN",
 			"Attributes":[
-				"UNSIGNED",
 				"NOT NULL"
 			],
-			"Constraints":[
-				"constraint RoleLeave_fk_leave_type_id FOREIGN KEY (LeaveTypeId) REFERENCES LeaveType(Id)"
-			]
+			"Constraints":[]
 		},
 		{
-			"Name": "NumberOfLeave",
-			"Type": "int",
+			"Name": "Remarks",
+			"Type": "text",
+			"Attributes":[
+				"NOT NULL"
+			],
+			"Constraints":[]
+		},
+		{
+			"Name": "LeaveDateFrom",
+			"Type": "TIMESTAMP",
+			"Attributes":[
+				"NOT NULL"
+			],
+			"Constraints":[]
+		},
+		{
+			"Name": "LeaveDateTo",
+			"Type": "TIMESTAMP",
 			"Attributes":[
 				"NOT NULL"
 			],

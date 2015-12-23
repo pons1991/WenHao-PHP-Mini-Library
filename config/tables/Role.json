@@ -23,6 +23,7 @@
 			"Name": "RolePriority",
 			"Type": "int",
 			"Attributes":[
+                "UNSIGNED",
 				"NOT NULL"
 			],
 			"Constraints":[]
