@@ -69,5 +69,12 @@
 				return $accessUser->Email;
 			}
 		}
+        
+        public function GetUserId(){
+            $accessUser = $this->GetUserSession();
+			if( $accessUser != null ){
+				return $accessUser->Id;
+			}
+        }
 	}
 ?>

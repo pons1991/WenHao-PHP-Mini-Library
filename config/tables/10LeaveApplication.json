@@ -39,7 +39,7 @@
 			"Constraints":[]
 		},
 		{
-			"Name": "LeaveDateFrom",
+			"Name": "LeaveDate",
 			"Type": "TIMESTAMP",
 			"Attributes":[
 				"NOT NULL"
@@ -47,12 +47,26 @@
 			"Constraints":[]
 		},
 		{
-			"Name": "LeaveDateTo",
-			"Type": "TIMESTAMP",
+			"Name": "Status",
+			"Type": "int",
 			"Attributes":[
+                "UNSIGNED",
 				"NOT NULL"
 			],
-			"Constraints":[]
+			"Constraints":[
+                "constraint LeaveApplication_fk_leave_status_id FOREIGN KEY (Status) REFERENCES LeaveStatus(Id)"
+            ]
+		},
+		{
+			"Name": "ApprovedBy",
+			"Type": "int",
+			"Attributes":[
+				"UNSIGNED",
+                "NOT NULL"
+			],
+			"Constraints":[
+                "constraint LeaveApplication_fk_approved_user_id FOREIGN KEY (ApprovedBy) REFERENCES AccessUser(Id)"
+            ]
 		},
 		{
 			"Name": "IsActive",

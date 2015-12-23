@@ -1,11 +1,32 @@
 <?php
     if (isset($_POST["submit"])){
-        ;
+        $fromDate = $_POST["datepickerFrom"];
+        $toDate = $_POST["datepickerTo"];
+        $leaveType = $_POST["leaveType"];
+        $halfDay = isset($_POST["halfDay"]) ? true : false;
+        $remarks = empty($_POST["remarks"]) ? "N/A" : $_POST["remarks"];
+        $userId = $loginCtrl->GetUserId();
+        $userEmail = $loginCtrl->GetUserName();
+        
+        $fromDateObj = datetime::createfromformat('m/d/Y',$fromDate);
+        $fromDateFormat = $fromDateObj->format('Y-m-d 00:00:00');
+        
+        $toDateObj = datetime::createfromformat('m/d/Y',$toDate);
+        $toDateFormat = $toDateObj->format('Y-m-d 00:00:00');
+        
+        $dbOpt = $leaveCtrl->ApplyLeave($fromDateFormat, $leaveType, !$halfDay, $remarks, $userId, $userEmail);
+        echo print_r($dbOpt);
+        while( $fromDateFormat !=  $toDateFormat ){
+            $fromDateObj->add(new DateInterval('P1D'));
+            $fromDateFormat = $fromDateObj->format('Y-m-d 00:00:00');
+            
+            $dbOpt = $leaveCtrl->ApplyLeave($fromDateFormat, $leaveType, !$halfDay, $remarks, $userId, $userEmail);
+        }
     }
 ?>
 
 
-<form method="post" >
+<form method="post">
     <div class="row" >
         <div class="col-sm-12 form-group">
             <div class="alert alert-danger hide" role="alert" id="leaveApplicationErrorMessage">
@@ -61,7 +82,7 @@
         <div class="col-sm-12 form-group">
             <div class="col-sm-2"></div>
             <div class="col-sm-5">
-                <button class="btn btn-primary btn-sm" type="submit" onclick="return ValidateLeaveApplicationForm();">Apply</button>
+                <button class="btn btn-primary btn-sm" id="submit" name="submit" type="submit" onclick="return ValidateLeaveApplicationForm();">Apply</button>
                 <button class="btn btn-danger btn-sm" type="button">Cancel</button>
             </div>
         </div>

@@ -18,9 +18,14 @@
 			$newRoleLeave->CreatedBy = $createdby;
 			$newRoleLeave->UpdatedDate = date("Y-m-d H:i:s", time());
 			$newRoleLeave->UpdatedBy = $createdby;
-			$dbOpt = $newRoleLeave->Add($this->dbConnection, $newRoleLeave);
+            
+            $currentObjInst = new ReflectionClass($newRoleLeave);
+			$props  = $currentObjInst->getProperties();
+            
+            return $props;
+			//$dbOpt = $newRoleLeave->Add($this->dbConnection, $newRoleLeave);
 			
-			return $dbOpt;
+			//return $dbOpt;
 		}
 	}
 

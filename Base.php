@@ -37,7 +37,6 @@
 	include_once "controller/user.php";
     include_once "controller/page.php";
     include_once "controller/leave.php";
-    include_once "controller/leaveapplication.php";
 	
 	//initialize session
 	if (session_status() == PHP_SESSION_NONE || session_id() == '') {
