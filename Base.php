@@ -26,6 +26,7 @@
 	include_once "base/modal/AccessUserRole.php";
     include_once "base/modal/Page.php";
     include_once "base/modal/OrgRel.php";
+    include_once "base/modal/LeaveStatus.php";
     include_once "base/modal/LeaveType.php";
 	include_once "base/modal/LeaveApplication.php";
     

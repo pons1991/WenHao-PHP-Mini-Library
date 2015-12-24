@@ -14,15 +14,31 @@
 			return $newLeaveType->Gets($this->dbConnection, 0, 999, null);
 		}
         
-        public function ApplyLeave($from, $type, $halfDay, $remarks, $userId, $email){
+        public function GetLeaveByUserId($userId){
+            $newLeaveApplication = new LeaveApplication;
+            
+            $additionalParams = array(
+                array('table' => 'LeaveApplication', 'column' => 'UserId', 'value' => $userId, 'type' => PDO::PARAM_INT, 'condition' => 'and')
+		    );
+			
+			$returnLeave = $newLeaveApplication->GetByQuery($this->dbConnection,0, 999, $additionalParams);
+            
+            echo print_r($returnLeave);
+            
+			return $returnLeave;
+        }
+        
+        public function ApplyLeave($from, $to, $diff, $type, $remarks, $userId, $email){
             
             $dbOptResponse = new DbOpt;
             
             $newLeave = new LeaveApplication;
             $newLeave->UserId = $userId;
-		    $newLeave->IsFullDay = $halfDay;
+            $newLeave->LeaveTypeId = $type;
 		    $newLeave->Remarks = $remarks;
-			$newLeave->LeaveDate = $from;
+			$newLeave->LeaveDateFrom = $from;
+            $newLeave->LeaveDateTo = $to;
+            $newLeave->TotalLeave = $diff;
 			$newLeave->Status = 1;
             $newLeave->ApprovedBy = $userId;
 			$newLeave->IsActive = true;
@@ -30,15 +46,9 @@
 			$newLeave->CreatedBy = $email;
 			$newLeave->UpdatedDate = date("Y-m-d H:i:s", time());
 			$newLeave->UpdatedBy = $email;
-		  
-            $leaveList = $newLeave->IsLeaveDateValid($this->dbConnection, $newLeave);
-            if( count($leaveList) == 0){
-                $dbOptResponse = $newLeave->Add($this->dbConnection, $newLeave);
-                $dbOptResponse->OptObj = $newLeave;
-            }else{
-                $dbOptResponse->OptStatus = false;
-                $dbOptResponse->OptMessage = "Error: Duplicated leave";
-            }
+
+            $dbOptResponse = $newLeave->Add($this->dbConnection, $newLeave);
+            $dbOptResponse->OptObj = $newLeave;
 			
             
             return $dbOptResponse;

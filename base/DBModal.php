@@ -22,11 +22,15 @@
 				if( $prop->getName() == "Id" ){
 					//skip
 				}else{
-					$propValue = $prop->getValue($obj);
-					if( empty($propValue)){
-						$isTrue = false;
-						break;
-					}
+                    if (strpos($prop->getName(),'_IGNORE') !== false) {
+                        //skip if contain _IGNORE custom attribute
+                    }else{
+                        $propValue = $prop->getValue($obj);
+                        if( empty($propValue)){
+                            $isTrue = false;
+                            break;
+                        }
+                    }
 				}
 			}
 			
@@ -90,10 +94,14 @@
 						if( $prop->getName() == "Id" ){
 							//skip
 						}else{
-							if( !empty($updateSqlFieldStr)){
-								$updateSqlFieldStr = $updateSqlFieldStr.",";
-							}
-							$updateSqlFieldStr = $updateSqlFieldStr." ".$prop->getName()."='".$prop->getValue($obj)."'";
+                            if (strpos($prop->getName(),'_IGNORE') !== false) {
+                                //skip if contain _IGNORE custom attribute
+                            }else{
+                                if( !empty($updateSqlFieldStr)){
+                                    $updateSqlFieldStr = $updateSqlFieldStr.",";
+                                }
+                                $updateSqlFieldStr = $updateSqlFieldStr." ".$prop->getName()."='".$prop->getValue($obj)."'";
+                            }
 						}
 					}
 					
@@ -132,13 +140,17 @@
 						if( $prop->getName() == "Id" ){
 							//skip
 						}else{
-							if( empty($insertColumnSqlStr) ){
-								$insertColumnNameSqlStr = $insertColumnNameSqlStr."".$prop->getName();
-								$insertColumnSqlStr = $insertColumnSqlStr."'".$prop->getValue($obj)."'";
-							}else{
-								$insertColumnNameSqlStr = $insertColumnNameSqlStr.",".$prop->getName();
-								$insertColumnSqlStr = $insertColumnSqlStr.",'".$prop->getValue($obj)."'";
-							}
+                            if (strpos($prop->getName(),'_IGNORE') !== false) {
+                                //skip if contain _IGNORE custom attribute
+                            }else{
+                               if( empty($insertColumnSqlStr) ){
+                                    $insertColumnNameSqlStr = $insertColumnNameSqlStr."".$prop->getName();
+                                    $insertColumnSqlStr = $insertColumnSqlStr."'".$prop->getValue($obj)."'";
+                                }else{
+                                    $insertColumnNameSqlStr = $insertColumnNameSqlStr.",".$prop->getName();
+                                    $insertColumnSqlStr = $insertColumnSqlStr.",'".$prop->getValue($obj)."'";
+                                } 
+                            }
 						}
 					}
 					$insertSqlStr = "Insert into ".$currentObjInst->getName()." (".$insertColumnNameSqlStr.") values(".$insertColumnSqlStr.")";
@@ -161,6 +173,119 @@
 			
 		}
 		
+        //Get with custom query string
+        public function GetByQuery($dbConn, $startPage, $recordPerPage, $additionalParams){
+            
+            $queryParamValue = array(
+				':start' => array('value' => ($startPage * $recordPerPage), 'type' => PDO::PARAM_INT),
+				':end' => array('value' => ($recordPerPage ), 'type' => PDO::PARAM_INT)
+			);
+            
+            $currentObjInst = new ReflectionClass($this);
+			$className = $currentObjInst->getName();
+            $props  = $currentObjInst->getProperties();
+            
+            $referenceByList = array();
+            $joinStatement = "select ";
+            $selectColumn = "";
+            $fromStatement = "";
+            $whereStatement = "";
+            $asciiIndex = 97;
+            
+            $queryMeta = array();
+            
+            //construct default class query string 
+            for ($i = 0 ; $i < count($props); $i++) {
+				$prop = $props[$i];
+				if( $prop != null ){
+					$propName = $prop->getName();
+                    if (strpos($propName,'_IGNORE') !== false) {
+                        array_push($referenceByList, $propName);
+                    }else{
+                        if(!empty($selectColumn)){
+                            $selectColumn .= ",";
+                        }
+                        $selectColumn .= chr($asciiIndex).".".$propName." as ".chr($asciiIndex)."_".$propName;
+                    }
+				}
+			}
+            
+            $queryMeta[$className] = chr($asciiIndex);
+            $fromStatement .= " from ".$className." as ".chr($asciiIndex);
+            
+            //construct reference class query string 
+            for($i = 0 ; $i < count($referenceByList); $i++){
+                $asciiIndex = $asciiIndex + 1;
+                
+                $propToken = explode("_",$referenceByList[$i]);
+                $referenceClassName = $propToken[0];
+                $referenceByName = "";
+                //Get reference by name
+                for($rIndex = 0 ; $rIndex < count($propToken); $rIndex++ ){
+                    if( $propToken[$rIndex] == "REFERENCEBY" ){
+                        $referenceByName = $propToken[$rIndex+1];
+                        break;
+                    }
+                }
+                
+                $referenceReflectionClass = new ReflectionClass($referenceClassName);
+                $referenceProps  = $referenceReflectionClass->getProperties();
+                for ($j = 0 ; $j < count($referenceProps); $j++) {
+                    $prop = $referenceProps[$j];
+                    if( $prop != null ){
+                        $propName = $prop->getName();
+                        if (strpos($propName,'_IGNORE') !== false) {
+                            //skip the ignore
+                        }else{
+                            if(!empty($selectColumn)){
+                                $selectColumn .= ",";
+                            }
+                            $selectColumn .= chr($asciiIndex).".".$propName." as ".chr($asciiIndex)."_".$propName;
+                        }
+                    }
+                }
+                $queryMeta[$referenceClassName] = chr($asciiIndex);
+                $fromStatement .= " inner join ".$referenceClassName." as ".chr($asciiIndex)." on a.".$referenceByName." = ".chr($asciiIndex).".Id";
+            }
+            
+            $joinStatement .= $selectColumn." ".$fromStatement;
+            
+            //construct where statement 
+            if( $additionalParams != null ){
+				$additionalParamIndex = 0;
+				foreach($additionalParams as $valueArr ){
+                    $tableKey = $valueArr["table"];
+                    $asciiLabel = $queryMeta[$tableKey];
+                    
+                    $columnName = $valueArr["column"];
+                    $condition = $valueArr["condition"]; //where statement condition (and/or) (further enhance by not)
+                    
+                    $dynamicParamKey = ":".$asciiLabel."_".$columnName;
+                    
+                    $queryParamValue[$dynamicParamKey] = $valueArr;
+                    
+					if( !empty($whereStatement)){
+						$whereStatement .= " ".$condition;
+					}
+                    
+                    $whereStatement .= " ".$columnName."=".$dynamicParamKey; //update select query
+					
+					$additionalParamIndex++;
+				}
+                
+                if( !empty($whereStatement)){
+                    $joinStatement .= " where ".$whereStatement; //joining where statement
+                }
+			}
+            
+            $joinStatement .= " limit :start , :end"; //limit constraint
+            
+            echo print_r($joinStatement);
+            
+            $result = $dbConn->ExecuteSelectPrepare($joinStatement,$queryParamValue);
+            return $result;
+        }
+        
 		//Get single
 		public function Get($dbConn, $objId){
 			$additionalParams = array(
@@ -225,9 +350,13 @@
 				$prop = $props[$i];
 				if( $prop != null ){
 					$propName = $prop->getName();
-					$propValue = $pdoRecord[$propName];
-					//reflection set value to object
-					$prop->setValue($tempObj, $propValue);
+                    if (strpos($propName,'_IGNORE') !== false) {
+                        //skip if contain _IGNORE custom attribute
+                    }else{
+                        $propValue = $pdoRecord[$propName];
+                        //reflection set value to object
+                        $prop->setValue($tempObj, $propValue);
+                    }
 				}
 			}
 			

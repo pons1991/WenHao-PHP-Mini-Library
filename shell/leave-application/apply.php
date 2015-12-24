@@ -14,14 +14,16 @@
         $toDateObj = datetime::createfromformat('m/d/Y',$toDate);
         $toDateFormat = $toDateObj->format('Y-m-d 00:00:00');
         
-        $dbOpt = $leaveCtrl->ApplyLeave($fromDateFormat, $leaveType, !$halfDay, $remarks, $userId, $userEmail);
-        echo print_r($dbOpt);
-        while( $fromDateFormat !=  $toDateFormat ){
-            $fromDateObj->add(new DateInterval('P1D'));
-            $fromDateFormat = $fromDateObj->format('Y-m-d 00:00:00');
-            
-            $dbOpt = $leaveCtrl->ApplyLeave($fromDateFormat, $leaveType, !$halfDay, $remarks, $userId, $userEmail);
+        $dateIntervalDiff = $toDateObj->diff($fromDateObj);
+        $dateDiff = $dateIntervalDiff->d + 1;
+        
+        //if it is half day, total leave day is 0.5
+        if( $dateDiff == 1 && $halfDay ){
+            $dateDiff = 0.5;
         }
+        
+        $dbOpt = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $dateDiff, $leaveType, $remarks, $userId, $userEmail);
+        echo print_r($dbOpt);
     }
 ?>
 

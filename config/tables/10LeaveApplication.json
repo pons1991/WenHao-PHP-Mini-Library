@@ -23,12 +23,15 @@
 			]
 		},
 		{
-			"Name": "IsFullDay",
-			"Type": "BOOLEAN",
+			"Name": "LeaveTypeId",
+			"Type": "int",
 			"Attributes":[
+				"UNSIGNED",
 				"NOT NULL"
 			],
-			"Constraints":[]
+			"Constraints":[
+				"constraint LeaveApplication_fk_leave_type_id FOREIGN KEY (LeaveTypeId) REFERENCES LeaveType(Id)"
+			]
 		},
 		{
 			"Name": "Remarks",
@@ -39,8 +42,24 @@
 			"Constraints":[]
 		},
 		{
-			"Name": "LeaveDate",
+			"Name": "LeaveDateFrom",
 			"Type": "TIMESTAMP",
+			"Attributes":[
+				"NOT NULL"
+			],
+			"Constraints":[]
+		},
+		{
+			"Name": "LeaveDateTo",
+			"Type": "TIMESTAMP",
+			"Attributes":[
+				"NOT NULL"
+			],
+			"Constraints":[]
+		},
+		{
+			"Name": "TotalLeave",
+			"Type": "DECIMAL(3,1)",
 			"Attributes":[
 				"NOT NULL"
 			],

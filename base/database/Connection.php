@@ -43,7 +43,7 @@
 					$prepareStatement->bindParam($key, $valueArr["value"], $valueArr["type"]);
 				}
 			}
-			
+            
 			$prepareStatement->execute();
 			return $prepareStatement;
 			
