@@ -10,10 +10,14 @@
         var $ApprovedBy;
         
         //Reference class which need will be ignored when constructing the query :)
-        //The naming convention is based on {class name}_IGNORE_REFERENCEBY_{foreign key name}
-        var $LeaveStatus_IGNORE_REFERENCEBY_Status;
-        var $LeaveType_IGNORE_REFERENCEBY_LeaveTypeId;
-        var $AccessUser_IGNORE_REFERENCEBY_UserId;
+        var $LeaveStatus_META = '{"ReferenceBy":"Status","Ignore":"true"}';
+        var $LeaveStatus;
+        
+        var $LeaveType_META = '{"ReferenceBy":"LeaveTypeId","Ignore":"true"}';
+        var $LeaveType;
+        
+        var $AccessUser_META = '{"ReferenceBy":"UserId","Ignore":"true"}';
+        var $AccessUser;
         
         public function IsLeaveDateValid($dbConn, $obj){
             //Temporary comment out for not being used at the moment :)

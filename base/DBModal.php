@@ -186,6 +186,7 @@
             $props  = $currentObjInst->getProperties();
             
             $referenceByList = array();
+            $referenceByListMeta = array();
             $joinStatement = "select ";
             $selectColumn = "";
             $fromStatement = "";
@@ -199,13 +200,31 @@
 				$prop = $props[$i];
 				if( $prop != null ){
 					$propName = $prop->getName();
-                    if (strpos($propName,'_IGNORE') !== false) {
-                        array_push($referenceByList, $propName);
+                    if (strpos($propName,'_META') !== false) {
+                        $explodeToken = explode("_",$propName);
+                        $jsonString = $prop->getValue($this);
+                        $jsonMeta = json_decode($jsonString, true);
+                        array_push($referenceByList, $explodeToken[0]);
+                        $referenceByListMeta[$explodeToken[0]] = $jsonMeta;
                     }else{
-                        if(!empty($selectColumn)){
-                            $selectColumn .= ",";
+                        //check the prop name exists in reference by list?
+                        //direct process if not exists 
+                        if( !in_array($propName, $referenceByList) ){
+                            if(!empty($selectColumn)){
+                                $selectColumn .= ",";
+                            }
+                            $selectColumn .= chr($asciiIndex).".".$propName." as ".chr($asciiIndex)."_".$propName;
+                        }else {
+                            //if meta exists but not reference class
+                            //process if not reference class
+                            $jsonMeta = $referenceByListMeta[$propName];
+                            if( !array_key_exists("ReferenceBy",$jsonMeta ) ){
+                                if(!empty($selectColumn)){
+                                    $selectColumn .= ",";
+                                }
+                                $selectColumn .= chr($asciiIndex).".".$propName." as ".chr($asciiIndex)."_".$propName;
+                            }
                         }
-                        $selectColumn .= chr($asciiIndex).".".$propName." as ".chr($asciiIndex)."_".$propName;
                     }
 				}
 			}
@@ -217,30 +236,43 @@
             for($i = 0 ; $i < count($referenceByList); $i++){
                 $asciiIndex = $asciiIndex + 1;
                 
-                $propToken = explode("_",$referenceByList[$i]);
-                $referenceClassName = $propToken[0];
-                $referenceByName = "";
-                //Get reference by name
-                for($rIndex = 0 ; $rIndex < count($propToken); $rIndex++ ){
-                    if( $propToken[$rIndex] == "REFERENCEBY" ){
-                        $referenceByName = $propToken[$rIndex+1];
-                        break;
-                    }
-                }
+                $referenceClassName = $referenceByList[$i];
+                $referenceByName = $referenceByListMeta[$referenceClassName]["ReferenceBy"];
                 
                 $referenceReflectionClass = new ReflectionClass($referenceClassName);
                 $referenceProps  = $referenceReflectionClass->getProperties();
+                $referenceClassReferenceByList = array();
+                $referenceClassReferenceByListMeta = array();
+                
                 for ($j = 0 ; $j < count($referenceProps); $j++) {
                     $prop = $referenceProps[$j];
                     if( $prop != null ){
                         $propName = $prop->getName();
-                        if (strpos($propName,'_IGNORE') !== false) {
-                            //skip the ignore
+                        if (strpos($propName,'_META') !== false) {
+                            $explodeToken = explode("_",$propName);
+                            $jsonString = $prop->getValue($this);
+                            $jsonMeta = json_decode($jsonString, true);
+                            array_push($referenceClassReferenceByList, $explodeToken[0]);
+                            $referenceClassReferenceByListMeta[$explodeToken[0]] = $jsonMeta;
                         }else{
-                            if(!empty($selectColumn)){
-                                $selectColumn .= ",";
+                            //check the prop name exists in reference by list?
+                            //direct process if not exists 
+                            if( !in_array($propName, $referenceClassReferenceByList) ){
+                                if(!empty($selectColumn)){
+                                    $selectColumn .= ",";
+                                }
+                                $selectColumn .= chr($asciiIndex).".".$propName." as ".chr($asciiIndex)."_".$propName;
+                            }else {
+                                //if meta exists but not reference class
+                                //process if not reference class
+                                $jsonMeta = $referenceClassReferenceByListMeta[$propName];
+                                if( !array_key_exists("ReferenceBy",$jsonMeta ) ){
+                                    if(!empty($selectColumn)){
+                                        $selectColumn .= ",";
+                                    }
+                                    $selectColumn .= chr($asciiIndex).".".$propName." as ".chr($asciiIndex)."_".$propName;
+                                }
                             }
-                            $selectColumn .= chr($asciiIndex).".".$propName." as ".chr($asciiIndex)."_".$propName;
                         }
                     }
                 }
@@ -259,17 +291,13 @@
                     
                     $columnName = $valueArr["column"];
                     $condition = $valueArr["condition"]; //where statement condition (and/or) (further enhance by not)
-                    
                     $dynamicParamKey = ":".$asciiLabel."_".$columnName;
-                    
                     $queryParamValue[$dynamicParamKey] = $valueArr;
                     
 					if( !empty($whereStatement)){
 						$whereStatement .= " ".$condition;
 					}
-                    
                     $whereStatement .= " ".$columnName."=".$dynamicParamKey; //update select query
-					
 					$additionalParamIndex++;
 				}
                 
@@ -279,9 +307,7 @@
 			}
             
             $joinStatement .= " limit :start , :end"; //limit constraint
-            
             echo print_r($joinStatement);
-            
             $result = $dbConn->ExecuteSelectPrepare($joinStatement,$queryParamValue);
             return $result;
         }
