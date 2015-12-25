@@ -1,5 +1,7 @@
 <p><button type="button" class="btn btn-default btn-sm"><a href="?action=edit&id=0">Apply Leave</a></button></p>
-
+<?php
+    echo 'php version: '.phpversion();
+?>
 <div class="table-responsive">
     <table class="table table-striped">
         <thead>
