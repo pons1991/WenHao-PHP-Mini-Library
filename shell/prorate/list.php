@@ -1,0 +1,1 @@
+<p><button type="button" class="btn btn-default btn-sm"><a href="?action=edit&id=0">New Prorate</a></button></p>

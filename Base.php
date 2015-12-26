@@ -28,6 +28,7 @@
     include_once "base/modal/OrgRel.php";
     include_once "base/modal/LeaveStatus.php";
     include_once "base/modal/LeaveType.php";
+    include_once "base/modal/ProRatedLeave.php";
 	include_once "base/modal/LeaveApplication.php";
     
 	//Load controller

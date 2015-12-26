@@ -9,7 +9,24 @@
 			}
 		}
         
-        public function GetLeaves(){
+        public function AddNewProRatedLeave($userid,$year,$proratedString, $email){
+            $newProRatedLeave = new ProRatedLeave;
+            $newProRatedLeave->UserId = $userid;
+            $newProRatedLeave->ProRatedYear = $year;
+            $newProRatedLeave->ProRatedAttributes = $proratedString;
+            $newProRatedLeave->IsActive = true;
+            $newProRatedLeave->CreatedDate = date("Y-m-d H:i:s", time());
+			$newProRatedLeave->CreatedBy = $email;
+			$newProRatedLeave->UpdatedDate = date("Y-m-d H:i:s", time());
+			$newProRatedLeave->UpdatedBy = $email;
+            
+            $dbOptResponse = $newProRatedLeave->Add($this->dbConnection, $newProRatedLeave);
+            $dbOptResponse->OptObj = $newProRatedLeave;
+			
+            return $dbOptResponse;
+        }
+        
+        public function GetLeaveTypes(){
 			$newLeaveType = new LeaveType;
 			return $newLeaveType->Gets($this->dbConnection, 0, 999, null);
 		}

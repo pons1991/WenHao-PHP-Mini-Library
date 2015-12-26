@@ -52,7 +52,7 @@
                 <select id="leaveType" name="leaveType" class="form-control">
                     <option value="-1"> -- Please select -- </option>
                     <?php
-                        foreach( $leaveCtrl->GetLeaves() as $lv ){
+                        foreach( $leaveCtrl->GetLeaveTypes() as $lv ){
                             echo '<option value="'.$lv->Id.'">'.$lv->LeaveName.'</option>';
                         }
                     ?>

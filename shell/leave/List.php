@@ -11,7 +11,7 @@
         </thead>
         <tbody>
                 <?php 
-                    foreach( $leaveCtrl->GetLeaves() as $lv ){
+                    foreach( $leaveCtrl->GetLeaveTypes() as $lv ){
                         echo '<tr>';
                         echo '<td>'.$lv->Id.'</td>';
                         echo '<td>'.$lv->LeaveName.'</td>';
