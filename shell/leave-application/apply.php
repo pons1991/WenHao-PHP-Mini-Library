@@ -23,7 +23,6 @@
         }
         
         $dbOpt = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $dateDiff, $leaveType, $remarks, $userId, $userEmail);
-        echo print_r($dbOpt);
     }
 ?>
 

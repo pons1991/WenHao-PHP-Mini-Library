@@ -1,6 +1,19 @@
 <?php
     $leaveTypeList = $leaveCtrl->GetLeaveTypes();
     
+    $isEditing = false;
+    $editingProRatedLeave = null;
+    $dbOptResp = null;
+    
+    if( isset($_GET["id"]) && $_GET["id"] !== '0' ){
+        //To edit
+        $isEditing = true;
+        $proratedList = $leaveCtrl->GetProRatedLeave($_GET["id"]);
+        if( $proratedList != null && count($proratedList) == 1){
+            $editingProRatedLeave = $proratedList[0];
+        }
+    }
+    
     if (isset($_POST["submit"])){
         $userId = $_POST["userId"];
         $proratedYear = $_POST["proratedYear"];
@@ -16,7 +29,30 @@
         
         $jsonEncodedArray = json_encode($proratedLeaveArray);
         $dbOptResp = $leaveCtrl->AddNewProRatedLeave($userId,$proratedYear,$jsonEncodedArray, $loginCtrl->GetUserName());
-        echo print_r($dbOptResp);
+    }
+    
+    //update
+    if (isset($_POST["update"])){
+        
+        $userId = $_POST["userId"];
+        $proratedYear = $_POST["proratedYear"];
+        
+        $proratedLeaveArray = array();
+        foreach( $leaveTypeList as $lv ){
+            $proratedLeaveTB = $_POST["leaveType".$lv->Id];
+            $proratedLeaveTB = trim($proratedLeaveTB);
+            if( !empty($proratedLeaveTB) ){
+                $proratedLeaveArray[$lv->Id] = $proratedLeaveTB;
+            }
+        }
+        
+        $jsonEncodedArray = json_encode($proratedLeaveArray);
+        
+        $editingProRatedLeave->UserId = $userId;
+        $editingProRatedLeave->ProRatedYear = $proratedYear;
+        $editingProRatedLeave->ProRatedAttributes = $jsonEncodedArray;
+        
+        $dbOptResp = $leaveCtrl->UpdateProRatedLeave($editingProRatedLeave, $loginCtrl->GetUserName());
     }
 ?>
 
@@ -26,6 +62,19 @@
             <div class="alert alert-danger hide" role="alert" id="prorateErrorMessage">
                 <strong>Error: </strong><span></span>
             </div>
+            <?php 
+                if( $dbOptResp != null ){
+                    if( $dbOptResp->OptStatus ){
+                        echo '<div class="alert alert-success" role="alert">';
+                        echo '<span>'.$dbOptResp->OptMessage.'</span>';
+                        echo '</div>';
+                    }else{
+                        echo '<div class="alert alert-danger" role="alert">';
+                        echo '<span>'.$dbOptResp->OptMessage.'</span>';
+                        echo '</div>';
+                    }
+                }
+            ?>
         </div>
     </div>
     
@@ -37,7 +86,11 @@
                     <option value="-1"> -- Please select -- </option>
                     <?php
                         foreach( $userCtrl->GetUsers() as $usr ){
-                            echo '<option value="'.$usr->Id.'">'.$usr->Email.'</option>';
+                            if( $isEditing && $editingProRatedLeave->UserId == $usr->Id ){
+                                echo '<option value="'.$usr->Id.'" selected>'.$usr->Email.'</option>';
+                            }else{
+                                echo '<option value="'.$usr->Id.'">'.$usr->Email.'</option>';
+                            }
                         }
                     ?>
                 </select>
@@ -52,9 +105,16 @@
                 <select id="proratedYear" name="proratedYear" class="form-control">
                         <option value="-1"> -- Please select -- </option>
                         <?php
+                            if( $isEditing && $editingProRatedLeave->ProRatedYear != date("Y")){
+                                echo '<option value="'.$editingProRatedLeave->ProRatedYear.'" selected>'.$editingProRatedLeave->ProRatedYear.'</option>';
+                            }
                             for( $i = 0 ; $i < 5 ; $i++ ){
                                 $tempYear = date("Y", strtotime('+'.$i.' years'));
-                                echo '<option value="'.$tempYear.'">'.$tempYear.'</option>';
+                                if( $isEditing &&  $editingProRatedLeave->ProRatedYear == $tempYear ){
+                                    echo '<option value="'.$tempYear.'" selected>'.$tempYear.'</option>';
+                                }else{
+                                    echo '<option value="'.$tempYear.'">'.$tempYear.'</option>';
+                                }
                             }
                         ?>
                     </select>
@@ -67,11 +127,22 @@
             <div class="col-sm-2"><label for="leaveType">Leave Type </label></div>
             <div class="col-sm-5">
                 <?php
+                    $editingProratedDecodedArray = null;
+                    if( $isEditing ){
+                        $editingProratedDecodedArray = json_decode($editingProRatedLeave->ProRatedAttributes,true);
+                    }
                         foreach( $leaveTypeList as $lv ){
                             echo '<div class="row">';
                             echo '<div class="col-sm-12 form-group">';
                             echo '<div class="col-sm-6"><label for="">'.$lv->LeaveName.'</label></div>';
-                            echo '<div class="col-sm-6"><input type="text" class="form-control leaveTypeTB" id="leaveType'.$lv->Id.'" name="leaveType'.$lv->Id.'" /></div>';
+                            echo '<div class="col-sm-6">';
+                            if( $isEditing && array_key_exists($lv->Id,$editingProratedDecodedArray ) ){
+                                $proratedValue = $editingProratedDecodedArray[$lv->Id];
+                                echo '<input type="text" class="form-control leaveTypeTB" value="'.$proratedValue.'" id="leaveType'.$lv->Id.'" name="leaveType'.$lv->Id.'" />';
+                            }else{
+                                echo '<input type="text" class="form-control leaveTypeTB" id="leaveType'.$lv->Id.'" name="leaveType'.$lv->Id.'" />';
+                            }
+                            echo '</div>';
                             echo '</div>';
                             echo '</div>';
                         }
@@ -84,7 +155,13 @@
         <div class="col-sm-12 form-group">
             <div class="col-sm-2"></div>
             <div class="col-sm-5">
-                <button class="btn btn-primary btn-sm" id="submit" name="submit" type="submit" onclick="return ValidateProRateForm();">Apply</button>
+                <?php 
+                    if($isEditing){
+                        echo '<button class="btn btn-primary btn-sm" id="update" name="update" type="submit" onclick="return ValidateProRateForm();">Update</button>';
+                    }else{
+                        echo '<button class="btn btn-primary btn-sm" id="submit" name="submit" type="submit" onclick="return ValidateProRateForm();">Apply</button>';
+                    }
+                ?>
                 <button class="btn btn-danger btn-sm" type="button">Cancel</button>
             </div>
         </div>

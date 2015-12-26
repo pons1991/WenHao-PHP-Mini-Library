@@ -26,6 +26,35 @@
             return $dbOptResponse;
         }
         
+        public function GetProRatedLeave($id){
+            $newProRatedLeave = new ProRatedLeave;
+            
+            $additionalParams = array(
+                array('table' => 'ProRatedLeave', 'column' => 'Id', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
+		    );
+            
+            $returnProRatedLeave = $newProRatedLeave->Gets($this->dbConnection,0, 1, $additionalParams);
+			return $returnProRatedLeave;
+        }
+        
+        public function UpdateProRatedLeave($obj, $currentUser){
+            $dbOpt = new DbOpt;
+			$dbOpt->OptStatus = true;
+			$dbOpt->OptMessage = "Done";
+			
+			if( $obj != null ){
+				$obj->UpdatedDate = date("Y-m-d H:i:s", time());
+				$obj->UpdatedBy = $currentUser;
+				
+				$dbOpt = $obj->Update($this->dbConnection, $obj);
+			}else{
+				$dbOpt->OptStatus = false;
+				$dbOpt->OptMessage = "Error when updating pro rated leave";
+			}
+			
+			return $dbOpt;
+        }
+        
         public function GetLeaveTypes(){
 			$newLeaveType = new LeaveType;
 			return $newLeaveType->Gets($this->dbConnection, 0, 999, null);

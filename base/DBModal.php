@@ -263,9 +263,6 @@
         }
         
         public function ConstructWhere($additionalParams,$queryMeta,&$queryParamValue){
-            echo print_r($additionalParams)."<br/>";
-            echo print_r($queryMeta)."<br/>";
-            
             $whereStatement = "";
             $additionalParamIndex = 0;
 				foreach($additionalParams as $valueArr ){
