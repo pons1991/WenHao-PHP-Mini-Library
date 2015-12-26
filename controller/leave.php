@@ -21,10 +21,7 @@
                 array('table' => 'LeaveApplication', 'column' => 'UserId', 'value' => $userId, 'type' => PDO::PARAM_INT, 'condition' => 'and')
 		    );
 			
-			$returnLeave = $newLeaveApplication->GetByQuery($this->dbConnection,0, 999, $additionalParams);
-            
-            echo print_r($returnLeave);
-            
+			$returnLeave = $newLeaveApplication->Gets($this->dbConnection,0, 999, $additionalParams);
 			return $returnLeave;
         }
         
