@@ -6,6 +6,7 @@
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Roles','/shell/role/roles.php',1,1,1,now(),'admin',now(),'admin')",
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Access','/shell/access/access.php',1,1,1,now(),'admin',now(),'admin')",
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Leave','/shell/leave/index.php',1,1,1,now(),'admin',now(),'admin')",
+        "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Pro Rate Leave','/shell/leave-application/prorate.php',1,1,1,now(),'admin',now(),'admin')",
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Leave Application','/shell/leave-application/index.php',1,1,1,now(),'admin',now(),'admin')",
 		"insert into AccessUser (Email,Password,CustomAttribute,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('admin@gmail.com','admin','',1,now(),'admin',now(),'admin')",
         "insert into AccessUser (Email,Password,CustomAttribute,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('wenhao.mui@gmail.com','wenhao','',1,now(),'admin',now(),'admin')",

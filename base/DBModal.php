@@ -110,18 +110,30 @@
 					
 					for ($i = 0 ; $i < count($props); $i++) {
 						$prop = $props[$i];
-						if( $prop->getName() == "Id" ){
-							//skip
-						}else{
-                            if (strpos($prop->getName(),'_IGNORE') !== false) {
-                                //skip if contain _IGNORE custom attribute
-                            }else{
+                        
+                        $propName = $prop->getName();
+                        if (strpos($propName,'_META') !== false) {
+                            //skip if contain _META custom attribute
+                        }else{
+                            if( !array_key_exists($propName,$metaValue) ){
                                 if( !empty($updateSqlFieldStr)){
                                     $updateSqlFieldStr = $updateSqlFieldStr.",";
                                 }
                                 $updateSqlFieldStr = $updateSqlFieldStr." ".$prop->getName()."='".$prop->getValue($obj)."'";
+                            }else{
+                                $jsonMeta = $metaValue[$propName];
+                                if( array_key_exists("ReferenceBy",$jsonMeta) ){
+                                    //skip
+                                }else if(array_key_exists("PrimaryKey",$jsonMeta) ){
+                                    //skip
+                                }else{
+                                    if( !empty($updateSqlFieldStr)){
+                                        $updateSqlFieldStr = $updateSqlFieldStr.",";
+                                    }
+                                    $updateSqlFieldStr = $updateSqlFieldStr." ".$prop->getName()."='".$prop->getValue($obj)."'";
+                                }
                             }
-						}
+                        }
 					}
 					
 					//Combine update query with field query
@@ -251,6 +263,9 @@
         }
         
         public function ConstructWhere($additionalParams,$queryMeta,&$queryParamValue){
+            echo print_r($additionalParams)."<br/>";
+            echo print_r($queryMeta)."<br/>";
+            
             $whereStatement = "";
             $additionalParamIndex = 0;
 				foreach($additionalParams as $valueArr ){

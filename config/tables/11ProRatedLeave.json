@@ -1,0 +1,74 @@
+{
+	"TableName": "ProRatedLeave",
+	"Properties":[
+		{
+			"Name": "Id",
+			"Type": "int",
+			"Attributes":[
+				"UNSIGNED",
+				"AUTO_INCREMENT",
+				"PRIMARY KEY"
+			],
+			"Constraints":[]
+		},
+		{
+			"Name": "UserId",
+			"Type": "int",
+			"Attributes":[
+				"UNSIGNED",
+				"NOT NULL"
+			],
+			"Constraints":[
+				"constraint ProRatedLeave_fk_access_user_id FOREIGN KEY (UserId) REFERENCES AccessUser(Id)"
+			]
+		},
+		{
+			"Name": "ProRatedAttributes",
+			"Type": "text",
+			"Attributes":[
+				"NOT NULL"
+			],
+			"Constraints":[]
+		},
+		{
+			"Name": "IsActive",
+			"Type": "BOOLEAN",
+			"Attributes":[
+				"NOT NULL"
+			],
+			"Constraints":[]
+		},
+		{
+			"Name": "CreatedDate",
+			"Type": "TIMESTAMP",
+			"Attributes":[
+				"NOT NULL"
+			],
+			"Constraints":[]
+		},
+		{
+			"Name": "CreatedBy",
+			"Type": "varchar(100)",
+			"Attributes":[
+				"NOT NULL"
+			],
+			"Constraints":[]
+		},
+		{
+			"Name": "UpdatedDate",
+			"Type": "TIMESTAMP",
+			"Attributes":[
+				"NOT NULL"
+			],
+			"Constraints":[]
+		},
+		{
+			"Name": "UpdatedBy",
+			"Type": "varchar(100)",
+			"Attributes":[
+				"NOT NULL"
+			],
+			"Constraints":[]
+		}
+	]
+}
