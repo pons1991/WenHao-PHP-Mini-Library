@@ -19,11 +19,9 @@
     
 	//Load modal
 	include_once "base/modal/AccessUser.php";
-	include_once "base/modal/AccessRole.php";
 	include_once "base/modal/Role.php";
 	include_once "base/modal/RoleLeave.php";
 	include_once "base/modal/UserRole.php";
-	include_once "base/modal/AccessUserRole.php";
     include_once "base/modal/Page.php";
     include_once "base/modal/OrgRel.php";
     include_once "base/modal/LeaveStatus.php";

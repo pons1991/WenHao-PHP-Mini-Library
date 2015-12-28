@@ -19,7 +19,7 @@
 				"NOT NULL"
 			],
 			"Constraints":[
-				"constraint LeaveApplication_fk_user_id FOREIGN KEY (UserId) REFERENCES AccessRole(Id)"
+				"constraint LeaveApplication_fk_user_id FOREIGN KEY (UserId) REFERENCES AccessUser(Id)"
 			]
 		},
 		{

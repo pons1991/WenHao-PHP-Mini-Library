@@ -15,7 +15,7 @@
 			$loginResp = $loginCtrl->VerifyUser($email,$password);
 			
             if( $loginResp-> OptStatus){
-                Redirection($GLOBALS["DOMAIN_NAME"]);
+                Redirection($GLOBALS["MAIN_PAGE"]);
             }else{
                 $loginPageErrorMessage = $loginResp->OptMessage;
             }

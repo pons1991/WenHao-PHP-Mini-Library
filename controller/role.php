@@ -77,7 +77,7 @@
                 array('table' => 'RoleLeave', 'column' => 'Id', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
 		    );
 			
-			$returnLeave = $newRoleLeave->Gets($this->dbConnection,0, 999, $additionalParams);
+			$returnLeave = $newRoleLeave->Gets($this->dbConnection,0, 1, $additionalParams);
 			return $returnLeave;
         }
 		
@@ -88,7 +88,7 @@
                 array('table' => 'UserRole', 'column' => 'UserId', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
 		    );
 			
-			$returnRoleLeave = $newUserRole->Gets($this->dbConnection,0, 999, $additionalParams);
+			$returnRoleLeave = $newUserRole->Gets($this->dbConnection,0, 1, $additionalParams);
 			return $returnRoleLeave;
         }
         

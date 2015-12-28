@@ -1,4 +1,6 @@
 <?php
+
+    echo '<p>'.print_r($userCtrl->GetOrgRel()).'</p>';
 	$editingUser = false;
 	$editingUserId = 0;
 	$getUser = null;

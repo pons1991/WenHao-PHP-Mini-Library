@@ -24,7 +24,7 @@
 				print_r($dbOptLogin);
 				
 				if( $dbOptLogin->OptStatus ){
-					Redirection($GLOBALS["DOMAIN_NAME"]);
+					Redirection($GLOBALS["MAIN_PAGE"]);
 				}
 			}else{
 				echo $dbOpt->OptMessage;

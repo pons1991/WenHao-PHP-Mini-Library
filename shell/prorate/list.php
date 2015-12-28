@@ -1,4 +1,4 @@
-<p><button type="button" class="btn btn-default btn-sm"><a href="?action=edit&id=0">New Prorate</a></button></p>
+<p><a href="?action=edit&id=0"><button type="button" class="btn btn-default btn-sm">Apply Leave</button></a></p>
 
 <div class="table-responsive">
     <table class="table table-striped">

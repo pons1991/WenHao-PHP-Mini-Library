@@ -363,11 +363,23 @@
                 
                 $referenceClassName = $referenceByList[$i];
                 if( array_key_exists("ReferenceBy",$referenceByListMeta[$referenceClassName] ) ){
+                    
+                    //reference table is used to hold the meta reference table
+                    //in fact, when store into $queryMeta, use the original variable name
+                    //this is to avoid further code changes :)
+                    $referenceTable = $referenceClassName;
+                    if( array_key_exists("table",$referenceByListMeta[$referenceClassName] ) ){
+                        $referenceTable = $referenceByListMeta[$referenceClassName]["table"];
+                    }
+                    
                     $referenceByName = $referenceByListMeta[$referenceClassName]["ReferenceBy"];
-                    $tempSelectStr = $this->ConstructReferenceQueryString($asciiIndex,$referenceClassName,$referenceByName);
+                    $tempSelectStr = $this->ConstructReferenceQueryString($asciiIndex,$referenceTable,$referenceByName);
                     $selectColumn = empty($selectColumn) ? ($tempSelectStr) : ($selectColumn.",".$tempSelectStr);
-                    $queryMeta[$referenceClassName] = chr($asciiIndex);
-                    $fromStatement .= " inner join ".$referenceClassName." as ".chr($asciiIndex)." on a.".$referenceByName." = ".chr($asciiIndex).".Id";
+                    //$queryMeta[$referenceClassName] = chr($asciiIndex);
+                    $queryMeta[$referenceTable] = chr($asciiIndex);
+                    
+                    //Variable name can different from table name
+                    $fromStatement .= " inner join ".$referenceTable." as ".chr($asciiIndex)." on a.".$referenceByName." = ".chr($asciiIndex).".Id";
                 }else{
                     $asciiIndex = $asciiIndex - 1;
                 }
@@ -385,12 +397,16 @@
             
             $joinStatement .= " order by ".$queryMeta[$className].".Id desc ";
             $joinStatement .= " limit :start , :end"; //limit constraint
+            
             $result = $dbConn->ExecuteSelectPrepare($joinStatement,$queryParamValue);
             
             
             if( $result != null ){
 				//Loop through the array of records
 				foreach($result as $k=>$v){
+                    
+                    //$referenceByListMeta stores all the meta value
+                    //$queryMeta stores all the ascii index
 					$tempObj = $this->Conversion($v,$referenceByList,$referenceByListMeta,$queryMeta);
 					array_push($arrayObject, $tempObj);
 				}
@@ -421,9 +437,18 @@
                                 //reflection set value to object
                                 $prop->setValue($tempObj, $propValue);
                             }else{
-                                $tempReflectionObj = $this->ReferenceConversion($pdoRecord,$propName,$queryMeta);
-                                //reference object assignment to the base object
-                                $prop->setValue($tempObj, $tempReflectionObj);
+                                
+                                if( !array_key_exists("table",$metaValue[$propName] ) ){
+                                    $tempReflectionObj = $this->ReferenceConversion($pdoRecord,$propName,$queryMeta);
+                                    //reference object assignment to the base object
+                                    $prop->setValue($tempObj, $tempReflectionObj);
+                                }else{
+                                    $tempPropName = $metaValue[$propName]["table"];
+                                    echo print_r($tempPropName);
+                                    $tempReflectionObj = $this->ReferenceConversion($pdoRecord,$tempPropName,$queryMeta);
+                                    //reference object assignment to the base object
+                                    $prop->setValue($tempObj, $tempReflectionObj);
+                                }
                             }
                         }else{
                             $pdoTitle = $queryMeta[$className]."_".$propName;

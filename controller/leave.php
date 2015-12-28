@@ -127,12 +127,14 @@
             return $dbOptResponse;
         }
         
-        public function GetLeaveApplication($userid, $year){
+        public function GetNonRejectedLeaveApplication($userid, $year){
             $newLeaveApplication = new LeaveApplication;
             
             $additionalParams = array(
                 array('table' => 'LeaveApplication', 'column' => 'UserId', 'value' => $userid, 'type' => PDO::PARAM_INT, 'condition' => 'and'),
-                array('table' => 'LeaveApplication', 'column' => 'LeaveDateFrom', 'value' => '%'.$year.'%', 'operator' => 'like', 'type' => PDO::PARAM_INT, 'condition' => 'and')
+                array('table' => 'LeaveApplication', 'column' => 'Status', 'value' => 1, 'type' => PDO::PARAM_INT, 'condition' => 'or'),
+                array('table' => 'LeaveApplication', 'column' => 'Status', 'value' => 2, 'type' => PDO::PARAM_INT, 'condition' => 'or'),
+                array('table' => 'LeaveApplication', 'column' => 'LeaveDateFrom', 'value' => '%'.$year.'%', 'operator' => 'like', 'type' => PDO::PARAM_STR, 'condition' => 'and')
 		    );
 			
 			$returnLeave = $newLeaveApplication->Gets($this->dbConnection,0, 999, $additionalParams);

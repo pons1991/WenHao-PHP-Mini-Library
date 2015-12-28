@@ -1,7 +1,6 @@
 <?php
 
     $dbOptResp = null;
-    echo '<p>'.print_r($leaveCtrl->GetLeaveApplication($loginCtrl->GetUserId(), date('Y'))).'</p>';
 
     if (isset($_POST["submit"])){
         $fromDate = $_POST["datepickerFrom"];
@@ -27,37 +26,48 @@
         }
         
         //validation on pro rated leave
+        $appliedLeave = $leaveCtrl->GetNonRejectedLeaveApplication($loginCtrl->GetUserId(), date('Y'));
+        $totalAppliedDay = 0.0;
+        if( count($appliedLeave) > 0 ){
+            foreach($appliedLeave as $la ){
+                $totalAppliedDay += $la->TotalLeave;
+            }
+        }
+        
         $proRatedList = $leaveCtrl->GetProRatedLeaveByUserIdAndYear($loginCtrl->GetUserId(), date('Y'));
         if( $proRatedList != null && count($proRatedList) == 1 ){
             $proRated = $proRatedList[0];
             $proRatedLeaveArray = json_decode($proRated->ProRatedAttributes, true);
             
             $leaveTypeNumber = $proRatedLeaveArray[$leaveType];
-            if( $dateDiff > $leaveTypeNumber ){
+            if ( ($totalAppliedDay + $dateDiff) > $leaveTypeNumber){
                 //error
                 $dbOptResp = new DbOpt;
                 $dbOptResp->OptStatus = false;
                 $dbOptResp->OptMessage = 'Your applied leave has exceed your available leave';
             }else{
                 //proceed
-                $dbOpt = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $dateDiff, $leaveType, $remarks, $userId, $userEmail);
+                $dbOptResp = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $dateDiff, $leaveType, $remarks, $userId, $userEmail);
             }
         }else{
             //validation on role leave
-            $roleLeaveList = $roleCtrl->GetRoleLeaveByUserId($loginCtrl->GetUserId());
-            if( $roleLeaveList != null && count($roleLeaveList) == 1 ){
-                $roleLeave = $roleLeaveList[0];
-                $roleLeaveArray = json_decode($roleLeave->LeaveAttribute, true);
-                
-                $leaveTypeNumber = $roleLeaveArray[$leaveType];
-                if( $dateDiff > $leaveTypeNumber ){
-                    //error
-                    $dbOptResp = new DbOpt;
-                    $dbOptResp->OptStatus = false;
-                    $dbOptResp->OptMessage = 'Your applied leave has exceed your available leave';
-                }else{
-                    //proceed
-                    $dbOpt = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $dateDiff, $leaveType, $remarks, $userId, $userEmail);
+            $userRoleList = $roleCtrl->GetRoleLeaveByUserId($loginCtrl->GetUserId());
+            if( $userRoleList != null && count($userRoleList) == 1 ){
+                $userRole = $userRoleList[0];
+                $roleLeaveList = $roleCtrl->GetRoleLeaveById($userRole->Role->Id);
+                if( $roleLeaveList != null && count($roleLeaveList) == 1 ){
+                    $roleLeave = $roleLeaveList[0];
+                    $roleLeaveArray = json_decode($roleLeave->LeaveAttribute, true);
+                    $leaveTypeNumber = $roleLeaveArray[$leaveType];
+                    if( ($totalAppliedDay + $dateDiff) > $leaveTypeNumber ){
+                        //error
+                        $dbOptResp = new DbOpt;
+                        $dbOptResp->OptStatus = false;
+                        $dbOptResp->OptMessage = 'Your applied leave has exceed your available leave';
+                    }else{
+                        //proceed
+                        $dbOptResp = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $dateDiff, $leaveType, $remarks, $userId, $userEmail);
+                    }
                 }
             }
         }
