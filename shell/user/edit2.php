@@ -15,7 +15,6 @@
         $userRoleList = $roleCtrl->GetRoleLeaveByUserId($_GET["id"]);
         if( $userRoleList != null && count($userRoleList) == 1){
             $editingUserRole = $userRoleList[0];
-            echo print_r($editingUserRole);
         } 
     }
    
