@@ -9,6 +9,23 @@
 			}
 		}
 		
+        public function AddNewRoleLeave($roleid, $leaveString, $email){
+            
+            $newRoleLeave = new RoleLeave;
+            $newRoleLeave->RoleId = $roleid;
+            $newRoleLeave->LeaveAttribute = $leaveString;
+            $newRoleLeave->IsActive = true;
+            $newRoleLeave->CreatedDate = date("Y-m-d H:i:s", time());
+			$newRoleLeave->CreatedBy = $email;
+			$newRoleLeave->UpdatedDate = date("Y-m-d H:i:s", time());
+			$newRoleLeave->UpdatedBy = $email;
+            
+            $dbOptResponse = $newRoleLeave->Add($this->dbConnection, $newRoleLeave);
+            $dbOptResponse->OptObj = $newRoleLeave;
+			
+            return $dbOptResponse;
+		}
+        
 		public function NewRole($rolename, $createdby){
 			
 			$newRole = new Role;
@@ -46,10 +63,16 @@
 			return $newRole->Gets($this->dbConnection, 0, 999, null);
 		}
 		
-		public function GetRoleById($id){
-			$newRole = new Role;
-			return $newRole->Get($this->dbConnection,$id);
-		}
+        public function GetRoleLeaveById($id){
+            $newRoleLeave = new RoleLeave;
+            
+            $additionalParams = array(
+                array('table' => 'RoleLeave', 'column' => 'Id', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
+		    );
+			
+			$returnLeave = $newRoleLeave->Gets($this->dbConnection,0, 999, $additionalParams);
+			return $returnLeave;
+        }
 		
 		public function GetRoleByUserId($id){
 			$additionalParams = array(
@@ -59,14 +82,12 @@
 			return $userRole->Gets($this->dbConnection,0, 1, $additionalParams);
 		}
 		
-		public function UpdateRole($roleObj, $roleId, $currentUser){
+		public function UpdateRole($roleObj, $currentUser){
 			$dbOpt = new DbOpt;
 			$dbOpt->OptStatus = true;
 			$dbOpt->OptMessage = "Done";
 			
 			if( $roleObj != null ){
-				$roleObj->RoleId = $roleId;
-				
 				$roleObj->UpdatedDate = date("Y-m-d H:i:s", time());
 				$roleObj->UpdatedBy = $currentUser;
 				
@@ -78,5 +99,23 @@
 			
 			return $dbOpt;
 		}
+        
+        public function UpdateRoleLeave($obj, $currentUser){
+            $dbOpt = new DbOpt;
+			$dbOpt->OptStatus = true;
+			$dbOpt->OptMessage = "Done";
+			
+			if( $obj != null ){
+				$obj->UpdatedDate = date("Y-m-d H:i:s", time());
+				$obj->UpdatedBy = $currentUser;
+				
+				$dbOpt = $obj->Update($this->dbConnection, $obj);
+			}else{
+				$dbOpt->OptStatus = false;
+				$dbOpt->OptMessage = "Error when updating role leave";
+			}
+			
+			return $dbOpt;
+        }
 	}
 ?>

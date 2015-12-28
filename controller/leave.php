@@ -9,6 +9,20 @@
 			}
 		}
         
+        public function GetRoleLeaveList(){
+            $newRoleLeave = new RoleLeave;
+            
+            $returnRoleLeave = $newRoleLeave->Gets($this->dbConnection,0, 999, null);
+			return $returnRoleLeave;
+        }
+        
+        public function GetProRatedLeaveList(){
+            $newProRatedLeave = new ProRatedLeave;
+            
+            $returnProRatedLeave = $newProRatedLeave->Gets($this->dbConnection,0, 999, null);
+			return $returnProRatedLeave;
+        }
+        
         public function AddNewProRatedLeave($userid,$year,$proratedString, $email){
             $newProRatedLeave = new ProRatedLeave;
             $newProRatedLeave->UserId = $userid;

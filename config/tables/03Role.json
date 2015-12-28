@@ -20,15 +20,6 @@
 			"Constraints":[]
 		},
 		{
-			"Name": "RolePriority",
-			"Type": "int",
-			"Attributes":[
-                "UNSIGNED",
-				"NOT NULL"
-			],
-			"Constraints":[]
-		},
-		{
 			"Name": "IsActive",
 			"Type": "BOOLEAN",
 			"Attributes":[

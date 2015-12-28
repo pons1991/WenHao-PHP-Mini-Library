@@ -277,7 +277,7 @@
 					if( !empty($whereStatement)){
 						$whereStatement .= " ".$condition;
 					}
-                    $whereStatement .= " ".$columnName."=".$dynamicParamKey; //update select query
+                    $whereStatement .= " ".$asciiLabel.".".$columnName."=".$dynamicParamKey; //update select query
 					$additionalParamIndex++;
 				}
             return $whereStatement;
@@ -377,6 +377,7 @@
                 }
 			}
             
+            $joinStatement .= " order by ".$queryMeta[$className].".Id desc ";
             $joinStatement .= " limit :start , :end"; //limit constraint
             $result = $dbConn->ExecuteSelectPrepare($joinStatement,$queryParamValue);
             

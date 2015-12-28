@@ -23,23 +23,13 @@
 			]
 		},
 		{
-			"Name": "LeaveTypeId",
-			"Type": "int",
+			"Name": "LeaveAttribute",
+			"Type": "text",
 			"Attributes":[
-				"UNSIGNED",
 				"NOT NULL"
 			],
 			"Constraints":[
-				"constraint RoleLeave_fk_leave_type_id FOREIGN KEY (LeaveTypeId) REFERENCES LeaveType(Id)"
 			]
-		},
-		{
-			"Name": "NumberOfLeave",
-			"Type": "int",
-			"Attributes":[
-				"NOT NULL"
-			],
-			"Constraints":[]
 		},
 		{
 			"Name": "IsActive",

@@ -1,33 +1,146 @@
 <?php
-	if (isset($_POST["submit"])){
-		$rolename = $_POST["rolename"];
-		$roleleave = $_POST["roleleave"];
-		
-		if( !empty($rolename) && !empty($roleleave)){
-			
-			
-			$roleCtrl = new RoleController($dbConn);
-			$dbOpt = $roleCtrl->NewRole($rolename ,$loginCtrl->GetUserName());
+    $leaveTypeList = $leaveCtrl->GetLeaveTypes();
+    
+    $isEditing = false;
+    $editingRoleLeave = null;
+    $dbOptResp = null;
+    
+    if( isset($_GET["id"]) && $_GET["id"] !== '0' ){
+        //To edit
+        $isEditing = true;
+        $roleLeaveList = $roleCtrl->GetRoleLeaveById($_GET["id"]);
+        if( $roleLeaveList != null && count($roleLeaveList) == 1){
+            $editingRoleLeave = $roleLeaveList[0];
+        }
+    }
+    
+    if (isset($_POST["submit"])){
+        $roleName = $_POST["roleName"];
+        
+        if( !empty($roleName) ){
+			$dbOpt = $roleCtrl->NewRole($roleName ,$loginCtrl->GetUserName());
 			if( $dbOpt->OptStatus ){
-				$roleleaveCtrl = new RoleLeaveController($dbConn);
-				$dbOptRoleLeave = $roleleaveCtrl->AddNewLeave($dbOpt->OptObj->Id,$roleleave, $loginCtrl->GetUserName() );
-				if( $dbOptRoleLeave->OptStatus ){
-					echo 'success';
-				}else{
-					echo $dbOptRoleLeave->OptMessage;
-				}
-			}
+                echo "Role name ok";
+                $roleLeaveArray = array();
+                foreach( $leaveTypeList as $lv ){
+                    $roleLeaveTB = $_POST["leaveType".$lv->Id];
+                    $roleLeaveTB = trim($roleLeaveTB);
+                    if( !empty($roleLeaveTB) ){
+                        $roleLeaveArray[$lv->Id] = $roleLeaveTB;
+                    }
+                }
+                $jsonEncodedArray = json_encode($roleLeaveArray);
+				$dbOptResp = $roleCtrl->AddNewRoleLeave($dbOpt->OptObj->Id, $jsonEncodedArray, $loginCtrl->GetUserName() );
+			}else{
+                echo "Role name not ok";
+                $dbOptResp = $dbOpt;
+            }
 		}
-	}
+    }
+    
+    //update
+    if (isset($_POST["update"])){
+        $roleName = $_POST["roleName"];
+        //Update role name
+        $editingRole = $editingRoleLeave->Role;
+        
+        if( $roleName != $editingRole->RoleName){
+            $editingRole->RoleName = $roleName;
+            $dbOptResp = $roleCtrl->UpdateRole($editingRole,$loginCtrl->GetUserName() );
+        }
+        $roleLeaveArray = array();
+                foreach( $leaveTypeList as $lv ){
+                    $roleLeaveTB = $_POST["leaveType".$lv->Id];
+                    $roleLeaveTB = trim($roleLeaveTB);
+                    if( !empty($roleLeaveTB) ){
+                        $roleLeaveArray[$lv->Id] = $roleLeaveTB;
+                    }
+                }
+        $jsonEncodedArray = json_encode($roleLeaveArray);
+        $editingRoleLeave->LeaveAttribute = $jsonEncodedArray;
+        $dbOptResp = $roleCtrl->UpdateRoleLeave($editingRoleLeave, $loginCtrl->GetUserName() );
+    }
 ?>
 
-<p>This role edit page</p>
 <form method="post">
-	<label>Role Name</label>
-	<input type="text" name="rolename" id="rolename" required />
-	<br/>
-	<label>Leave number</label>
-	<input type="number" min="1" max="365" name="roleleave" id="roleleave" required />
-	<br/>
-	<input type="submit" name="submit" id="submit" />
+    <div class="row" >
+        <div class="col-sm-12 form-group">
+            <div class="alert alert-danger hide" role="alert" id="prorateErrorMessage">
+                <strong>Error: </strong><span></span>
+            </div>
+            <?php 
+                if( $dbOptResp != null ){
+                    if( $dbOptResp->OptStatus ){
+                        echo '<div class="alert alert-success" role="alert">';
+                        echo '<span>'.$dbOptResp->OptMessage.'</span>';
+                        echo '</div>';
+                    }else{
+                        echo '<div class="alert alert-danger" role="alert">';
+                        echo '<span>'.$dbOptResp->OptMessage.'</span>';
+                        echo '</div>';
+                    }
+                }
+            ?>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <div class="col-sm-2"><label for="user">Role</label></div>
+            <div class="col-sm-5">
+                <?php 
+                    if( $isEditing ){
+                        echo '<input type="text" class="form-control" id="roleName" name="roleName" value="'.$editingRoleLeave->Role->RoleName.'" />';
+                    }else{
+                        echo '<input type="text" class="form-control" id="roleName" name="roleName" />';
+                    }
+                ?>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <div class="col-sm-2"><label for="leaveType">Leave Type </label></div>
+            <div class="col-sm-5">
+                <?php
+                    $editingLeaveDecodedArray = null;
+                    if( $isEditing ){
+                        $editingLeaveDecodedArray = json_decode($editingRoleLeave->LeaveAttribute,true);
+                    }
+                        foreach( $leaveTypeList as $lv ){
+                            echo '<div class="row">';
+                            echo '<div class="col-sm-12 form-group">';
+                            echo '<div class="col-sm-6"><label for="">'.$lv->LeaveName.'</label></div>';
+                            echo '<div class="col-sm-6">';
+                            if( $isEditing && array_key_exists($lv->Id,$editingLeaveDecodedArray ) ){
+                                $leaveValue = $editingLeaveDecodedArray[$lv->Id];
+                                echo '<input type="text" class="form-control leaveTypeTB" value="'.$leaveValue.'" id="leaveType'.$lv->Id.'" name="leaveType'.$lv->Id.'" />';
+                            }else{
+                                echo '<input type="text" class="form-control leaveTypeTB" id="leaveType'.$lv->Id.'" name="leaveType'.$lv->Id.'" />';
+                            }
+                            echo '</div>';
+                            echo '</div>';
+                            echo '</div>';
+                        }
+                ?>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-5">
+                <?php 
+                    if($isEditing){
+                        echo '<button class="btn btn-primary btn-sm" id="update" name="update" type="submit" onclick="return ValidateProRateForm();">Update</button>';
+                    }else{
+                        echo '<button class="btn btn-primary btn-sm" id="submit" name="submit" type="submit" onclick="return ValidateProRateForm();">Apply</button>';
+                    }
+                ?>
+                <button class="btn btn-danger btn-sm" type="button">Cancel</button>
+            </div>
+        </div>
+    </div>
 </form>

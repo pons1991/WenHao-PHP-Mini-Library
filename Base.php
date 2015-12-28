@@ -34,7 +34,6 @@
 	//Load controller
 	include_once "controller/login.php";
 	include_once "controller/role.php";
-	include_once "controller/roleleave.php";
 	include_once "controller/access.php";
 	include_once "controller/user.php";
     include_once "controller/page.php";
