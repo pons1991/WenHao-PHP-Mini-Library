@@ -9,6 +9,13 @@
 			}
 		}
 		
+        public function GetRoleLeaveList(){
+            $newRoleLeave = new RoleLeave;
+            
+            $returnRoleLeave = $newRoleLeave->Gets($this->dbConnection,0, 999, null);
+			return $returnRoleLeave;
+        }
+        
         public function AddNewRoleLeave($roleid, $leaveString, $email){
             
             $newRoleLeave = new RoleLeave;
@@ -74,6 +81,17 @@
 			return $returnLeave;
         }
 		
+        public function GetRoleLeaveByUserId($id){
+            $newUserRole = new UserRole;
+            
+            $additionalParams = array(
+                array('table' => 'UserRole', 'column' => 'UserId', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
+		    );
+			
+			$returnRoleLeave = $newUserRole->Gets($this->dbConnection,0, 999, $additionalParams);
+			return $returnRoleLeave;
+        }
+        
 		public function GetRoleByUserId($id){
 			$additionalParams = array(
 				':UserId' => array('value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and'),

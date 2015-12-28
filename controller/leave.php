@@ -9,13 +9,6 @@
 			}
 		}
         
-        public function GetRoleLeaveList(){
-            $newRoleLeave = new RoleLeave;
-            
-            $returnRoleLeave = $newRoleLeave->Gets($this->dbConnection,0, 999, null);
-			return $returnRoleLeave;
-        }
-        
         public function GetProRatedLeaveList(){
             $newProRatedLeave = new ProRatedLeave;
             
@@ -45,6 +38,29 @@
             
             $additionalParams = array(
                 array('table' => 'ProRatedLeave', 'column' => 'Id', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
+		    );
+            
+            $returnProRatedLeave = $newProRatedLeave->Gets($this->dbConnection,0, 1, $additionalParams);
+			return $returnProRatedLeave;
+        }
+        
+        public function GetProRatedLeaveByUserId($id){
+            $newProRatedLeave = new ProRatedLeave;
+            
+            $additionalParams = array(
+                array('table' => 'ProRatedLeave', 'column' => 'UserId', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
+		    );
+            
+            $returnProRatedLeave = $newProRatedLeave->Gets($this->dbConnection,0, 1, $additionalParams);
+			return $returnProRatedLeave;
+        }
+        
+        public function GetProRatedLeaveByUserIdAndYear($id, $year){
+            $newProRatedLeave = new ProRatedLeave;
+            
+            $additionalParams = array(
+                array('table' => 'ProRatedLeave', 'column' => 'UserId', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and'),
+                array('table' => 'ProRatedLeave', 'column' => 'ProRatedYear', 'value' => $year, 'type' => PDO::PARAM_STR, 'condition' => 'and')
 		    );
             
             $returnProRatedLeave = $newProRatedLeave->Gets($this->dbConnection,0, 1, $additionalParams);
@@ -109,6 +125,18 @@
 			
             
             return $dbOptResponse;
+        }
+        
+        public function GetLeaveApplication($userid, $year){
+            $newLeaveApplication = new LeaveApplication;
+            
+            $additionalParams = array(
+                array('table' => 'LeaveApplication', 'column' => 'UserId', 'value' => $userid, 'type' => PDO::PARAM_INT, 'condition' => 'and'),
+                array('table' => 'LeaveApplication', 'column' => 'LeaveDateFrom', 'value' => '%'.$year.'%', 'operator' => 'like', 'type' => PDO::PARAM_INT, 'condition' => 'and')
+		    );
+			
+			$returnLeave = $newLeaveApplication->Gets($this->dbConnection,0, 999, $additionalParams);
+			return $returnLeave;
         }
         
         public function CheckDuplicateLeave($from, $userId){

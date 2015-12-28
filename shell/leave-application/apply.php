@@ -1,4 +1,8 @@
 <?php
+
+    $dbOptResp = null;
+    echo '<p>'.print_r($leaveCtrl->GetLeaveApplication($loginCtrl->GetUserId(), date('Y'))).'</p>';
+
     if (isset($_POST["submit"])){
         $fromDate = $_POST["datepickerFrom"];
         $toDate = $_POST["datepickerTo"];
@@ -22,7 +26,42 @@
             $dateDiff = 0.5;
         }
         
-        $dbOpt = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $dateDiff, $leaveType, $remarks, $userId, $userEmail);
+        //validation on pro rated leave
+        $proRatedList = $leaveCtrl->GetProRatedLeaveByUserIdAndYear($loginCtrl->GetUserId(), date('Y'));
+        if( $proRatedList != null && count($proRatedList) == 1 ){
+            $proRated = $proRatedList[0];
+            $proRatedLeaveArray = json_decode($proRated->ProRatedAttributes, true);
+            
+            $leaveTypeNumber = $proRatedLeaveArray[$leaveType];
+            if( $dateDiff > $leaveTypeNumber ){
+                //error
+                $dbOptResp = new DbOpt;
+                $dbOptResp->OptStatus = false;
+                $dbOptResp->OptMessage = 'Your applied leave has exceed your available leave';
+            }else{
+                //proceed
+                $dbOpt = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $dateDiff, $leaveType, $remarks, $userId, $userEmail);
+            }
+        }else{
+            //validation on role leave
+            $roleLeaveList = $roleCtrl->GetRoleLeaveByUserId($loginCtrl->GetUserId());
+            if( $roleLeaveList != null && count($roleLeaveList) == 1 ){
+                $roleLeave = $roleLeaveList[0];
+                $roleLeaveArray = json_decode($roleLeave->LeaveAttribute, true);
+                
+                $leaveTypeNumber = $roleLeaveArray[$leaveType];
+                if( $dateDiff > $leaveTypeNumber ){
+                    //error
+                    $dbOptResp = new DbOpt;
+                    $dbOptResp->OptStatus = false;
+                    $dbOptResp->OptMessage = 'Your applied leave has exceed your available leave';
+                }else{
+                    //proceed
+                    $dbOpt = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $dateDiff, $leaveType, $remarks, $userId, $userEmail);
+                }
+            }
+        }
+        
     }
 ?>
 
@@ -33,6 +72,21 @@
             <div class="alert alert-danger hide" role="alert" id="leaveApplicationErrorMessage">
                 <strong>Error: </strong><span></span>
             </div>
+            <?php 
+                if (isset($_POST["submit"])){
+                    if( $dbOptResp != null ){
+                        if( $dbOptResp->OptStatus ){
+                            echo '<div class="alert alert-success" role="alert">';
+                            echo '<span>'.$dbOptResp->OptMessage.'</span>';
+                            echo '</div>';
+                        }else{
+                            echo '<div class="alert alert-danger" role="alert">';
+                            echo '<strong>Error: </strong><span>'.$dbOptResp->OptMessage.'</span>';
+                            echo '</div>';
+                        }
+                    }
+                }
+            ?>
         </div>
     </div>
     
@@ -145,7 +199,10 @@
     }
 
     $(document).ready(function(){
+        var currentYear = (new Date).getFullYear();;
         $('#datepickerFrom').datepicker({
+            minDate: new Date(currentYear, 0, 1),
+            maxDate: new Date(currentYear, 11, 31),
             defaultDate: "+1w",
             changeMonth: true,
             numberOfMonths: 2,
@@ -155,6 +212,8 @@
             }
         });
         $('#datepickerTo').datepicker({
+            minDate: new Date(currentYear, 0, 1),
+            maxDate: new Date(currentYear, 11, 31),
             defaultDate: "+1w",
             changeMonth: true,
             numberOfMonths: 2,

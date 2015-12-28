@@ -277,7 +277,13 @@
 					if( !empty($whereStatement)){
 						$whereStatement .= " ".$condition;
 					}
-                    $whereStatement .= " ".$asciiLabel.".".$columnName."=".$dynamicParamKey; //update select query
+                    
+                    $operator = '=';
+                    if( array_key_exists("operator",$valueArr ) ){
+                        $operator = $valueArr["operator"];
+                    }
+                    
+                    $whereStatement .= " ".$asciiLabel.".".$columnName." ".$operator." ".$dynamicParamKey; //update select query
 					$additionalParamIndex++;
 				}
             return $whereStatement;

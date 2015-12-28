@@ -10,7 +10,7 @@
         </thead>
         <tbody>
                 <?php
-                    $roleLeaveList = $leaveCtrl->GetRoleLeaveList();
+                    $roleLeaveList = $roleCtrl->GetRoleLeaveList();
                     foreach( $roleLeaveList as $roleLeave ){
                         echo '<tr>';
                         echo '<td>'.$roleLeave->Role->RoleName.'</td>';
