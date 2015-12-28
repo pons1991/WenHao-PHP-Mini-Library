@@ -10,7 +10,6 @@
         $userList = $userCtrl->GetUserOrgRel($_GET["id"]);
         if( $userList != null && count($userList) == 1){
             $editingUser = $userList[0];
-            echo print_r($editingUser)."<br/>";
         }
         
         $userRoleList = $roleCtrl->GetRoleLeaveByUserId($_GET["id"]);
@@ -49,7 +48,6 @@
         
 	    $dbOptResp = $userCtrl->UpdateUser($editingUser->User, $email, $password, $userid, $loginCtrl->GetUserName());
 		if( $dbOptResp->OptStatus ){
-            
             $dbOptResp  = $roleCtrl->UpdateRole($editingUserRole, $role,$loginCtrl->GetUserName() );
 		    if( $dbOptResp->OptStatus ){
                 $dbOptResp = $userCtrl->UpdateOrgRel($editingUser,$reportingTo , $loginCtrl->GetUserName());
@@ -138,7 +136,7 @@
                     <option value="-1"> -- Please select -- </option>
                     <?php 
                         foreach($roleCtrl->GetRoles() as $role ){
-                            if( $isEditing && $editingUserRole->RoleId = $role->Id ){
+                            if( $isEditing && $editingUserRole->RoleId == $role->Id ){
                                 echo '<option value="'.$role->Id.'" selected>'.$role->RoleName.'</option>';
                             }else{
                                 echo '<option value="'.$role->Id.'">'.$role->RoleName.'</option>';

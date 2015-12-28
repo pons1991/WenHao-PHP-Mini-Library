@@ -100,12 +100,13 @@
 			return $userRole->Gets($this->dbConnection,0, 1, $additionalParams);
 		}
 		
-		public function UpdateRole($roleObj, $currentUser){
+		public function UpdateRole($roleObj, $roleId, $currentUser){
 			$dbOpt = new DbOpt;
 			$dbOpt->OptStatus = true;
 			$dbOpt->OptMessage = "Done";
 			
 			if( $roleObj != null ){
+                $roleObj->RoleId = $roleId;
 				$roleObj->UpdatedDate = date("Y-m-d H:i:s", time());
 				$roleObj->UpdatedBy = $currentUser;
 				

@@ -72,7 +72,7 @@
                 $obj->UpdatedDate = date("Y-m-d H:i:s", time());
                 $obj->UpdatedBy = $updated;
                 
-				$dbOpt = $usrObj->Update($this->dbConnection, $usrObj);
+				$dbOpt = $obj->Update($this->dbConnection, $obj);
 			}else{
 				$dbOpt->OptStatus = false;
 				$dbOpt->OptMessage = "Error when updating the reporting supervisor";
