@@ -61,7 +61,7 @@
 			$userRole->UpdatedDate = date("Y-m-d H:i:s", time());
 			$userRole->UpdatedBy = $createdby;
 			$dbOpt = $userRole->Add($this->dbConnection, $userRole);
-			
+			$dbOpt->OptObj = $userRole;
 			return $dbOpt;
 		}
 		

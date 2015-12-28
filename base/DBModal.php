@@ -444,7 +444,6 @@
                                     $prop->setValue($tempObj, $tempReflectionObj);
                                 }else{
                                     $tempPropName = $metaValue[$propName]["table"];
-                                    echo print_r($tempPropName);
                                     $tempReflectionObj = $this->ReferenceConversion($pdoRecord,$tempPropName,$queryMeta);
                                     //reference object assignment to the base object
                                     $prop->setValue($tempObj, $tempReflectionObj);

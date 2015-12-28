@@ -9,7 +9,7 @@
 			}
 		}
 		
-		public function RegisterNewUser($email, $password, $userid){
+		public function RegisterNewUser($email, $password, $userid, $createdBy){
 			$dbOpt = new DbOpt;
 			$dbOpt->OptStatus = true;
 			$dbOpt->OptMessage = "Done";
@@ -26,9 +26,9 @@
 				
 				$accessUser->IsActive = true;
 				$accessUser->CreatedDate = date("Y-m-d H:i:s", time());
-				$accessUser->CreatedBy = $email;
+				$accessUser->CreatedBy = $createdBy;
 				$accessUser->UpdatedDate = date("Y-m-d H:i:s", time());
-				$accessUser->UpdatedBy = $email;
+				$accessUser->UpdatedBy = $createdBy;
 				
 				$dbOpt = $accessUser->Add($this->dbConnection, $accessUser);
 				$dbOpt->OptObj = $accessUser;
@@ -40,6 +40,47 @@
 			return $dbOpt;
 		}
 		
+        public function NewOrgRel($userid, $managerid, $createdby){
+            
+            $dbOpt = new DbOpt;
+			$dbOpt->OptStatus = true;
+			$dbOpt->OptMessage = "Success";
+            
+            $newOrgRel = new OrgRel;
+            $newOrgRel->SuperiorUserId = $managerid;
+            $newOrgRel->UserId = $userid;
+            
+            $newOrgRel->IsActive = true;
+	        $newOrgRel->CreatedDate = date("Y-m-d H:i:s", time());
+			$newOrgRel->CreatedBy = $createdby;
+			$newOrgRel->UpdatedDate = date("Y-m-d H:i:s", time());
+			$newOrgRel->UpdatedBy = $createdby;
+            
+            $dbOpt = $newOrgRel->Add($this->dbConnection, $newOrgRel);
+		    $dbOpt->OptObj = $newOrgRel;
+            
+            return $dbOpt;
+        }
+        
+        public function UpdateOrgRel($obj, $reportingTo, $updated){
+            $dbOpt = new DbOpt;
+			$dbOpt->OptStatus = true;
+			$dbOpt->OptMessage = "Success";
+			
+			if( $obj != null ){
+                $obj->SuperiorUserId = $reportingTo;
+                $obj->UpdatedDate = date("Y-m-d H:i:s", time());
+                $obj->UpdatedBy = $updated;
+                
+				$dbOpt = $usrObj->Update($this->dbConnection, $usrObj);
+			}else{
+				$dbOpt->OptStatus = false;
+				$dbOpt->OptMessage = "Error when updating the reporting supervisor";
+			}
+			
+			return $dbOpt;
+        }
+        
 		public function CheckEmailExist($email){
 			$accessUser = new AccessUser;
 			$accessUser->Email = $email;
@@ -57,9 +98,23 @@
 		}
 		
 		public function GetUserById($id){
+            
+            $additionalParams = array(
+                array('table' => 'AccessUser', 'column' => 'Id', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
+		    );
+            
 			$accessUser = new AccessUser;
-			return $accessUser->Get($this->dbConnection,$id);
+			return $accessUser->Gets($this->dbConnection,0, 1, $additionalParams);
 		}
+        
+        public function GetUserOrgRel($id){
+            $additionalParams = array(
+                array('table' => 'OrgRel', 'column' => 'UserId', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
+		    );
+            
+			$newOrgRel = new OrgRel;
+			return $newOrgRel->Gets($this->dbConnection,0, 1, $additionalParams);
+        }
 		
         public function GetOrgRel(){
             $newOrgRel = new OrgRel;
