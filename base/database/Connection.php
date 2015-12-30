@@ -1,6 +1,6 @@
 <?php
 	class Connection{
-		private $ConfigFile = "/config/connectionstring.json";
+		private $ConfigFile;
 		
 		private $ServerName;
 		private $DatabaseName;
@@ -9,6 +9,7 @@
 		private $DbLink;
 		
 		function __construct() {
+            $this->ConfigFile = $GLOBALS["CONNECTION_CONFIG_NAME"];
 			$this->GetConfig();
 		}
 		
@@ -36,17 +37,20 @@
 		}
 		
 		function ExecutePrepare($sqlQuery,$sqlMap){
-			$prepareStatement = $this->DbLink->prepare($sqlQuery);
+            if( $this->DbLink != null ){
+                $prepareStatement = $this->DbLink->prepare($sqlQuery);
 			
-			if( count($sqlMap) > 0 ){
-				foreach($sqlMap as $key => $valueArr ){
-					$prepareStatement->bindParam($key, $valueArr["value"], $valueArr["type"]);
-				}
-			}
-            
-			$prepareStatement->execute();
-			return $prepareStatement;
-			
+                if( count($sqlMap) > 0 ){
+                    foreach($sqlMap as $key => $valueArr ){
+                        $prepareStatement->bindParam($key, $valueArr["value"], $valueArr["type"]);
+                    }
+                }
+                
+                $prepareStatement->execute();
+                return $prepareStatement;
+            }else{
+                return null;
+            }
 		}
 		
 		function ExecuteSelectPrepare($sqlQuery,$sqlMap){

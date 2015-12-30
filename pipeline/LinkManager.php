@@ -1,6 +1,6 @@
 <?php
     function GetFriendlyUrl($relativePath){
-        $hostName = "http://localhost:8888/whLibrary";
+        $hostName = $GLOBALS["DOMAIN_NAME"];
         
         //Further update to construct full url
         if( !empty($relativePath) && $relativePath[0] === '/' ){

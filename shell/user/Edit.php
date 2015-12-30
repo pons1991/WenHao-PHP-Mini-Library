@@ -1,162 +1,245 @@
-<?php
-
-    echo '<p>'.print_r($userCtrl->GetOrgRel()).'</p>';
-	$editingUser = false;
-	$editingUserId = 0;
-	$getUser = null;
-	$getUserRole = null;
-	$getAccessRole = null;
-	
-	if( isset($_GET["id"]) && $_GET["id"] !== '0' ){
-		//edit user
-		$editingUser = true;
-		$editingUserId = $_GET["id"];
-		
-		$getUser = $userCtrl->GetUserById($editingUserId);	//get user by id
-		if( count($getUser) == 1 ){
-			$getUser = $getUser[0];
-			
-			$getUserRole = $roleCtrl->GetRoleByUserId($getUser->Id); //get user role by user id
-			if( count($getUserRole) == 1 ){
-				$getUserRole = $getUserRole[0];
-			}
-			
-			$getAccessRole = $accessCtrl->GetAccessByUserId($getUser->Id); //get user access role by user id
-			if( count($getAccessRole) == 1 ){
-				$getAccessRole = $getAccessRole[0];
-			}
-		}else{
-			//error message, user not found
-		}
-	}
-	
-	if (isset($_POST["submit"])){
+<?php 
+   $dbOptResp = null; 
+   $isEditing = false;
+   $editingUser = null;
+   $editingUserRole = null;
+   
+   if( isset($_GET["id"]) && $_GET["id"] !== '0' ){
+        //To edit
+        $isEditing = true;
+        $userList = $userCtrl->GetUserOrgRel($_GET["id"]);
+        if( $userList != null && count($userList) == 1){
+            $editingUser = $userList[0];
+        }
+        
+        $userRoleList = $roleCtrl->GetRoleLeaveByUserId($_GET["id"]);
+        if( $userRoleList != null && count($userRoleList) == 1){
+            $editingUserRole = $userRoleList[0];
+        } 
+    }
+   
+   if (isset($_POST["submit"])){
 		//create new user
 		$email = $_POST["email"];
 		$password = $_POST["password"];
 		$userid = $_POST["userid"];
-		$position = $_POST["position"];
-		$accessRole = $_POST["accessrole"];
-			
-		if( !empty($email) && !empty($password) && !empty($userid) && !empty($position) && !empty($accessRole)){	
-			if( $getUser != null && isset($_GET["id"]) && $_GET["id"] !== '0' ){
-				//updating existing user
-				$currentUser = $loginCtrl->GetUserName();
-				$usrDbOpt = $userCtrl->UpdateUser($getUser, $email, $password, $userid, $currentUser);
-				if( $usrDbOpt->OptStatus ){
-					echo '<p>Success update user profile</p>';
-				}else{
-					echo '<p>'.$usrDbOpt->OptMessage.'</p>';
-				}
-				
-				//updating role id
-				$roleDbOpt  = $roleCtrl->UpdateRole($getUserRole, $position,$currentUser );
-				if( $roleDbOpt->OptStatus ){
-					echo '<p>Success update user role</p>';
-				}else{
-					echo '<p>'.$roleDbOpt->OptMessage.'</p>';
-				}
-				
-				//updating access role id
-				$accDbOpt = $accessCtrl->UpdateAccess($getAccessRole, $accessRole, $currentUser);
-				if( $accDbOpt->OptStatus ){
-					echo '<p>Success update user access</p>';
-				}else{
-					echo '<p>'.$accDbOpt->OptMessage.'</p>';
-				}
-				
-				
-			}else{
-				$dbOpt = $userCtrl->RegisterNewUser($email, $password, $userid);
-				
-				if( $dbOpt->OptStatus ){
-					//Assign role to users
-					$dbOptRole = $roleCtrl->AssignRoleToUser($dbOpt->OptObj->Id, $position, $loginCtrl->GetUserName());
-					if( $dbOptRole->OptStatus ){
-						echo 'Success assign role <br/>';
-					}else{
-						echo $dbOptRole->OptMessage;
-					}
-					
-					$dbOptAccessRole = $accessCtrl->AssignAccessRoleToUser($dbOpt->OptObj->Id, $accessRole, $loginCtrl->GetUserName());
-					if( $dbOptRole->OptStatus ){
-						echo 'Success assign access role';
-					}else{
-						echo $dbOptRole->OptMessage;
-					}
-					
-				}else{
-					echo $dbOpt->OptMessage;
-				}
-			}	
-		}else{
-			echo 'verify data ! please';
-		}
+		$role = $_POST["role"];
+        $reportingTo = $_POST["reportingTo"];
+		
+		$dbOptResp = $userCtrl->RegisterNewUser($email, $password, $userid,$loginCtrl->GetUserName());
+		if( $dbOptResp->OptStatus ){
+            //Assign role to users
+            $dbOptResp = $roleCtrl->AssignRoleToUser($dbOptResp->OptObj->Id, $role, $loginCtrl->GetUserName());
+            if( $dbOptResp->OptStatus ){
+                //Assign new organization relationship
+                $dbOptResp = $userCtrl->NewOrgRel($dbOptResp->OptObj->Id,$reportingTo,$loginCtrl->GetUserName());
+            }
+        }
 	}
+    
+    //update
+    if (isset($_POST["update"])){
+        $email = $_POST["email"];
+		$password = $_POST["password"];
+		$userid = $_POST["userid"];
+		$role = $_POST["role"];
+        $reportingTo = $_POST["reportingTo"];
+        
+	    $dbOptResp = $userCtrl->UpdateUser($editingUser->User, $email, $password, $userid, $loginCtrl->GetUserName());
+		if( $dbOptResp->OptStatus ){
+            $dbOptResp  = $roleCtrl->UpdateRole($editingUserRole, $role,$loginCtrl->GetUserName() );
+		    if( $dbOptResp->OptStatus ){
+                $dbOptResp = $userCtrl->UpdateOrgRel($editingUser,$reportingTo , $loginCtrl->GetUserName());
+            }
+	    }
+    }
 ?>
 
-<form method="post" >
-			<label for="email">Email</label>
-			<input type="email" name="email" id="email" 
-				value=<?php echo ($getUser != null ? $getUser->Email : "")  ?>
-			></input>
-			<br/>
-			<label for="password">Password</label>
-			<input type="password" name="password" id="password"
-				value=<?php echo ($getUser != null ? $getUser->Password : "")  ?>
-			></input>
-			<br/>
-			<label for="userid">User Id</label>
-			<input type="text" name="userid" id="userid"
-				value=<?php
-					if( $getUser != null && !empty($getUser->CustomAttribute) ){
-						$jsonDecodedArray = json_decode($getUser->CustomAttribute, true);
-						if( !empty($jsonDecodedArray["userid"]) ){
-							echo $jsonDecodedArray["userid"];
-						}else{
-							echo "";
-						}
-					}else{
-						echo "";
-					}
-				?>
-			></input>
-			<br/>
-			<label for="accessrole">Access Role</label>
-			<select name="accessrole" id="accessrole" required>
-				<?php 
-					foreach($accessCtrl->GetAccess() as $access ){
-						if( $getUser != null && $getAccessRole != null && $access->Id == $getAccessRole->RoleId ){
-							echo '<option selected value="'.$access->Id.'">'.$access->RoleName.'</option>';	
-						}else{
-							echo '<option value="'.$access->Id.'">'.$access->RoleName.'</option>';	
-						}
-					}
-				?>
-			</select>
-			<br/>
-			<label for="position">Position</label>
-			<select name="position" id="position" required>
-				<?php 
-					foreach($roleCtrl->GetRoles() as $role ){
-						if( $getUser != null && $getUserRole != null && $role->Id == $getUserRole->RoleId ){
-							echo '<option selected value="'.$role->Id.'">'.$role->RoleName.'</option>';
-						}else{
-							echo '<option value="'.$role->Id.'">'.$role->RoleName.'</option>';
-						}
-						
-					}
-				?>
-			</select>
-			<br/>
+<form method="post">
+    <div class="row" >
+        <div class="col-sm-12 form-group">
+            <div class="alert alert-danger hide" role="alert" id="userErrorMessage">
+                <strong>Error: </strong><span></span>
+            </div>
             <?php 
-                if( isset($_GET["id"]) && $_GET["id"] !== '0' ){
-                    echo '<input type="submit" name="submit" id="submit" value="Update" />';
-                }else{
-                    echo '<input type="submit" name="submit" id="submit" value="Register" />';
+                if( $dbOptResp != null ){
+                    if( $dbOptResp->OptStatus ){
+                        echo '<div class="alert alert-success" role="alert">';
+                        echo '<span>'.$dbOptResp->OptMessage.'</span>';
+                        echo '</div>';
+                    }else{
+                        echo '<div class="alert alert-danger" role="alert">';
+                        echo '<span>'.$dbOptResp->OptMessage.'</span>';
+                        echo '</div>';
+                    }
                 }
             ?>
-			<a href="?action=list">Cancel</a>
-		</form>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <div class="col-sm-2"><label for="userid">User Id</label></div>
+            <div class="col-sm-5">
+                <?php 
+                    if( $isEditing ){
+                        $customAttributeArray = json_decode($editingUser->User->CustomAttribute, true);
+                        if( array_key_exists("userid", $customAttributeArray) ){
+                            echo '<input type="text" class="form-control" name="userid" id="userid" value="'.$customAttributeArray["userid"].'" />';
+                        }else{
+                            echo '<input type="text" class="form-control" name="userid" id="userid" value="" />';
+                        }
+                    }else{
+                        echo '<input type="text" class="form-control" name="userid" id="userid" value="" />';
+                    }
+                ?>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <div class="col-sm-2"><label for="email">Email</label></div>
+            <div class="col-sm-5">
+                <?php 
+                    if( $isEditing ){
+                        echo '<input type="email" class="form-control" name="email" id="email" value="'.$editingUser->User->Email.'" />';
+                    }else{
+                        echo '<input type="email" class="form-control" name="email" id="email" value="" />';
+                    }
+                ?>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <div class="col-sm-2"><label for="password">Password</label></div>
+            <div class="col-sm-5">
+                <?php 
+                    if( $isEditing ){
+                        echo '<input type="password" name="password" id="password" class="form-control" value="'.$editingUser->User->Password.'" />';
+                    }else{
+                        echo '<input type="password" name="password" id="password" class="form-control" />';
+                    }
+                ?>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <div class="col-sm-2"><label for="role">Role</label></div>
+            <div class="col-sm-5">
+                <select name="role" id="role" class="form-control" required>
+                    <option value="-1"> -- Please select -- </option>
+                    <?php 
+                        foreach($roleCtrl->GetRoles() as $role ){
+                            if( $isEditing && $editingUserRole->RoleId == $role->Id ){
+                                echo '<option value="'.$role->Id.'" selected>'.$role->RoleName.'</option>';
+                            }else{
+                                echo '<option value="'.$role->Id.'">'.$role->RoleName.'</option>';
+                            }
+                        }
+                    ?>
+			</select>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <div class="col-sm-2"><label for="reportingTo">Reporting to</label></div>
+            <div class="col-sm-5">
+                <select name="reportingTo" id="reportingTo" class="form-control" required>
+                    <option value="-1"> -- Please select -- </option>
+                    <?php 
+                        foreach($userCtrl->GetUsers() as $user ){
+                            if( $isEditing && $editingUser->SuperiorUserId == $user->Id ){
+                                echo '<option value="'.$user->Id.'" selected>'.$user->Email.'</option>';
+                            }else if($user->Id == $editingUser->UserId){
+                                //skip if current user is editing, avoid showing current user as reporting to
+                            }else{
+                                echo '<option value="'.$user->Id.'">'.$user->Email.'</option>';
+                            }
+                        }
+                    ?>
+			</select>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-5">
+                <?php 
+                    if($isEditing){
+                        echo '<button class="btn btn-primary btn-sm" id="update" name="update" type="submit" onclick="return ValidateUser();">Update</button>';
+                    }else{
+                        echo '<button class="btn btn-primary btn-sm" id="submit" name="submit" type="submit" onclick="return ValidateUser();">Apply</button>';
+                    }
+                ?>
+                <button class="btn btn-danger btn-sm" type="button">Cancel</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    function ValidateUser(){
+        var emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         
- 
+        var userId = $('#userid').val();
+        var email = $('#email').val();
+        var password = $('#password').val();
+        var roleId = $('#role').val();
+        var reportingToId = $('#reportingTo').val();
+        
+        var isValidated = false;
+        
+        userId = userId.trim();
+        $('#userid').val(userId);
+        email = email.trim();
+        $('#email').val(email);
+        
+        if( userId == "" ){
+            ShowErrorMessage('Please insert a valid user id');
+            return isValidated;
+        }
+        
+        if( email == "" ){
+            ShowErrorMessage('Please insert a valid email');
+            return isValidated;
+        }
+        
+        if( !emailRegex.test(email) ){
+            ShowErrorMessage('Please insert a valid email');
+            return isValidated;
+        }
+        
+        if( password == "" ){
+            ShowErrorMessage('Please insert a valid password');
+            return isValidated;
+        }
+        
+        if( roleId == -1 ){
+            ShowErrorMessage('Please select a role');
+            return isValidated;
+        }
+        
+        if( reportingToId == -1 ){
+            ShowErrorMessage('Please select a reporting person');
+            return isValidated;
+        }
+        
+        isValidated = true;
+        
+        return isValidated;
+    }
+    
+    function ShowErrorMessage(errorMessage){
+        $('#userErrorMessage').removeClass('hide');
+        $('#userErrorMessage > span').html(errorMessage);
+    }
+</script>

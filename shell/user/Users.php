@@ -19,7 +19,7 @@
           <h2 class="sub-header">Users</h2>
           <?php 
             if( $action == "edit" ){
-                include_once "edit2.php";
+                include_once "edit.php";
             }else{
                 include_once "list.php";
             }
