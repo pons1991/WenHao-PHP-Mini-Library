@@ -2,36 +2,38 @@
     <div class="panel-heading"><h3 class="panel-title">Pending for approval leave</h3> </div>
     <?php 
         $currentUserId = $loginCtrl->GetUserId();
-        $leaveList = $leaveCtrl->GetLeaveByUserId($currentUserId);
-        if( count($leaveList) > 0 ){
+        $userList = $userCtrl->GetOrgRelBySupervisorId($currentUserId);
+        
+        $userIdList = array();
+        foreach( $userList as $usr ){
+            array_push($userIdList, $usr->UserId);
+        }
+        
+        $pendingApprovalLeave = $leaveCtrl->GetPendingLeaveByUserIds($userIdList);
+        if( $pendingApprovalLeave != null && count($pendingApprovalLeave) > 0 ){
             ?>
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
                             <tr>
+                                <th>By</th>
                                 <th>From</th>
                                 <th>To</th>
                                 <th>Total leave</th>
-                                <th>Status</th>
-                                <th>Approved By</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                                 <?php
-                                    foreach( $leaveList as $usrLeave ){
+                                    foreach( $pendingApprovalLeave as $usrLeave ){
                                         echo '<tr>';
+                                        echo '<td>'.$usrLeave->AccessUser->Email.'</td>';
                                         echo '<td>'.datetime::createfromformat('Y-m-d h:m:s',$usrLeave->LeaveDateFrom)->format('d M Y').'</td>';
                                         echo '<td>'.datetime::createfromformat('Y-m-d h:m:s',$usrLeave->LeaveDateTo)->format('d M Y').'</td>';
                                         echo '<td>'.$usrLeave->TotalLeave.'</td>';
-                                        echo '<td>'.$usrLeave->LeaveStatus->StatusName.'</td>';
-                                        if( $usrLeave->LeaveStatus->Id == 1 ){
-                                            //new status
-                                            echo '<td>&nbsp;</td>';
-                                        }else{
-                                            echo '<td>'.$usrLeave->AccessUser->Email.'</td>';
-                                        }
-                                        echo '<td><button type="button" class="btn btn-default btn-sm"><a href="?action=edit&id='.$usrLeave->Id.'">View</a></button></td>';
+                                        
+                                        $friendlyUrl = GetFriendlyUrl("/shell/leave-application/index.php?action=approval&id=".$usrLeave->Id);
+                                        echo '<td><a href="'.$friendlyUrl.'"><button type="button" class="btn btn-default btn-sm">View</button></a></td>';
                                         echo '</tr>';
                                     }
                                 ?>
@@ -45,4 +47,5 @@
             <?php
         }
     ?>
+    
 </div>

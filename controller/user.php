@@ -121,6 +121,15 @@
             return $newOrgRel->Gets($this->dbConnection, 0,999,null);
         }
         
+        public function GetOrgRelBySupervisorId($id){
+            $additionalParams = array(
+                array('table' => 'OrgRel', 'column' => 'SuperiorUserId', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
+		    );
+            
+			$newOrgRel = new OrgRel;
+			return $newOrgRel->Gets($this->dbConnection,0, 999, $additionalParams);
+        }
+        
 		public function UpdateUser($usrObj, $email, $password, $userid, $currentUser){
 			$dbOpt = new DbOpt;
 			$dbOpt->OptStatus = true;

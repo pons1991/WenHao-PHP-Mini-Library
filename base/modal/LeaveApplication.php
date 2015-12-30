@@ -3,6 +3,7 @@
         var $UserId;
         var $LeaveTypeId;
         var $Remarks;
+        var $SupervisorRemarks;
         var $LeaveDateFrom;
         var $LeaveDateTo;
         var $TotalLeave;
@@ -18,6 +19,9 @@
         
         var $AccessUser_META = '{"ReferenceBy":"UserId","Ignore":"true"}';
         var $AccessUser;
+        
+        var $ApprovedByUser_META = '{"ReferenceBy":"ApprovedBy","Ignore":"true", "table":"AccessUser"}';
+        var $ApprovedByUser;
         
         public function IsLeaveDateValid($dbConn, $obj){
             //Temporary comment out for not being used at the moment :)

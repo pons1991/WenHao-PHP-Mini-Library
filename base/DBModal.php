@@ -264,6 +264,7 @@
         
         public function ConstructWhere($additionalParams,$queryMeta,&$queryParamValue){
             $whereStatement = "";
+            $previousColumnName = "";
             $additionalParamIndex = 0;
 				foreach($additionalParams as $valueArr ){
                     $tableKey = $valueArr["table"];
@@ -271,11 +272,15 @@
                     
                     $columnName = $valueArr["column"];
                     $condition = $valueArr["condition"]; //where statement condition (and/or) (further enhance by not)
-                    $dynamicParamKey = ":".$asciiLabel."_".$columnName;
+                    $dynamicParamKey = ":".$asciiLabel."_".$columnName."_".$additionalParamIndex; //to ensure each dynamic key is uniquely generated
                     $queryParamValue[$dynamicParamKey] = $valueArr;
                     
 					if( !empty($whereStatement)){
-						$whereStatement .= " ".$condition;
+                        if( ($asciiLabel.".".$columnName) != $previousColumnName){
+                            $whereStatement .= " ) ".$condition;
+                        }else{
+                            $whereStatement .= " ".$condition;
+                        }
 					}
                     
                     $operator = '=';
@@ -283,9 +288,19 @@
                         $operator = $valueArr["operator"];
                     }
                     
-                    $whereStatement .= " ".$asciiLabel.".".$columnName." ".$operator." ".$dynamicParamKey; //update select query
+                    if( ($asciiLabel.".".$columnName) != $previousColumnName){
+                        $whereStatement .= " ( ".$asciiLabel.".".$columnName." ".$operator." ".$dynamicParamKey; //update select query
+                    }else{
+                        $whereStatement .= " ".$asciiLabel.".".$columnName." ".$operator." ".$dynamicParamKey; //update select query
+                    }
+                    
+                    $previousColumnName = $asciiLabel.".".$columnName;
+                    
 					$additionalParamIndex++;
 				}
+                
+                $whereStatement .= " )";
+                
             return $whereStatement;
         }
         
@@ -399,7 +414,6 @@
             $joinStatement .= " limit :start , :end"; //limit constraint
             
             $result = $dbConn->ExecuteSelectPrepare($joinStatement,$queryParamValue);
-            
             
             if( $result != null ){
 				//Loop through the array of records

@@ -26,9 +26,9 @@
                                     //new status
                                     echo '<td>&nbsp;</td>';
                                 }else{
-                                    echo '<td>'.$usrLeave->AccessUser->Email.'</td>';
+                                    echo '<td>'.$usrLeave->ApprovedByUser->Email.'</td>';
                                 }
-                                echo '<td><button type="button" class="btn btn-default btn-sm"><a href="?action=edit&id='.$usrLeave->Id.'">View</a></button></td>';
+                                echo '<td><a href="?action=edit&id='.$usrLeave->Id.'"><button type="button" class="btn btn-default btn-sm">View</button></a></td>';
                                 echo '</tr>';
                             }
                         ?>

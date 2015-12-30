@@ -82,10 +82,15 @@
             <div class="col-sm-2"><label for="userid">User Id</label></div>
             <div class="col-sm-5">
                 <?php 
+                    
                     if( $isEditing ){
                         $customAttributeArray = json_decode($editingUser->User->CustomAttribute, true);
-                        if( array_key_exists("userid", $customAttributeArray) ){
-                            echo '<input type="text" class="form-control" name="userid" id="userid" value="'.$customAttributeArray["userid"].'" />';
+                        if( $customAttributeArray != null ){
+                            if( array_key_exists("userid", $customAttributeArray) ){
+                                echo '<input type="text" class="form-control" name="userid" id="userid" value="'.$customAttributeArray["userid"].'" />';
+                            }else{
+                                echo '<input type="text" class="form-control" name="userid" id="userid" value="" />';
+                            }
                         }else{
                             echo '<input type="text" class="form-control" name="userid" id="userid" value="" />';
                         }

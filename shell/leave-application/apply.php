@@ -8,6 +8,7 @@
         $leaveType = $_POST["leaveType"];
         $halfDay = isset($_POST["halfDay"]) ? true : false;
         $remarks = empty($_POST["remarks"]) ? "N/A" : $_POST["remarks"];
+        $approvalRemarks = "N/A";
         $userId = $loginCtrl->GetUserId();
         $userEmail = $loginCtrl->GetUserName();
         
@@ -66,7 +67,7 @@
                         $dbOptResp->OptMessage = 'Your applied leave has exceed your available leave';
                     }else{
                         //proceed
-                        $dbOptResp = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $dateDiff, $leaveType, $remarks, $userId, $userEmail);
+                        $dbOptResp = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $dateDiff, $leaveType, $remarks,$approvalRemarks, $userId, $userEmail);
                     }
                 }
             }

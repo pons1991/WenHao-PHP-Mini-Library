@@ -42,6 +42,14 @@
 			"Constraints":[]
 		},
 		{
+			"Name": "SupervisorRemarks",
+			"Type": "text",
+			"Attributes":[
+				"NOT NULL"
+			],
+			"Constraints":[]
+		},
+		{
 			"Name": "LeaveDateFrom",
 			"Type": "TIMESTAMP",
 			"Attributes":[

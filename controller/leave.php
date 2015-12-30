@@ -101,7 +101,46 @@
 			return $returnLeave;
         }
         
-        public function ApplyLeave($from, $to, $diff, $type, $remarks, $userId, $email){
+        public function GetLeaveByid($id){
+            $newLeaveApplication = new LeaveApplication;
+            
+            $additionalParams = array(
+                array('table' => 'LeaveApplication', 'column' => 'Id', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
+		    );
+			
+			$returnLeave = $newLeaveApplication->Gets($this->dbConnection,0, 1, $additionalParams);
+			return $returnLeave;
+        }
+        
+        //$userIds is an array of user id
+        public function GetPendingLeaveByUserIds($userIds){
+            if( count($userIds) > 0 ){
+                $newLeaveApplication = new LeaveApplication;
+            
+                $additionalParams = array();
+                
+                //get leave application with new status
+                array_push($additionalParams, array('table' => 'LeaveApplication', 'column' => 'Status', 'value' => '1', 'type' => PDO::PARAM_INT, 'condition' => 'and'));
+                
+                
+                $i = 0;
+                $operator = 'and';
+                foreach( $userIds as $id ){
+                    if( $i > 0 ){
+                        $operator = 'or';
+                    }
+                    array_push($additionalParams, array('table' => 'LeaveApplication', 'column' => 'UserId', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => $operator));
+                    $i += 1;
+                }
+
+                $returnLeave = $newLeaveApplication->Gets($this->dbConnection,0, 999, $additionalParams);
+                return $returnLeave;
+            }else{
+                return null;
+            }
+        }
+        
+        public function ApplyLeave($from, $to, $diff, $type, $remarks,$approvalRemarks, $userId, $email){
             
             $dbOptResponse = new DbOpt;
             
@@ -109,6 +148,7 @@
             $newLeave->UserId = $userId;
             $newLeave->LeaveTypeId = $type;
 		    $newLeave->Remarks = $remarks;
+            $newLeave->SupervisorRemarks = $approvalRemarks;
 			$newLeave->LeaveDateFrom = $from;
             $newLeave->LeaveDateTo = $to;
             $newLeave->TotalLeave = $diff;
@@ -125,6 +165,24 @@
 			
             
             return $dbOptResponse;
+        }
+        
+        public function UpdateApplicationLeave($obj, $currentUser){
+            $dbOpt = new DbOpt;
+			$dbOpt->OptStatus = true;
+			$dbOpt->OptMessage = "Success";
+			
+			if( $obj != null ){
+				$obj->UpdatedDate = date("Y-m-d H:i:s", time());
+				$obj->UpdatedBy = $currentUser;
+				
+				$dbOpt = $obj->Update($this->dbConnection, $obj);
+			}else{
+				$dbOpt->OptStatus = false;
+				$dbOpt->OptMessage = "Error when updating pro rated leave";
+			}
+			
+			return $dbOpt;
         }
         
         public function GetNonRejectedLeaveApplication($userid, $year){
@@ -144,6 +202,12 @@
         public function CheckDuplicateLeave($from, $userId){
             $newLeaveType = new LeaveType;
 			return $newLeaveType->IsLeaveDateValid($this->dbConnection, 0, 999, null);
+        }
+        
+        public function GetLeaveStatus(){
+            $newLeaveStatus = new LeaveStatus;
+            $returnLeaveStatus = $newLeaveStatus->Gets($this->dbConnection,0, 999, null);
+			return $returnLeaveStatus;
         }
     }
 ?>

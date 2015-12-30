@@ -12,6 +12,7 @@
 	}
     
     $loginCtrl = new LoginController(null);
+    $userCtrl = new UserController($dbConn);
 	$leaveCtrl = new LeaveController($dbConn);
     $roleCtrl = new RoleController($dbConn);
 ?>
