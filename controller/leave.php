@@ -190,7 +190,7 @@
             
             $additionalParams = array(
                 array('table' => 'LeaveApplication', 'column' => 'UserId', 'value' => $userid, 'type' => PDO::PARAM_INT, 'condition' => 'and'),
-                array('table' => 'LeaveApplication', 'column' => 'Status', 'value' => 1, 'type' => PDO::PARAM_INT, 'condition' => 'or'),
+                array('table' => 'LeaveApplication', 'column' => 'Status', 'value' => 1, 'type' => PDO::PARAM_INT, 'condition' => 'and'),
                 array('table' => 'LeaveApplication', 'column' => 'Status', 'value' => 2, 'type' => PDO::PARAM_INT, 'condition' => 'or'),
                 array('table' => 'LeaveApplication', 'column' => 'LeaveDateFrom', 'value' => '%'.$year.'%', 'operator' => 'like', 'type' => PDO::PARAM_STR, 'condition' => 'and')
 		    );
@@ -208,6 +208,12 @@
             $newLeaveStatus = new LeaveStatus;
             $returnLeaveStatus = $newLeaveStatus->Gets($this->dbConnection,0, 999, null);
 			return $returnLeaveStatus;
+        }
+        
+        public function GetOverallLeaveStatus(){
+            //remaining leave for each leave type 
+            //bring forward
+            //
         }
     }
 ?>

@@ -64,7 +64,7 @@
                         //error
                         $dbOptResp = new DbOpt;
                         $dbOptResp->OptStatus = false;
-                        $dbOptResp->OptMessage = 'Your applied leave has exceed your available leave';
+                        $dbOptResp->OptMessage = 'Your applied leave has exceed your available leave2';
                     }else{
                         //proceed
                         $dbOptResp = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $dateDiff, $leaveType, $remarks,$approvalRemarks, $userId, $userEmail);
