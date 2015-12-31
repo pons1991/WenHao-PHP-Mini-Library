@@ -7,6 +7,7 @@
         var $LeaveDateFrom;
         var $LeaveDateTo;
         var $TotalLeave;
+        var $TotalBringForwardLeave;
         var $Status;
         var $ApprovedBy;
         

@@ -16,7 +16,7 @@
                         echo '<tr>';
                         echo '<td>'.$pl->AccessUser->Email.'</td>';
                         echo '<td>'.$pl->ProRatedYear.'</td>';
-                        echo '<td><button type="button" class="btn btn-default btn-sm"><a href="?action=edit&id='.$pl->Id.'">View</a></button></td>';
+                        echo '<td><a href="?action=edit&id='.$pl->Id.'"><button type="button" class="btn btn-default btn-sm">View</button></a></td>';
                         echo '</tr>';
                     }
                 ?>

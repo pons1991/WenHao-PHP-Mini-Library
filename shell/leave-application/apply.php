@@ -2,6 +2,8 @@
 
     $dbOptResp = null;
 
+    echo print_r(date(''));
+
     if (isset($_POST["submit"])){
         $fromDate = $_POST["datepickerFrom"];
         $toDate = $_POST["datepickerTo"];
@@ -26,8 +28,11 @@
             $dateDiff = 0.5;
         }
         
+        $currentYear = intval(date('Y'));
+        $previousYear = $currentYear - 1;
+        
         //validation on pro rated leave
-        $appliedLeave = $leaveCtrl->GetNonRejectedLeaveApplication($loginCtrl->GetUserId(), date('Y'));
+        $appliedLeave = $leaveCtrl->GetNonRejectedLeaveApplication($loginCtrl->GetUserId(), $currentYear);
         $totalAppliedDay = 0.0;
         if( count($appliedLeave) > 0 ){
             foreach($appliedLeave as $la ){
@@ -35,7 +40,7 @@
             }
         }
         
-        $proRatedList = $leaveCtrl->GetProRatedLeaveByUserIdAndYear($loginCtrl->GetUserId(), date('Y'));
+        $proRatedList = $leaveCtrl->GetProRatedLeaveByUserIdAndYear($loginCtrl->GetUserId(), $currentYear);
         if( $proRatedList != null && count($proRatedList) == 1 ){
             $proRated = $proRatedList[0];
             $proRatedLeaveArray = json_decode($proRated->ProRatedAttributes, true);
@@ -48,7 +53,7 @@
                 $dbOptResp->OptMessage = 'Your applied leave has exceed your available leave';
             }else{
                 //proceed
-                $dbOptResp = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $dateDiff, $leaveType, $remarks, $userId, $userEmail);
+                $dbOptResp = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $dateDiff,0, $leaveType, $remarks, $userId, $userEmail);
             }
         }else{
             //validation on role leave
@@ -67,7 +72,7 @@
                         $dbOptResp->OptMessage = 'Your applied leave has exceed your available leave2';
                     }else{
                         //proceed
-                        $dbOptResp = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $dateDiff, $leaveType, $remarks,$approvalRemarks, $userId, $userEmail);
+                        $dbOptResp = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $dateDiff,0, $leaveType, $remarks,$approvalRemarks, $userId, $userEmail);
                     }
                 }
             }

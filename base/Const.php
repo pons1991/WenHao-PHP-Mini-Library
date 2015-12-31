@@ -2,6 +2,9 @@
     $CONNECTION_CONFIG_NAME = "/config/connectionstring.json";
     $MAIN_PAGE = "/shell/dashboard/index.php";
     
+    $BRING_FORWARD_EXPIRE_DATE_DAYS = 30;
+    $BRING_FORWARD_EXPIRE_DATE_MONTH = 11;
+    
     //development configuration
 	$DOMAIN_NAME = "http://localhost:8888/whLibrary/";
 	$DATABASE_NAME = "whMiniLibrary";

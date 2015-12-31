@@ -38,6 +38,7 @@
         "insert into OrgRel (SuperiorUserId,UserId,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (1,6,1,now(),'admin',now(),'admin')",
         "insert into LeaveStatus (StatusName,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('New',1,now(),'admin',now(),'admin')",
         "insert into LeaveStatus (StatusName,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Approved',1,now(),'admin',now(),'admin')",
-        "insert into LeaveStatus (StatusName,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Rejected',1,now(),'admin',now(),'admin')"
+        "insert into LeaveStatus (StatusName,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Rejected',1,now(),'admin',now(),'admin')",
+        "insert into BringForwardLeave (UserId,BringForwardFromYear,BringForwardAttributes,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (2,'2014','{\"1\":\"10\"}',1,now(),'admin',now(),'admin')"
 	]
 }

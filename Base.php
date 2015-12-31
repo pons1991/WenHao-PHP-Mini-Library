@@ -28,6 +28,7 @@
     include_once "base/modal/LeaveType.php";
     include_once "base/modal/ProRatedLeave.php";
 	include_once "base/modal/LeaveApplication.php";
+    include_once "base/modal/BringForwardLeave.php";
     
 	//Load controller
 	include_once "controller/login.php";

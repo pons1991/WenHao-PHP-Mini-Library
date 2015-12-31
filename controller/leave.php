@@ -187,7 +187,7 @@
             }
         }
         
-        public function ApplyLeave($from, $to, $diff, $type, $remarks,$approvalRemarks, $userId, $email){
+        public function ApplyLeave($from, $to, $diff, $totalBringFoward, $type, $remarks,$approvalRemarks, $userId, $email){
             
             $dbOptResponse = new DbOpt;
             
@@ -199,6 +199,7 @@
 			$newLeave->LeaveDateFrom = $from;
             $newLeave->LeaveDateTo = $to;
             $newLeave->TotalLeave = $diff;
+            $newLeave->TotalBringForwardLeave = $totalBringFoward;
 			$newLeave->Status = 1;
             $newLeave->ApprovedBy = $userId;
 			$newLeave->IsActive = true;

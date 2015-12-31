@@ -74,6 +74,14 @@
 			"Constraints":[]
 		},
 		{
+			"Name": "TotalBringForwardLeave",
+			"Type": "DECIMAL(3,1)",
+			"Attributes":[
+				"NOT NULL"
+			],
+			"Constraints":[]
+		},
+		{
 			"Name": "Status",
 			"Type": "int",
 			"Attributes":[
