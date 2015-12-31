@@ -31,7 +31,7 @@
                     //if not exists, then process as normal
                     if( !array_key_exists($propName,$metaValue ) ){
                         $propValue = $prop->getValue($obj);
-                        if( empty($propValue)){
+                        if( empty($propValue) && !isset($propValue)){
                             $isTrue = false;
                             break;
                         }
@@ -43,7 +43,7 @@
                             //skip
                         }else{
                             $propValue = $prop->getValue($obj);
-                            if( empty($propValue)){
+                            if( empty($propValue) && !isset($propValue) ){
                                 $isTrue = false;
                                 break;
                             }

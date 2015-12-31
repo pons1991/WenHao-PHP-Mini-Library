@@ -85,6 +85,53 @@
 			return $dbOpt;
         }
         
+        public function AddLeaveType($leaveName, $bringForward, $email){
+            $newLeaveType = new LeaveType;
+            $newLeaveType->LeaveName = $leaveName;
+            $newLeaveType->IsAllowToBringForward = $bringForward;
+            $newLeaveType->IsActive = true;
+            $newLeaveType->CreatedDate = date("Y-m-d H:i:s", time());
+			$newLeaveType->CreatedBy = $email;
+			$newLeaveType->UpdatedDate = date("Y-m-d H:i:s", time());
+			$newLeaveType->UpdatedBy = $email;
+            
+            echo print_r($newLeaveType);
+            
+            $dbOptResponse = $newLeaveType->Add($this->dbConnection, $newLeaveType);
+            $dbOptResponse->OptObj = $newLeaveType;
+			
+            return $dbOptResponse;
+        }
+        
+        public function UpdateLeaveType($obj, $email){
+            $dbOpt = new DbOpt;
+			$dbOpt->OptStatus = true;
+			$dbOpt->OptMessage = "Success";
+			
+			if( $obj != null ){
+				$obj->UpdatedDate = date("Y-m-d H:i:s", time());
+				$obj->UpdatedBy = $email;
+				
+				$dbOpt = $obj->Update($this->dbConnection, $obj);
+			}else{
+				$dbOpt->OptStatus = false;
+				$dbOpt->OptMessage = "Error when updating leave type";
+			}
+			
+			return $dbOpt;
+        }
+        
+        public function GetLeaveTypeById($id){
+            $newLeaveType = new LeaveType;
+            
+            $additionalParams = array(
+                array('table' => 'LeaveType', 'column' => 'Id', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
+            );
+            
+            $returnLeaveTypeList = $newLeaveType->Gets($this->dbConnection,0, 1, $additionalParams);
+			return $returnLeaveTypeList;
+        }
+        
         public function GetLeaveTypes(){
 			$newLeaveType = new LeaveType;
 			return $newLeaveType->Gets($this->dbConnection, 0, 999, null);
@@ -208,12 +255,6 @@
             $newLeaveStatus = new LeaveStatus;
             $returnLeaveStatus = $newLeaveStatus->Gets($this->dbConnection,0, 999, null);
 			return $returnLeaveStatus;
-        }
-        
-        public function GetOverallLeaveStatus(){
-            //remaining leave for each leave type 
-            //bring forward
-            //
         }
     }
 ?>

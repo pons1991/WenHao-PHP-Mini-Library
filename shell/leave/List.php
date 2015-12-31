@@ -15,7 +15,7 @@
                         echo '<tr>';
                         echo '<td>'.$lv->Id.'</td>';
                         echo '<td>'.$lv->LeaveName.'</td>';
-                        echo '<td><button type="button" class="btn btn-default btn-sm"><a href="?action=edit&id='.$lv->Id.'">Edit</a></button></td>';
+                        echo '<td><a href="?action=edit&id='.$lv->Id.'"><button type="button" class="btn btn-default btn-sm">Edit</button></a></td>';
                         echo '</tr>';
                     }
                 ?>
