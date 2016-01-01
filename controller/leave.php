@@ -257,5 +257,17 @@
             $returnLeaveStatus = $newLeaveStatus->Gets($this->dbConnection,0, 999, null);
 			return $returnLeaveStatus;
         }
+        
+        public function GetBringForwardLeaveByUserId($id, $year){
+            $newBringForwardLeave = new BringForwardLeave;
+            
+            $additionalParams = array(
+                array('table' => 'BringForwardLeave', 'column' => 'UserId', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and'),
+                array('table' => 'BringForwardLeave', 'column' => 'BringForwardFromYear', 'value' => $year, 'type' => PDO::PARAM_STR, 'condition' => 'and')
+		    );
+			
+			$bringForward = $newBringForwardLeave->Gets($this->dbConnection,0, 999, $additionalParams);
+			return $bringForward;
+        }
     }
 ?>

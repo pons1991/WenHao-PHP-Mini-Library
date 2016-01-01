@@ -1,9 +1,6 @@
 <?php
 
     $dbOptResp = null;
-
-    echo print_r(date(''));
-
     if (isset($_POST["submit"])){
         $fromDate = $_POST["datepickerFrom"];
         $toDate = $_POST["datepickerTo"];
@@ -30,30 +27,92 @@
         
         $currentYear = intval(date('Y'));
         $previousYear = $currentYear - 1;
-        
-        //validation on pro rated leave
-        $appliedLeave = $leaveCtrl->GetNonRejectedLeaveApplication($loginCtrl->GetUserId(), $currentYear);
-        $totalAppliedDay = 0.0;
-        if( count($appliedLeave) > 0 ){
-            foreach($appliedLeave as $la ){
-                $totalAppliedDay += $la->TotalLeave;
+
+        $totalAvailableBringForward = 0.0;
+
+        //Bring forward algorithm 
+        $userBringForwardList = $leaveCtrl->GetBringForwardLeaveByUserId($loginCtrl->GetUserId(), $previousYear);
+        if( $userBringForwardList != null && count($userBringForwardList) == 1 ){
+            $userBringForward = $userBringForwardList[0];
+            $userBringForwardAttributes = $userBringForward->BringForwardAttributes;
+            $userBringForwardAttributeArray = json_decode($userBringForwardAttributes, true);
+            
+            if( array_key_exists($leaveType,$userBringForwardAttributeArray) ){
+                $totalAvailableBringForward = $userBringForwardAttributeArray[$leaveType];
             }
         }
         
+        //Non rejected leave application algorithm
+        $appliedLeave = $leaveCtrl->GetNonRejectedLeaveApplication($loginCtrl->GetUserId(), $currentYear);
+        $totalAppliedDay = 0.0;
+        $totalUsedBringForwardDay = 0.0;
+        if( count($appliedLeave) > 0 ){
+            foreach($appliedLeave as $la ){
+                $totalAppliedDay += $la->TotalLeave;
+                $totalUsedBringForwardDay += $la->TotalBringForwardLeave;
+            }
+        }
+        
+        //Expired date object for bring forward leave 
+        $expiryDateString = $GLOBALS['BRING_FORWARD_EXPIRE_DATE_MONTH'].'/'.$GLOBALS['BRING_FORWARD_EXPIRE_DATE_DAYS'].'/'.date('Y');
+        $expiryDateObj = datetime::createfromformat('m/d/Y',$expiryDateString);
+        $from_expire_diff = $expiryDateObj->diff($fromDateObj);
+        $total_from_expire_diff = $from_expire_diff->d + 1;
+        
+        $totalBringForwardToApply = 0.0;
+        $totalBringForwardToApply = $totalAvailableBringForward - $totalUsedBringForwardDay;
+        $totalCurrentToApply = 0.0;
+        
+        $today_dt = new DateTime(date("Y-m-d"));
+        $from_dt = new DateTime($fromDateObj->format('Y-m-d'));
+        $to_dt = new DateTime($toDateObj->format('Y-m-d'));
+        $expirty_dt = new DateTime($expiryDateObj->format('Y-m-d'));
+        
+        if( $from_dt > $expirty_dt || $today_dt > $expirty_dt ){
+            //if from date is already pass expiry date
+            //if today date is already pass expiry date
+            $totalBringForwardToApply = 0.0;
+            $totalCurrentToApply = $dateDiff;
+        }else{
+            if( $to_dt <= $expirty_dt ){    //if last applied date is less than or equal to expiry date
+                if( $totalAvailableBringForward < $totalUsedBringForwardDay ){
+                    //Validation checking if total used bring forward is more htan available bring forward
+                    //In this canse, this code would not be executed
+                    $totalBringForwardToApply = 0.0;
+                }
+                if( $dateDiff > $totalBringForwardToApply ){
+                    //if current applied leave is more than available bring forward
+                    // 1. use all bring forward leave
+                    // 2. find the different that required this year leave
+                    $totalCurrentToApply = $dateDiff - $totalBringForwardToApply;
+                }else{
+                    //if available bring forward is more than or equal to current applied leave
+                    //applied all to available bring forward
+                    $totalBringForwardToApply = $dateDiff;
+                }
+            }else{  //if last applied date is greater than expiry date
+                if( $totalBringForwardToApply > $total_from_expire_diff ){
+                    $totalBringForwardToApply = $total_from_expire_diff;
+                }
+                $totalCurrentToApply = $dateDiff - $totalBringForwardToApply;
+            }
+        }
+        
+        //validation on pro rated leave
         $proRatedList = $leaveCtrl->GetProRatedLeaveByUserIdAndYear($loginCtrl->GetUserId(), $currentYear);
         if( $proRatedList != null && count($proRatedList) == 1 ){
             $proRated = $proRatedList[0];
             $proRatedLeaveArray = json_decode($proRated->ProRatedAttributes, true);
             
             $leaveTypeNumber = $proRatedLeaveArray[$leaveType];
-            if ( ($totalAppliedDay + $dateDiff) > $leaveTypeNumber){
+            if ( ($totalAppliedDay + $totalCurrentToApply) > $leaveTypeNumber){
                 //error
                 $dbOptResp = new DbOpt;
                 $dbOptResp->OptStatus = false;
                 $dbOptResp->OptMessage = 'Your applied leave has exceed your available leave';
             }else{
                 //proceed
-                $dbOptResp = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $dateDiff,0, $leaveType, $remarks, $userId, $userEmail);
+                $dbOptResp = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $totalCurrentToApply,$totalBringForwardToApply, $leaveType, $remarks, $userId, $userEmail);
             }
         }else{
             //validation on role leave
@@ -65,14 +124,14 @@
                     $roleLeave = $roleLeaveList[0];
                     $roleLeaveArray = json_decode($roleLeave->LeaveAttribute, true);
                     $leaveTypeNumber = $roleLeaveArray[$leaveType];
-                    if( ($totalAppliedDay + $dateDiff) > $leaveTypeNumber ){
+                    if( ($totalAppliedDay + $totalCurrentToApply) > $leaveTypeNumber ){
                         //error
                         $dbOptResp = new DbOpt;
                         $dbOptResp->OptStatus = false;
                         $dbOptResp->OptMessage = 'Your applied leave has exceed your available leave2';
                     }else{
                         //proceed
-                        $dbOptResp = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $dateDiff,0, $leaveType, $remarks,$approvalRemarks, $userId, $userEmail);
+                        $dbOptResp = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $totalCurrentToApply,$totalBringForwardToApply, $leaveType, $remarks,$approvalRemarks, $userId, $userEmail);
                     }
                 }
             }
