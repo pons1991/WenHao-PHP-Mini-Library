@@ -1,5 +1,7 @@
 <?php
     $leaveTypeList = $leaveCtrl->GetLeaveTypes();
+    $currentYear = intval(date('Y'));
+    $previousYear = $currentYear - 1;
     $leaveAttributeString = '';
     $leaveAttributeArray = array();
     $proRatedList = $leaveCtrl->GetProRatedLeaveByUserIdAndYear($loginCtrl->GetUserId(), date('Y'));
@@ -7,26 +9,50 @@
     
     $appliedLeaveList = $leaveCtrl->GetNonRejectedLeaveApplication($loginCtrl->GetUserId(), date('Y'));
     $appliedLeaveSummary_approved = array();
+    $forwardLeaveSummary_approved = array();
     $appliedLeaveSummary_pending = array();
+    $forwardLeaveSummary_pending = array();
+    
+    $userBringForwardAttributeArray = array();
+    
+    $userBringForwardList = $leaveCtrl->GetBringForwardLeaveByUserId($loginCtrl->GetUserId(), $previousYear);
+    if( $userBringForwardList != null && count($userBringForwardList) == 1 ){
+        $userBringForward = $userBringForwardList[0];
+        $userBringForwardAttributes = $userBringForward->BringForwardAttributes;
+        $userBringForwardAttributeArray = json_decode($userBringForwardAttributes, true);
+    }
     
     foreach($appliedLeaveList as $applied){
         $tempTotal = 0;
+        $tempTotalForward = 0;
         if( $applied->Status == 1 ){
             //New status
             if( array_key_exists($applied->LeaveTypeId, $appliedLeaveSummary_pending) ){
                 $tempTotal = $appliedLeaveSummary_pending[$applied->LeaveTypeId];
-                $tempTotal = $tempTotal + $applied->TotalLeave;
             }
+            
+            if( array_key_exists($applied->LeaveTypeId, $forwardLeaveSummary_pending) ){
+                $tempTotalForward = $forwardLeaveSummary_pending[$applied->LeaveTypeId];
+            }
+            
             $appliedLeaveSummary_pending[$applied->LeaveTypeId] = ($tempTotal + $applied->TotalLeave);
+            $forwardLeaveSummary_pending[$applied->LeaveTypeId] = ($tempTotalForward + $applied->TotalBringForwardLeave);
         }else{
+            
             //Approved status
             if( array_key_exists($applied->LeaveTypeId, $appliedLeaveSummary_approved) ){
                 $tempTotal = $appliedLeaveSummary_approved[$applied->LeaveTypeId];
-                $tempTotal = $tempTotal + $applied->TotalLeave;
             }
+            if( array_key_exists($applied->LeaveTypeId, $forwardLeaveSummary_approved) ){
+                $tempTotalForward = $forwardLeaveSummary_approved[$applied->LeaveTypeId];
+            }
+            
             $appliedLeaveSummary_approved[$applied->LeaveTypeId] = ($tempTotal + $applied->TotalLeave);
+            $forwardLeaveSummary_approved[$applied->LeaveTypeId] = ($tempTotalForward + $applied->TotalBringForwardLeave);
         }
     }
+    
+    
     
     if( $proRatedList != null && count($proRatedList) > 0 ){
         $proRate = $proRatedList[0];
@@ -66,26 +92,74 @@
                         echo '<tr>';
                         echo '<td>'.$lv->LeaveName.'</td>';
                         
+                        $current_total_leave = 0;
+                        $forward_total_leave = 0;
                         //Total Leave
                         if( array_key_exists($lv->Id, $leaveAttributeArray) ){
-                            echo '<td>'.$leaveAttributeArray[$lv->Id].'</td>';
-                        }else{
-                            echo '<td>0</td>';
+                            $current_total_leave = $leaveAttributeArray[$lv->Id];
                         }
                         
+                        if( array_key_exists($lv->Id, $userBringForwardAttributeArray) ){
+                            $forward_total_leave = $userBringForwardAttributeArray[$lv->Id];
+                        }
+                        
+                        if( $lv->IsAllowToBringForward ){
+                            echo '<td>';
+                            echo '<p> Current: '.$current_total_leave.'</p>';
+                            echo '<p> Forward: '.$forward_total_leave.'</p>';
+                            echo '</td>';
+                        }else{
+                            echo '<td>';
+                            echo '<p>'.$current_total_leave.'</p>';
+                            echo '</td>';
+                        }
+                        
+                        $current_pending_leave = 0;
+                        $forward_pending_leave = 0;
                         //Pending Approval Leave
                         if( array_key_exists($lv->Id, $appliedLeaveSummary_pending) ){
-                            echo '<td>'.$appliedLeaveSummary_pending[$lv->Id].'</td>';
-                        }else{
-                            echo '<td>0</td>';
+                            $current_pending_leave = $appliedLeaveSummary_pending[$lv->Id];
                         }
                         
-                        //Approved Leave
-                        if( array_key_exists($lv->Id, $appliedLeaveSummary_approved) ){
-                            echo '<td>'.$appliedLeaveSummary_approved[$lv->Id].'</td>';
-                        }else{
-                            echo '<td>0</td>';
+                        if( array_key_exists($lv->Id, $forwardLeaveSummary_pending) ){
+                            $forward_pending_leave = $forwardLeaveSummary_pending[$lv->Id];
                         }
+                        
+                        if( $lv->IsAllowToBringForward ){
+                            echo '<td>';
+                            echo '<p> Current: '.$current_pending_leave.'</p>';
+                            echo '<p> Forward: '.$forward_pending_leave.'</p>';
+                            echo '</td>';
+                        }else{
+                            echo '<td>';
+                            echo '<p>'.$current_pending_leave.'</p>';
+                            echo '</td>';
+                        }
+                        
+                        
+                        //Approved Leave
+                        $current_approved_leave = 0;
+                        $forward_approved_leave = 0;
+                        if( array_key_exists($lv->Id, $appliedLeaveSummary_approved) ){
+                            $current_approved_leave = $appliedLeaveSummary_approved[$lv->Id];
+                        }
+                        
+                        if( array_key_exists($lv->Id, $forwardLeaveSummary_approved) ){
+                            $forward_approved_leave = $forwardLeaveSummary_approved[$lv->Id];
+                        }
+                        
+                        if( $lv->IsAllowToBringForward ){
+                            echo '<td>';
+                            echo '<p> Current: '.$current_approved_leave.'</p>';
+                            echo '<p> Forward: '.$forward_approved_leave.'</p>';
+                            echo '</td>';
+                        }else{
+                            echo '<td>';
+                            echo '<p>'.$current_approved_leave.'</p>';
+                            echo '</td>';
+                        }
+                        
+                        
                         
                         echo '</tr>';
                     }

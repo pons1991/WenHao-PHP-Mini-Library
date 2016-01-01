@@ -19,7 +19,8 @@
                                 <th>By</th>
                                 <th>From</th>
                                 <th>To</th>
-                                <th>Total leave</th>
+                                <th>Leave</th>
+                                <th>Bringforard Leave</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -31,7 +32,7 @@
                                         echo '<td>'.datetime::createfromformat('Y-m-d h:m:s',$usrLeave->LeaveDateFrom)->format('d M Y').'</td>';
                                         echo '<td>'.datetime::createfromformat('Y-m-d h:m:s',$usrLeave->LeaveDateTo)->format('d M Y').'</td>';
                                         echo '<td>'.$usrLeave->TotalLeave.'</td>';
-                                        
+                                        echo '<td>'.$usrLeave->TotalBringForwardLeave.'</td>';
                                         $friendlyUrl = GetFriendlyUrl("/shell/leave-application/index.php?action=approval&id=".$usrLeave->Id);
                                         echo '<td><a href="'.$friendlyUrl.'"><button type="button" class="btn btn-default btn-sm">View</button></a></td>';
                                         echo '</tr>';

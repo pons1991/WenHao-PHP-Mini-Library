@@ -82,6 +82,42 @@
     
     <div class="row">
         <div class="col-sm-12 form-group">
+            <div class="col-sm-2"><label for="leaveDate">Total Leave</label></div>
+            <div class="col-sm-5">
+                <div class="col-sm-12">
+                    <div class="col-sm-6">
+                        This year leave:
+                    </div>
+                    <div class="col-sm-6">
+                        <?php 
+                            if( $isEditing ){
+                                echo '<input type="text" class="form-control" disabled value="'.$editingLeave->TotalLeave.'"/>';
+                            }else{
+                                echo '<input type="text" class="form-control" disabled/>';
+                            }
+                        ?>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-6">
+                        Bringforward leave:
+                    </div>
+                    <div class="col-sm-6">
+                        <?php 
+                            if( $isEditing ){
+                                echo '<input type="text" class="form-control" disabled value="'.$editingLeave->TotalBringForwardLeave.'"/>';
+                            }else{
+                                echo '<input type="text" class="form-control" disabled/>';
+                            }
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-12 form-group">
             <div class="col-sm-2"><label for="leaveType">Leave Type </label></div>
             <div class="col-sm-5">
                 <select id="leaveType" name="leaveType" class="form-control" disabled>
