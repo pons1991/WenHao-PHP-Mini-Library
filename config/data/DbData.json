@@ -3,6 +3,7 @@
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Dashboard','/shell/dashboard/index.php',0,1,1,now(),'admin',now(),'admin')",
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Login','/login',1,now(),0,0,'admin',now(),'admin')",
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Users','/shell/user/users.php',1,1,1,now(),'admin',now(),'admin')",
+        "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Profile','/shell/user/users.php?action=profile',1,1,1,now(),'admin',now(),'admin')",
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Roles','/shell/role/roles.php',1,1,1,now(),'admin',now(),'admin')",
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Leave','/shell/leave/index.php',1,1,1,now(),'admin',now(),'admin')",
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Pro Rate Leave','/shell/prorate/index.php',1,1,1,now(),'admin',now(),'admin')",
