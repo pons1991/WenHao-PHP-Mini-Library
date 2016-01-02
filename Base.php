@@ -1,4 +1,7 @@
 <?php
+    //Register external module
+    include_once "modules/email/emailmanager.php";
+
 	//php file
 	include_once "base/Error.php";
 	include_once "base/Const.php";

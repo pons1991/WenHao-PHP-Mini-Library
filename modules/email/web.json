@@ -1,0 +1,10 @@
+{
+	"host": "smtp.gmail.com",
+    "port": "465",
+    "isAuth": "true",
+    "username": "bakhacheluxuries@gmail.com",
+    "password": "bakhacheluxuries2015",
+    "secure": "ssl",
+    "isHtml":"true",
+    "debug": "0"
+}
