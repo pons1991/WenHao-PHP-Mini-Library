@@ -1,0 +1,16 @@
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="myFileAppender" class="LoggerAppenderFile">
+        <layout class="LoggerLayoutPattern">
+            <param name="conversionPattern" value="%date [%logger] [%level] %message%newline" />
+        </layout>
+        <param name="maxFileSize" value="2MB" />
+        <param name="file" value="logs/mini.log" />
+    </appender>
+    <logger name="mini">
+        <appender_ref ref="myFileAppender" />
+    </logger>
+    <root>
+        <level value="TRACE" />
+        <appender_ref ref="myAppender" />
+    </root>
+</configuration>

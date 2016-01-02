@@ -1,7 +1,8 @@
 <?php
     //Register external module
-    include_once "modules/email/emailmanager.php";
-
+    include_once "modules/email/mini.emailmanager.php";     //Register email manager module
+    include_once "modules/logger/mini.loggermanager.php";   //Register logger manager module
+    
 	//php file
 	include_once "base/Error.php";
 	include_once "base/Const.php";
