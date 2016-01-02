@@ -1,6 +1,19 @@
 <?php
 
     $dbOptResp = null;
+    $isEditing = false;
+    $editingLeave = null;
+    
+    if( isset($_GET["id"]) && $_GET["id"] !== '0' ){
+        //To edit
+        $isEditing = true;
+        $leaveList = $leaveCtrl->GetLeaveByid($_GET["id"]);
+        if( $leaveList != null && count($leaveList) == 1){
+            $editingLeave = $leaveList[0];
+        }
+    }
+    
+    
     if (isset($_POST["submit"])){
         $fromDate = $_POST["datepickerFrom"];
         $toDate = $_POST["datepickerTo"];
@@ -168,11 +181,61 @@
     <div class="row">
         <div class="col-sm-12 form-group">
             <div class="col-sm-2"><label for="leaveDate">Leave Date </label></div>
-            <div class="col-sm-5"><input type="text" class="form-control" id="datepickerFrom" name="datepickerFrom" placeholder="From" /></div>
-            <div class="col-sm-5"><input type="text" class="form-control" id="datepickerTo" name="datepickerTo" placeholder="to" /></div>
+            <div class="col-sm-5">
+                <?php 
+                    if( $isEditing ){
+                        echo '<input type="text" class="form-control" id="datepickerFrom" name="datepickerFrom" placeholder="From" disabled value="'.datetime::createfromformat('Y-m-d 00:00:00',$editingLeave->LeaveDateFrom)->format('m/d/Y').'" />';
+                    }else{
+                        echo '<input type="text" class="form-control" id="datepickerFrom" name="datepickerFrom" placeholder="From" />';
+                    }
+                ?>
+            </div>
+            <div class="col-sm-5">
+                <?php 
+                    if( $isEditing ){
+                        echo '<input type="text" class="form-control" id="datepickerTo" name="datepickerTo" placeholder="to" disabled value="'.datetime::createfromformat('Y-m-d 00:00:00',$editingLeave->LeaveDateTo)->format('m/d/Y').'"/>';
+                    }else{
+                        echo '<input type="text" class="form-control" id="datepickerTo" name="datepickerTo" placeholder="to" />';
+                    }
+                ?>
+            </div>
         </div>
     </div>
     
+    <?php 
+        if( $isEditing ){
+            ?>
+                <div class="row">
+                    <div class="col-sm-12 form-group">
+                        <div class="col-sm-2"><label for="leaveDate">Total Leave</label></div>
+                        <div class="col-sm-5">
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+                                    This year leave:
+                                </div>
+                                <div class="col-sm-6">
+                                    <?php 
+                                        echo '<input type="text" class="form-control" disabled value="'.$editingLeave->TotalLeave.'"/>';
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+                                    Bringforward leave:
+                                </div>
+                                <div class="col-sm-6">
+                                    <?php 
+                                        echo '<input type="text" class="form-control" disabled value="'.$editingLeave->TotalBringForwardLeave.'"/>';
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php
+        }
+    ?>
+
     <div class="row">
         <div class="col-sm-12 form-group">
             <div class="col-sm-2"><label for="leaveType">Leave Type </label></div>
@@ -181,7 +244,11 @@
                     <option value="-1"> -- Please select -- </option>
                     <?php
                         foreach( $leaveCtrl->GetLeaveTypes() as $lv ){
-                            echo '<option value="'.$lv->Id.'">'.$lv->LeaveName.'</option>';
+                            if( $isEditing && $editingLeave->LeaveTypeId == $lv->Id ){
+                                echo '<option value="'.$lv->Id.'" selected>'.$lv->LeaveName.'</option>';
+                            }else{
+                                echo '<option value="'.$lv->Id.'">'.$lv->LeaveName.'</option>';
+                            }
                         }
                     ?>
                 </select>
@@ -193,7 +260,17 @@
         <div class="col-sm-12 form-group">
             <div class="col-sm-2"><label for="leaveDate">Half Day</label></div>
             <div class="col-sm-5">
-                <input type="checkbox" id="halfDay" name="halfDay" disabled=disabled />
+                <?php 
+                    if( $isEditing ){
+                        if($editingLeave->TotalLeave == 0.5){
+                            echo '<input type="checkbox" id="halfDay" name="halfDay" disabled=disabled checked />';
+                        }else{
+                            echo '<input type="checkbox" id="halfDay" name="halfDay" disabled=disabled />';
+                        }
+                    }else{
+                        echo '<input type="checkbox" id="halfDay" name="halfDay" disabled=disabled />';
+                    }
+                ?>
                 <small> *Applicable when applying same date leave</small>
             </div>
         </div>
@@ -203,16 +280,64 @@
         <div class="col-sm-12 form-group">
             <div class="col-sm-2"><label for="remarks">Remarks</label></div>
             <div class="col-sm-5">
-                <textarea id="remarks" name="remarks" class="form-control"></textarea>
+                <?php 
+                    if( $isEditing ){
+                        echo '<textarea id="remarks" name="remarks" class="form-control" disabled>'.$editingLeave->Remarks.'</textarea>';
+                    }else{
+                        echo '<textarea id="remarks" name="remarks" class="form-control"></textarea>';
+                    }
+                ?>
+                
             </div>
         </div>
     </div>
+    
+    <?php 
+        if( $isEditing ){
+            ?>
+                <div class="row">
+                    <div class="col-sm-12 form-group">
+                        <div class="col-sm-2"><label for="leaveStatus">Status </label></div>
+                        <div class="col-sm-5">
+                            <select id="leaveStatus" name="leaveStatus" class="form-control" disabled>
+                                <option value="-1"> -- Please select -- </option>
+                                <?php
+                                    foreach( $leaveCtrl->GetLeaveStatus() as $lv ){
+                                        if( $editingLeave->Status == $lv->Id ){
+                                            echo '<option value="'.$lv->Id.'" selected>'.$lv->StatusName.'</option>';
+                                        }else{
+                                            echo '<option value="'.$lv->Id.'">'.$lv->StatusName.'</option>';
+                                        }
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 form-group">
+                        <div class="col-sm-2"><label for="supervisor-remarks">Supervisor Remarks</label></div>
+                        <div class="col-sm-5">
+                            <textarea id="supervisorRemarks" name="supervisorRemarks" class="form-control"><?php if( $isEditing ){echo $editingLeave->SupervisorRemarks;}?></textarea>
+                        </div>
+                    </div>
+                </div>
+            <?php
+        }
+    ?>
     
     <div class="row">
         <div class="col-sm-12 form-group">
             <div class="col-sm-2"></div>
             <div class="col-sm-5">
-                <button class="btn btn-primary btn-sm" id="submit" name="submit" type="submit" onclick="return ValidateLeaveApplicationForm();">Apply</button>
+                <?php 
+                    if( $isEditing ){
+                        echo '<button class="btn btn-primary btn-sm" id="submit" name="submit" disabled type="submit" onclick="return ValidateLeaveApplicationForm();">Apply</button>';
+                    }else{
+                        echo '<button class="btn btn-primary btn-sm" id="submit" name="submit" type="submit" onclick="return ValidateLeaveApplicationForm();">Apply</button>';
+                    }
+                ?>
+                
                 <button class="btn btn-danger btn-sm" type="button">Cancel</button>
             </div>
         </div>
