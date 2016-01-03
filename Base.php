@@ -33,6 +33,7 @@
     include_once "base/modal/ProRatedLeave.php";
 	include_once "base/modal/LeaveApplication.php";
     include_once "base/modal/BringForwardLeave.php";
+    include_once "base/modal/RoleAccess.php";
     
 	//Load controller
 	include_once "controller/login.php";

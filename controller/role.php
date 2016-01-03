@@ -9,6 +9,17 @@
 			}
 		}
 		
+        public function GetRoleAccessByRoleId($roleId){
+            $newRoleAccess = new RoleAccess;
+            
+            $additionalParams = array(
+                array('table' => 'RoleAccess', 'column' => 'RoleId', 'value' => $roleId, 'type' => PDO::PARAM_INT, 'condition' => 'and')
+		    );
+			
+			$returnRoleAccessList = $newRoleAccess->Gets($this->dbConnection,0, 1, $additionalParams);
+			return $returnRoleAccessList;
+        }
+        
         public function GetRoleLeaveList(){
             $newRoleLeave = new RoleLeave;
             
@@ -29,6 +40,23 @@
             
             $dbOptResponse = $newRoleLeave->Add($this->dbConnection, $newRoleLeave);
             $dbOptResponse->OptObj = $newRoleLeave;
+			
+            return $dbOptResponse;
+		}
+        
+        public function AddNewRoleAccess($roleid, $accessString, $email){
+            
+            $newRoleAccess = new RoleAccess;
+            $newRoleAccess->RoleId = $roleid;
+            $newRoleAccess->RoleAccessAttributes = $accessString;
+            $newRoleAccess->IsActive = true;
+            $newRoleAccess->CreatedDate = date("Y-m-d H:i:s", time());
+			$newRoleAccess->CreatedBy = $email;
+			$newRoleAccess->UpdatedDate = date("Y-m-d H:i:s", time());
+			$newRoleAccess->UpdatedBy = $email;
+            
+            $dbOptResponse = $newRoleAccess->Add($this->dbConnection, $newRoleAccess);
+            $dbOptResponse->OptObj = $newRoleAccess;
 			
             return $dbOptResponse;
 		}
@@ -92,13 +120,16 @@
 			return $returnRoleLeave;
         }
         
-		public function GetRoleByUserId($id){
-			$additionalParams = array(
-				':UserId' => array('value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and'),
-			);
-			$userRole = new UserRole;
-			return $userRole->Gets($this->dbConnection,0, 1, $additionalParams);
-		}
+        public function GetRoleAccessByUserId($id){
+            $newRoleAccess = new RoleAccess;
+            
+            $additionalParams = array(
+                array('table' => 'RoleAccess', 'column' => 'RoleId', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
+		    );
+			
+			$returnRoleAccessList = $newRoleAccess->Gets($this->dbConnection,0, 1, $additionalParams);
+			return $returnRoleAccessList;
+        }
 		
 		public function UpdateRole($roleObj, $roleId, $currentUser){
 			$dbOpt = new DbOpt;
@@ -120,6 +151,24 @@
 		}
         
         public function UpdateRoleLeave($obj, $currentUser){
+            $dbOpt = new DbOpt;
+			$dbOpt->OptStatus = true;
+			$dbOpt->OptMessage = "Done";
+			
+			if( $obj != null ){
+				$obj->UpdatedDate = date("Y-m-d H:i:s", time());
+				$obj->UpdatedBy = $currentUser;
+				
+				$dbOpt = $obj->Update($this->dbConnection, $obj);
+			}else{
+				$dbOpt->OptStatus = false;
+				$dbOpt->OptMessage = "Error when updating role leave";
+			}
+			
+			return $dbOpt;
+        }
+        
+        public function UpdateRoleAccess($obj, $currentUser){
             $dbOpt = new DbOpt;
 			$dbOpt->OptStatus = true;
 			$dbOpt->OptMessage = "Done";

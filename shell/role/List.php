@@ -1,4 +1,4 @@
-<p><a href="?action=edit&id=0"><button type="button" class="btn btn-default btn-sm">Apply Leave</button></a></p>
+<p><a href="?action=edit&id=0"><button type="button" class="btn btn-default btn-sm">New Role</button></a></p>
 
 <div class="table-responsive">
     <table class="table table-striped">
@@ -14,7 +14,7 @@
                     foreach( $roleLeaveList as $roleLeave ){
                         echo '<tr>';
                         echo '<td>'.$roleLeave->Role->RoleName.'</td>';
-                        echo '<td><button type="button" class="btn btn-default btn-sm"><a href="?action=edit&id='.$roleLeave->Id.'">View</a></button></td>';
+                        echo '<td><a href="?action=edit&id='.$roleLeave->Id.'"><button type="button" class="btn btn-default btn-sm">View</button></a></td>';
                         echo '</tr>';
                     }
                 ?>

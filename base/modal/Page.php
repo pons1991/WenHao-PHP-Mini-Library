@@ -5,6 +5,5 @@
         var $Path;
         var $IsCRUD;
         var $ShowInSideNavi;
-		
 	}
 ?>

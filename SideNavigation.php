@@ -5,16 +5,14 @@
             <div class="col-sm-3 col-md-2 sidebar">
                 <?php 
                     $pageCtrl = new PageController($dbConn);
+                    $loginCtrl = new LoginController(null);
+                    $roleId = $loginCtrl->GetUserRoleId();
+                    $pageIds = $loginCtrl->GetUserAccessPageIds();
                     $pageListing = $pageCtrl->GetUserAccessPages();
                     if( $pageListing != null && count($pageListing) > 0 ){
                         echo '<ul class="nav nav-sidebar">';
                         foreach( $pageListing as $pg ){
-                            if( $pg->ShowInSideNavi == 1){
-                                // if (strpos($pg->Path, $currentPageName) !== false) {
-                                //     echo '<li class="active"><a href="'.GetFriendlyUrl($pg->Path).'">'.$pg->PageName.'</a></li>';
-                                // }else{
-                                //     echo '<li><a href="'.GetFriendlyUrl($pg->Path).'">'.$pg->PageName.'</a></li>';
-                                // }
+                            if( $pg->ShowInSideNavi == 1 && in_array($pg->Id, $pageIds)){
                                 echo '<li><a href="'.GetFriendlyUrl($pg->Path).'">'.$pg->PageName.'</a></li>';
                             }
                         }
