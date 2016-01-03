@@ -3,6 +3,7 @@
     $dbOptResp = null;
     $isEditing = false;
     $editingLeave = null;
+    
     if( isset($_GET["id"]) && $_GET["id"] !== '0' ){
         //To edit
         $isEditing = true;
@@ -14,12 +15,16 @@
     
     if (isset($_POST["approve"]) || isset($_POST["reject"]) ){
         $applicationStatus;
+        $applicationStatusName;
+        
         if(isset($_POST["approve"])){
             $applicationStatus = 2;
+            $applicationStatusName =  'Approved';
         }
         
         if(isset($_POST["reject"])){
             $applicationStatus = 3;
+            $applicationStatusName =  'Rejected';
         }
         
         $supervisorRemarks = $_POST["supervisorRemarks"];
@@ -29,6 +34,22 @@
         $editingLeave->SupervisorRemarks = $supervisorRemarks;
         
         $dbOptResp = $leaveCtrl->UpdateApplicationLeave($editingLeave, $loginCtrl->GetUserName());
+        if( $dbOptResp != null && $dbOptResp->OptStatus ){
+            $subject = $applicationStatusName.' leave application - '.$editingLeave->AccessUser->Email;
+            $emailCtrl->SendLeaveApplicationEmail(
+                $editingLeave->AccessUser->Email,
+                $loginCtrl->GetUserName(),
+                $subject,
+                $editingLeave->AccessUser->Email,
+                datetime::createfromformat('Y-m-d 00:00:00',$editingLeave->LeaveDateFrom)->format('m/d/Y'),
+                datetime::createfromformat('Y-m-d 00:00:00',$editingLeave->LeaveDateTo)->format('m/d/Y'),
+                $editingLeave->LeaveType->LeaveName,
+                $editingLeave->Remarks,
+                $editingLeave->TotalLeave,
+                $editingLeave->TotalBringForwardLeave,
+                $applicationStatusName,
+                $editingLeave->SupervisorRemarks );
+        }
     }
 ?>
 

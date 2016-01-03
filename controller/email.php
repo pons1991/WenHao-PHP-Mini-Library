@@ -1,21 +1,20 @@
 <?php 
     class EmailController extends BaseController{
-        function SendLeaveApplicationEmail($managerEmail, $userEmail, $fromDate, $toDate, $leaveTypeName,$remarks,$totalLeave,$bringForward,$status,$sRemarks){
+        function SendLeaveApplicationEmail($toEmail, $ccEmail,$subject, $applicantEmail, $fromDate, $toDate, $leaveTypeName,$remarks,$totalLeave,$bringForward,$status,$sRemarks){
             $miniEmailManager = new MiniEmailManager;
                 
                 $to = array();
-                array_push($to, $managerEmail);
+                array_push($to, $toEmail);
                 
                 $cc = array();
-                array_push($cc, $userEmail);
+                array_push($cc, $ccEmail);
                 
-                $subject = $userEmail.' new leave application';
                 $body = '<table border="1">';
                 
                 //Applicant email
                 $body .= '<tr>';
                 $body .= '<td>Email</td>';
-                $body .= '<td>'.$userEmail.'</td>';
+                $body .= '<td>'.$applicantEmail.'</td>';
                 $body .= '</tr>';
                 
                 //leave from - to

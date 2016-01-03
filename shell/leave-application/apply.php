@@ -164,12 +164,12 @@
             $orgRelList = $userCtrl->GetUserOrgRel($userId);
             if( $orgRelList != null && count($orgRelList) == 1){
                 $orgRel = $orgRelList[0];
-                $emailCtrl->SendLeaveApplicationEmail($orgRel->SuperiorUser->Email,$userEmail,$fromDate,$toDate,$leaveTypeName,$remarks,$totalCurrentToApply,$totalBringForwardToApply,'New','' );
+                $subject = 'New leave application - '.$userEmail;
+                $emailCtrl->SendLeaveApplicationEmail($orgRel->SuperiorUser->Email,$userEmail,$subject,$userEmail,$fromDate,$toDate,$leaveTypeName,$remarks,$totalCurrentToApply,$totalBringForwardToApply,'New','' );
             }
         }
     }
 ?>
-
 
 <form method="post">
     <div class="row" >
