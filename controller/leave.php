@@ -137,6 +137,11 @@
 			return $newLeaveType->Gets($this->dbConnection, 0, 999, null);
 		}
         
+        public function GetLeaveAccess(){
+            $newLeaveAccess = new LeaveAccess;
+			return $newLeaveAccess->Gets($this->dbConnection, 0, 999, null);
+        }
+        
         public function GetLeaveByUserId($userId){
             $newLeaveApplication = new LeaveApplication;
             

@@ -3,6 +3,8 @@
     $isEditing = false;
     $editingLeaveType = null;
     
+    $roleList = $roleCtrl->GetRoles();
+    
     if( isset($_GET["id"]) && $_GET["id"] !== '0' ){
         //To edit
         $isEditing = true;

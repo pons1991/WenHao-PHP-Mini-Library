@@ -260,11 +260,33 @@
                 <select id="leaveType" name="leaveType" class="form-control">
                     <option value="-1"> -- Please select -- </option>
                     <?php
-                        foreach( $leaveTypeList as $lv ){
-                            if( $isEditing && $editingLeave->LeaveTypeId == $lv->Id ){
-                                echo '<option value="'.$lv->Id.'" selected>'.$lv->LeaveName.'</option>';
-                            }else{
-                                echo '<option value="'.$lv->Id.'">'.$lv->LeaveName.'</option>';
+                        $leaveAccessArray = null;
+                        $leaveAccessList = $roleCtrl->GetLeaveAccessByRoleId($loginCtrl->GetUserRoleId());
+                        if( $leaveAccessList != null && count($leaveAccessList) == 1 ){
+                            $leaveAccess = $leaveAccessList[0];
+                            if( $leaveAccess != null ){
+                                $jsonStr = $leaveAccess->LeaveAccessAttributes;
+                                if( !empty($jsonStr)){
+                                    $jsonArr = json_decode($jsonStr, true);
+                                    if( $jsonArr != null && array_key_exists('LeaveTypeIds', $jsonArr) ){
+                                        $arrStr = $jsonArr['LeaveTypeIds'];
+                                        if( !empty($arrStr) ){
+                                            $leaveAccessArray = explode(',',$arrStr);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        if( $leaveAccessArray != null && count($leaveAccessArray) > 0 ){
+                            foreach( $leaveTypeList as $lv ){
+                                if( $isEditing && $editingLeave->LeaveTypeId == $lv->Id ){
+                                    echo '<option value="'.$lv->Id.'" selected>'.$lv->LeaveName.'</option>';
+                                }else{
+                                    if( in_array($lv->Id,$leaveAccessArray) ){
+                                        echo '<option value="'.$lv->Id.'">'.$lv->LeaveName.'</option>';
+                                    }
+                                }
                             }
                         }
                     ?>

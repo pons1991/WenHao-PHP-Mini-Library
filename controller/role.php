@@ -61,6 +61,23 @@
             return $dbOptResponse;
 		}
         
+        public function AddNewLeaveAccess($roleid, $accessString, $email){
+            
+            $newLeaveAccess = new LeaveAccess;
+            $newLeaveAccess->RoleId = $roleid;
+            $newLeaveAccess->LeaveAccessAttributes = $accessString;
+            $newLeaveAccess->IsActive = true;
+            $newLeaveAccess->CreatedDate = date("Y-m-d H:i:s", time());
+			$newLeaveAccess->CreatedBy = $email;
+			$newLeaveAccess->UpdatedDate = date("Y-m-d H:i:s", time());
+			$newLeaveAccess->UpdatedBy = $email;
+            
+            $dbOptResponse = $newLeaveAccess->Add($this->dbConnection, $newLeaveAccess);
+            $dbOptResponse->OptObj = $newLeaveAccess;
+			
+            return $dbOptResponse;
+		}
+        
 		public function NewRole($rolename, $createdby){
 			
 			$newRole = new Role;
@@ -120,6 +137,17 @@
 			return $returnRoleLeave;
         }
         
+        public function GetLeaveAccessByRoleId($id){
+            $newLeaveAccess = new LeaveAccess;
+            
+            $additionalParams = array(
+                array('table' => 'LeaveAccess', 'column' => 'RoleId', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
+            );
+            
+            $returnLeaveAccessList = $newLeaveAccess->Gets($this->dbConnection,0, 1, $additionalParams);
+			return $returnLeaveAccessList;
+        }
+        
         public function GetRoleAccessByUserId($id){
             $newRoleAccess = new RoleAccess;
             
@@ -169,6 +197,24 @@
         }
         
         public function UpdateRoleAccess($obj, $currentUser){
+            $dbOpt = new DbOpt;
+			$dbOpt->OptStatus = true;
+			$dbOpt->OptMessage = "Done";
+			
+			if( $obj != null ){
+				$obj->UpdatedDate = date("Y-m-d H:i:s", time());
+				$obj->UpdatedBy = $currentUser;
+				
+				$dbOpt = $obj->Update($this->dbConnection, $obj);
+			}else{
+				$dbOpt->OptStatus = false;
+				$dbOpt->OptMessage = "Error when updating role leave";
+			}
+			
+			return $dbOpt;
+        }
+        
+        public function UpdateLeaveAccess($obj, $currentUser){
             $dbOpt = new DbOpt;
 			$dbOpt->OptStatus = true;
 			$dbOpt->OptMessage = "Done";
