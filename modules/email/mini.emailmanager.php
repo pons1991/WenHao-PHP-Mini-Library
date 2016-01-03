@@ -1,9 +1,9 @@
 <?php 
     require_once "mini.smtp.php";
-    require_once "mini.email.php";
+    //require_once "mini.email.php";
     require_once "class.smtp.php";
     require_once "class.phpmailer.php";
-    
+    include_once "../logger/mini.loggermanager.php";
     
     class MiniEmailManager {
         
@@ -45,25 +45,30 @@
             $this->mail->setFrom($this->smtp->username);
         }
         
-        function SendEmail($email){
-            if($email != null && is_a($email, 'MiniEmail')){
-                if( is_array($email->toAddressList) && count($email->toAddressList) > 0 ){
+        function SendEmail($toList, $ccList, $subject, $body){
+            if( $toList != null && is_array($toList) && count($toList) > 0 ){
                     //Add the list of address into mailer address list
-                    foreach($email->toAddressList as $address){
+                    foreach($toList as $address){
                         $this->mail->addAddress($address);
                     }
                     
-                    $this->mail->Subject = $email->subject;
-                    $this->mail->Body    = $email->message;
+                    if( $ccList != null && is_array($ccList) && count($ccList) > 0 ){
+                        foreach($ccList as $ccaddress){
+                            $this->mail->addCC($ccaddress);
+                        }
+                        
+                    }
+                    
+                    $this->mail->Subject = $subject;
+                    $this->mail->Body    = $body;
                     
                     if(!$this->mail->send()) {
-                        //will further log into log file
-                        //echo 'Mailer Error: ' . $mail->ErrorInfo;
+                        $miniLoggerManager = new MiniLoggerManager;
+                        $miniLoggerManager->log->fatal($this->mail->ErrorInfo);
                     } else {
                         return true;
                     }
                 }
-            }
             
             return false;
         }

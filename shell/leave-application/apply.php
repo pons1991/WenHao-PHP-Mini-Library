@@ -4,6 +4,8 @@
     $isEditing = false;
     $editingLeave = null;
     
+    $leaveTypeList = $leaveCtrl->GetLeaveTypes();
+    
     if( isset($_GET["id"]) && $_GET["id"] !== '0' ){
         //To edit
         $isEditing = true;
@@ -150,6 +152,21 @@
             }
         }
         
+        if( $dbOptResp != null && $dbOptResp->OptStatus && $dbOptResp->OptObj != null ){
+            $leaveTypeName = '';
+            foreach( $leaveTypeList as $lv ){
+                if( $lv->Id == $leaveType ){
+                    $leaveTypeName = $lv->LeaveName;
+                    break;
+                }
+            }
+            
+            $orgRelList = $userCtrl->GetUserOrgRel($userId);
+            if( $orgRelList != null && count($orgRelList) == 1){
+                $orgRel = $orgRelList[0];
+                $emailCtrl->SendLeaveApplicationEmail($orgRel->SuperiorUser->Email,$userEmail,$fromDate,$toDate,$leaveTypeName,$remarks,$totalCurrentToApply,$totalBringForwardToApply,'New','' );
+            }
+        }
     }
 ?>
 
@@ -243,7 +260,7 @@
                 <select id="leaveType" name="leaveType" class="form-control">
                     <option value="-1"> -- Please select -- </option>
                     <?php
-                        foreach( $leaveCtrl->GetLeaveTypes() as $lv ){
+                        foreach( $leaveTypeList as $lv ){
                             if( $isEditing && $editingLeave->LeaveTypeId == $lv->Id ){
                                 echo '<option value="'.$lv->Id.'" selected>'.$lv->LeaveName.'</option>';
                             }else{

@@ -262,6 +262,8 @@
             return $selectColumn;
         }
         
+        //We can ignore $queryMeta (variable_table) in where statement
+        //Because we are filtering the column in the parent table, so it would not affect the reference table
         public function ConstructWhere($additionalParams,$queryMeta,&$queryParamValue){
             $whereStatement = "";
             $previousColumnName = "";
@@ -372,7 +374,7 @@
             $queryMeta[$className] = chr($asciiIndex);
             $fromStatement .= " from ".$className." as ".chr($asciiIndex);
             
-            //construct reference class query string 
+            //construct reference class query string
             for($i = 0 ; $i < count($referenceByList); $i++){
                 $asciiIndex = $asciiIndex + 1;
                 
@@ -380,18 +382,19 @@
                 if( array_key_exists("ReferenceBy",$referenceByListMeta[$referenceClassName] ) ){
                     
                     //reference table is used to hold the meta reference table
-                    //in fact, when store into $queryMeta, use the original variable name
+                    //in fact, when store into $queryMeta, use the original variable name and table name (original variable name _ table name)
                     //this is to avoid further code changes :)
                     $referenceTable = $referenceClassName;
                     if( array_key_exists("table",$referenceByListMeta[$referenceClassName] ) ){
                         $referenceTable = $referenceByListMeta[$referenceClassName]["table"];
+                        $queryMeta[$referenceClassName.'_'.$referenceTable] = chr($asciiIndex);
+                    }else{
+                        $queryMeta[$referenceTable] = chr($asciiIndex);
                     }
                     
                     $referenceByName = $referenceByListMeta[$referenceClassName]["ReferenceBy"];
                     $tempSelectStr = $this->ConstructReferenceQueryString($asciiIndex,$referenceTable,$referenceByName);
                     $selectColumn = empty($selectColumn) ? ($tempSelectStr) : ($selectColumn.",".$tempSelectStr);
-                    //$queryMeta[$referenceClassName] = chr($asciiIndex);
-                    $queryMeta[$referenceTable] = chr($asciiIndex);
                     
                     //Variable name can different from table name
                     $fromStatement .= " inner join ".$referenceTable." as ".chr($asciiIndex)." on a.".$referenceByName." = ".chr($asciiIndex).".Id";
@@ -453,12 +456,12 @@
                             }else{
                                 
                                 if( !array_key_exists("table",$metaValue[$propName] ) ){
-                                    $tempReflectionObj = $this->ReferenceConversion($pdoRecord,$propName,$queryMeta);
+                                    $tempReflectionObj = $this->ReferenceConversion($pdoRecord,$propName,$queryMeta, '');
                                     //reference object assignment to the base object
                                     $prop->setValue($tempObj, $tempReflectionObj);
                                 }else{
                                     $tempPropName = $metaValue[$propName]["table"];
-                                    $tempReflectionObj = $this->ReferenceConversion($pdoRecord,$tempPropName,$queryMeta);
+                                    $tempReflectionObj = $this->ReferenceConversion($pdoRecord,$tempPropName,$queryMeta,$propName.'_'.$tempPropName );
                                     //reference object assignment to the base object
                                     $prop->setValue($tempObj, $tempReflectionObj);
                                 }
@@ -475,45 +478,49 @@
 			return $tempObj;
 		}
         
-        public function ReferenceConversion($pdoRecord,$propName,$queryMeta){
+        public function ReferenceConversion($pdoRecord,$propName,$queryMeta, $queryMetaUniqueKey){
             $referenceReflectionClass = new ReflectionClass($propName);
-                            $referenceReflectionClassProps  = $referenceReflectionClass->getProperties();
-                            $referenceReflectionClassName = $referenceReflectionClass->getName();
-                            $tempReflectionObj = new $referenceReflectionClassName;
-                            $tempMetaList = array();
-                            $tempMetaValue = array();
-                            for ($i = 0 ; $i < count($referenceReflectionClassProps); $i++) {
-                                $referenceReflectionClassProp = $referenceReflectionClassProps[$i];
-                                if( $referenceReflectionClassProp != null ){
-                                    $referenceReflectionClassPropName = $referenceReflectionClassProp->getName();
-                                    if (strpos($referenceReflectionClassPropName,'_META') !== false) {
-                                        $explodeToken = explode("_",$referenceReflectionClassPropName);
-                                        array_push($tempMetaList,$explodeToken[0]);
+            $referenceReflectionClassProps  = $referenceReflectionClass->getProperties();
+            $referenceReflectionClassName = $referenceReflectionClass->getName();
+            
+            //query meta unique key will hold variable_table name
+            $queryMetaUniqueKey = empty($queryMetaUniqueKey) ? $referenceReflectionClassName : $queryMetaUniqueKey;
+                            
+            $tempReflectionObj = new $referenceReflectionClassName;
+            $tempMetaList = array();
+            $tempMetaValue = array();
+            for ($i = 0 ; $i < count($referenceReflectionClassProps); $i++) {
+                $referenceReflectionClassProp = $referenceReflectionClassProps[$i];
+                if( $referenceReflectionClassProp != null ){
+                    $referenceReflectionClassPropName = $referenceReflectionClassProp->getName();
+                    if (strpos($referenceReflectionClassPropName,'_META') !== false) {
+                        $explodeToken = explode("_",$referenceReflectionClassPropName);
+                        array_push($tempMetaList,$explodeToken[0]);
                                         
-                                        $jsonString = $referenceReflectionClassProp->getValue($this);
-                                        $jsonMeta = json_decode($jsonString, true);
-                                        $tempMetaValue[$explodeToken[0]] = $jsonMeta;
-                                    }else{
-                                        if( in_array($referenceReflectionClassPropName,$tempMetaList) ){
-                                            $jsonMeta = $tempMetaValue[$referenceReflectionClassPropName];
-                                            if( !array_key_exists("ReferenceBy",$jsonMeta ) ){
-                                                $pdoTitle = $queryMeta[$referenceReflectionClassName]."_".$referenceReflectionClassPropName;
-                                                $propValue = $pdoRecord[$pdoTitle];
-                                                //reflection set value to object
-                                                $referenceReflectionClassProp->setValue($tempReflectionObj, $propValue);
-                                            }else{
-                                                //if exists then ignore - since the code only can support 1 level deep of reference
-                                            }
-                                        }else{
-                                            $pdoTitle = $queryMeta[$referenceReflectionClassName]."_".$referenceReflectionClassPropName;
-                                            $propValue = $pdoRecord[$pdoTitle];
-                                            //reflection set value to object
-                                            $referenceReflectionClassProp->setValue($tempReflectionObj, $propValue);
-                                        }
-                                    }
-                                }
+                        $jsonString = $referenceReflectionClassProp->getValue($this);
+                        $jsonMeta = json_decode($jsonString, true);
+                        $tempMetaValue[$explodeToken[0]] = $jsonMeta;
+                    }else{
+                        if( in_array($referenceReflectionClassPropName,$tempMetaList) ){
+                            $jsonMeta = $tempMetaValue[$referenceReflectionClassPropName];
+                            if( !array_key_exists("ReferenceBy",$jsonMeta ) ){
+                                $pdoTitle = $queryMeta[$queryMetaUniqueKey]."_".$referenceReflectionClassPropName;
+                                $propValue = $pdoRecord[$pdoTitle];
+                                //reflection set value to object
+                                $referenceReflectionClassProp->setValue($tempReflectionObj, $propValue);
+                            }else{
+                                //if exists then ignore - since the code only can support 1 level deep of reference
                             }
-                            return $tempReflectionObj;
+                      }else{
+                        $pdoTitle = $queryMeta[$queryMetaUniqueKey]."_".$referenceReflectionClassPropName;
+                        $propValue = $pdoRecord[$pdoTitle];
+                        //reflection set value to object
+                        $referenceReflectionClassProp->setValue($tempReflectionObj, $propValue);
+                      }
+                    }
+                }
+            }
+            return $tempReflectionObj;
         }
 	}
 ?>

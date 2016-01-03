@@ -11,7 +11,7 @@
         var $isHtml;
         
         function __construct() {
-            $dataJsonString = file_get_contents('web.json');
+            $dataJsonString = file_get_contents(dirname ( __FILE__ ).'/web.json');
             $dataArray = json_decode($dataJsonString, true);
             
             $currentObjInst = new ReflectionClass($this);

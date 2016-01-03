@@ -40,6 +40,7 @@
 	include_once "controller/user.php";
     include_once "controller/page.php";
     include_once "controller/leave.php";
+    include_once "controller/email.php";
 	
 	//initialize session
 	if (session_status() == PHP_SESSION_NONE || session_id() == '') {
