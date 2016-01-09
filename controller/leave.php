@@ -335,6 +335,19 @@
 			return $accumulativeList;
         }
         
+        public function GetAccumulativeLeaveByUserIdYearLeaveType($userid, $year, $leaveType){
+            $newAccumulativeLeave = new AccumulativeLeave;
+            
+            $additionalParams = array(
+                array('table' => 'AccumulativeLeave', 'column' => 'UserId', 'value' => $userid, 'type' => PDO::PARAM_INT, 'condition' => 'and'),
+                array('table' => 'AccumulativeLeave', 'column' => 'ExpiredYear', 'value' => $year, 'type' => PDO::PARAM_STR, 'condition' => 'and'),
+                array('table' => 'AccumulativeLeave', 'column' => 'LeaveTypeId', 'value' => $leaveType, 'type' => PDO::PARAM_INT, 'condition' => 'and')
+		    );
+			
+			$accumulativeList = $newAccumulativeLeave->Gets($this->dbConnection,0, 999, $additionalParams);
+			return $accumulativeList;
+        }
+        
         public function UpdateAccumulativeLeave($obj, $email){
             $dbOpt = new DbOpt;
 			$dbOpt->OptStatus = true;

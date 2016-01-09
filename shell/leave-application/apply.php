@@ -47,7 +47,7 @@
 
         //Bring forward algorithm 
         $userBringForwardList = $leaveCtrl->GetBringForwardLeaveByUserId($loginCtrl->GetUserId(), $previousYear);
-        if( $userBringForwardList != null && count($userBringForwardList) == 1 ){
+        if( $userBringForwardList != null && count($userBringForwardList) > 0 ){
             $userBringForward = $userBringForwardList[0];
             $userBringForwardAttributes = $userBringForward->BringForwardAttributes;
             $userBringForwardAttributeArray = json_decode($userBringForwardAttributes, true);
@@ -113,13 +113,31 @@
             }
         }
         
+        $leaveTypeNumber = 0;
+        
+        //check leave type
+        foreach( $leaveTypeList as $leave ){
+            if( $leave->Id == $leaveType ){
+                if( $leave->IsAllowToAccumulate ){
+                    $accumulatedLeaveList = $leaveCtrl->GetAccumulativeLeaveByUserIdYearLeaveType($loginCtrl->GetUserId(), date('Y'),$leave->Id );
+                    if( $accumulatedLeaveList != null && count($accumulatedLeaveList) > 0 ){
+                        foreach( $accumulatedLeaveList as $acc ){
+                            $leaveTypeNumber += $acc->AccumulativeLeaveNumber;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        
         //validation on pro rated leave
         $proRatedList = $leaveCtrl->GetProRatedLeaveByUserIdAndYear($loginCtrl->GetUserId(), $currentYear);
         if( $proRatedList != null && count($proRatedList) == 1 ){
             $proRated = $proRatedList[0];
             $proRatedLeaveArray = json_decode($proRated->ProRatedAttributes, true);
-            
-            $leaveTypeNumber = $proRatedLeaveArray[$leaveType];
+            if( array_key_exists($leaveType, $proRatedLeaveArray) ){
+                $leaveTypeNumber += $proRatedLeaveArray[$leaveType];
+            }
             if ( ($totalAppliedDay + $totalCurrentToApply) > $leaveTypeNumber){
                 //error
                 $dbOptResp = new DbOpt;
@@ -138,12 +156,14 @@
                 if( $roleLeaveList != null && count($roleLeaveList) == 1 ){
                     $roleLeave = $roleLeaveList[0];
                     $roleLeaveArray = json_decode($roleLeave->LeaveAttribute, true);
-                    $leaveTypeNumber = $roleLeaveArray[$leaveType];
+                    if( array_key_exists($leaveType, $roleLeaveArray) ){
+                        $leaveTypeNumber += $roleLeaveArray[$leaveType];
+                    }
                     if( ($totalAppliedDay + $totalCurrentToApply) > $leaveTypeNumber ){
                         //error
                         $dbOptResp = new DbOpt;
                         $dbOptResp->OptStatus = false;
-                        $dbOptResp->OptMessage = 'Your applied leave has exceed your available leave2';
+                        $dbOptResp->OptMessage = 'Your applied leave has exceed your available leave';
                     }else{
                         //proceed
                         $dbOptResp = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $totalCurrentToApply,$totalBringForwardToApply, $leaveType, $remarks,$approvalRemarks, $userId, $userEmail);
@@ -257,7 +277,7 @@
         <div class="col-sm-12 form-group">
             <div class="col-sm-2"><label for="leaveType">Leave Type </label></div>
             <div class="col-sm-5">
-                <select id="leaveType" name="leaveType" class="form-control">
+                <select id="leaveType" name="leaveType" class="form-control" <?php if($isEditing){ echo 'disabled'; } ?>>
                     <option value="-1"> -- Please select -- </option>
                     <?php
                         $leaveAccessArray = null;

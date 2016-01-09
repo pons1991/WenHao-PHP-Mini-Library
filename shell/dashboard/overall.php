@@ -18,7 +18,7 @@
     $userBringForwardAttributeArray = array();
     
     $userBringForwardList = $leaveCtrl->GetBringForwardLeaveByUserId($loginCtrl->GetUserId(), $previousYear);
-    if( $userBringForwardList != null && count($userBringForwardList) == 1 ){
+    if( $userBringForwardList != null && count($userBringForwardList) > 0 ){
         $userBringForward = $userBringForwardList[0];
         $userBringForwardAttributes = $userBringForward->BringForwardAttributes;
         $userBringForwardAttributeArray = json_decode($userBringForwardAttributes, true);
