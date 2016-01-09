@@ -87,6 +87,21 @@
     
     <div class="row">
         <div class="col-sm-12 form-group">
+            <div class="col-sm-2"><label for="accumulate">Is Allowed To Accumulate</label></div>
+            <div class="col-sm-5">
+                <?php 
+                    if( $isEditing && $editingLeaveType->IsAllowToAccumulate ){
+                        echo '<input type="checkbox" id="accumulate" name="accumulate" checked />';
+                    }else{
+                        echo '<input type="checkbox" id="accumulate" name="accumulate" />';
+                    }
+                ?>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-12 form-group">
             <div class="col-sm-2"></div>
             <div class="col-sm-5">
                 <?php 

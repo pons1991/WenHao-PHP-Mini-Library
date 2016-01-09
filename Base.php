@@ -35,6 +35,7 @@
     include_once "base/modal/BringForwardLeave.php";
     include_once "base/modal/RoleAccess.php";
     include_once "base/modal/LeaveAccess.php";
+    include_once "base/modal/AccumulativeLeave.php";
     
 	//Load controller
 	include_once "controller/login.php";

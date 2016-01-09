@@ -95,10 +95,28 @@
 			$newLeaveType->UpdatedDate = date("Y-m-d H:i:s", time());
 			$newLeaveType->UpdatedBy = $email;
             
-            echo print_r($newLeaveType);
-            
             $dbOptResponse = $newLeaveType->Add($this->dbConnection, $newLeaveType);
             $dbOptResponse->OptObj = $newLeaveType;
+			
+            return $dbOptResponse;
+        }
+        
+        public function AddAccumulativeLeave($userid, $leaveTypeId, $remarks, $year, $leaveNumber,$email){
+            $newAccumulativeLeave = new AccumulativeLeave;
+            $newAccumulativeLeave->UserId = $userid;
+            $newAccumulativeLeave->ExpiredYear = $year;
+            $newAccumulativeLeave->LeaveTypeId = $leaveTypeId;
+            $newAccumulativeLeave->Remarks = $remarks;
+            $newAccumulativeLeave->AccumulativeLeaveNumber = $leaveNumber;
+            
+            $newAccumulativeLeave->IsActive = true;
+            $newAccumulativeLeave->CreatedDate = date("Y-m-d H:i:s", time());
+			$newAccumulativeLeave->CreatedBy = $email;
+			$newAccumulativeLeave->UpdatedDate = date("Y-m-d H:i:s", time());
+			$newAccumulativeLeave->UpdatedBy = $email;
+
+            $dbOptResponse = $newAccumulativeLeave->Add($this->dbConnection, $newAccumulativeLeave);
+            $dbOptResponse->OptObj = $newAccumulativeLeave;
 			
             return $dbOptResponse;
         }
@@ -126,6 +144,17 @@
             
             $additionalParams = array(
                 array('table' => 'LeaveType', 'column' => 'Id', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
+            );
+            
+            $returnLeaveTypeList = $newLeaveType->Gets($this->dbConnection,0, 1, $additionalParams);
+			return $returnLeaveTypeList;
+        }
+        
+        public function GetAccumulativeLeaveType(){
+            $newLeaveType = new LeaveType;
+            
+            $additionalParams = array(
+                array('table' => 'LeaveType', 'column' => 'IsAllowToAccumulate', 'value' => 1, 'type' => PDO::PARAM_INT, 'condition' => 'and')
             );
             
             $returnLeaveTypeList = $newLeaveType->Gets($this->dbConnection,0, 1, $additionalParams);

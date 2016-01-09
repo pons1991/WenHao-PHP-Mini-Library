@@ -1,5 +1,5 @@
 {
-	"TableName": "LeaveType",
+	"TableName": "AccumulativeLeave",
 	"Properties":[
 		{
 			"Name": "Id",
@@ -12,24 +12,47 @@
 			"Constraints":[]
 		},
 		{
-			"Name": "LeaveName",
-			"Type": "varchar(100)",
+			"Name": "UserId",
+			"Type": "int",
+			"Attributes":[
+				"UNSIGNED",
+				"NOT NULL"
+			],
+			"Constraints":[
+				"constraint AccumulativeLeave_fk_access_user_id FOREIGN KEY (UserId) REFERENCES AccessUser(Id)"
+			]
+		},
+		{
+			"Name": "ExpiredYear",
+			"Type": "varchar(10)",
 			"Attributes":[
 				"NOT NULL"
 			],
 			"Constraints":[]
 		},
 		{
-			"Name": "IsAllowToBringForward",
-			"Type": "BOOLEAN",
+			"Name": "LeaveTypeId",
+			"Type": "int",
 			"Attributes":[
+				"UNSIGNED",
+				"NOT NULL"
+			],
+			"Constraints":[
+                "constraint AccumulativeLeave_fk_LeaveType_id FOREIGN KEY (LeaveTypeId) REFERENCES LeaveType(Id)"
+            ]
+		},
+		{
+			"Name": "AccumulativeLeaveNumber",
+			"Type": "int",
+			"Attributes":[
+				"UNSIGNED",
 				"NOT NULL"
 			],
 			"Constraints":[]
 		},
 		{
-			"Name": "IsAllowToAccumulate",
-			"Type": "BOOLEAN",
+			"Name": "Remarks",
+			"Type": "text",
 			"Attributes":[
 				"NOT NULL"
 			],

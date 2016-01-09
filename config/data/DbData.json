@@ -4,6 +4,7 @@
         "insert into Role (RoleName,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('staff',1,now(),'admin',now(),'admin')",
 		"insert into Role (RoleName,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('assistant manager',1,now(),'admin',now(),'admin')",
 		"insert into Role (RoleName,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('manager',1,now(),'admin',now(),'admin')",
+        
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Dashboard','/shell/dashboard/index.php',0,1,1,now(),'admin',now(),'admin')",
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Users','/shell/user/users.php',1,1,1,now(),'admin',now(),'admin')",
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Profile','/shell/user/users.php?action=profile',1,1,1,now(),'admin',now(),'admin')",
@@ -11,7 +12,9 @@
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Leave','/shell/leave/index.php',1,1,1,now(),'admin',now(),'admin')",
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Pro Rate Leave','/shell/prorate/index.php',1,1,1,now(),'admin',now(),'admin')",
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Leave Application','/shell/leave-application/index.php',1,1,1,now(),'admin',now(),'admin')",
-		"insert into RoleAccess (RoleId,RoleAccessAttributes,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (1,'{\"PageIds\":\"1,2,3,4,5,6,7\"}',1,now(),'admin',now(),'admin')",
+		"insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Accumulate Leave','/shell/accumulate/index.php',1,1,1,now(),'admin',now(),'admin')",
+        
+        "insert into RoleAccess (RoleId,RoleAccessAttributes,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (1,'{\"PageIds\":\"1,2,3,4,5,6,7,8\"}',1,now(),'admin',now(),'admin')",
         "insert into RoleAccess (RoleId,RoleAccessAttributes,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (2,'{\"PageIds\":\"1,3,7\"}',1,now(),'admin',now(),'admin')",
         "insert into RoleAccess (RoleId,RoleAccessAttributes,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (3,'{\"PageIds\":\"1,3,7\"}',1,now(),'admin',now(),'admin')",
         "insert into RoleAccess (RoleId,RoleAccessAttributes,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (4,'{\"PageIds\":\"1,3,7\"}',1,now(),'admin',now(),'admin')",
@@ -23,11 +26,11 @@
         "insert into AccessUser (Email,Password,CustomAttribute,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('wenhao.mui4@gmail.com','wenhao','',1,now(),'admin',now(),'admin')",
         "insert into AccessUser (Email,Password,CustomAttribute,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('wenhao.mui5@gmail.com','wenhao','',1,now(),'admin',now(),'admin')",
         
-        "insert into LeaveType (LeaveName,IsAllowToBringForward,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Annual Leave',1,1,now(),'admin',now(),'admin')",
-        "insert into LeaveType (LeaveName,IsAllowToBringForward,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Medical Leave',0,1,now(),'admin',now(),'admin')",
-        "insert into LeaveType (LeaveName,IsAllowToBringForward,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Replacement Leave',0,1,now(),'admin',now(),'admin')",
-        "insert into LeaveType (LeaveName,IsAllowToBringForward,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('OverTime Leave',0,1,now(),'admin',now(),'admin')",
-        "insert into LeaveType (LeaveName,IsAllowToBringForward,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Outstation Leave',0,1,now(),'admin',now(),'admin')",
+        "insert into LeaveType (LeaveName,IsAllowToBringForward,IsAllowToAccumulate,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Annual Leave',1,0,1,now(),'admin',now(),'admin')",
+        "insert into LeaveType (LeaveName,IsAllowToBringForward,IsAllowToAccumulate,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Medical Leave',0,0,1,now(),'admin',now(),'admin')",
+        "insert into LeaveType (LeaveName,IsAllowToBringForward,IsAllowToAccumulate,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Replacement Leave',0,0,1,now(),'admin',now(),'admin')",
+        "insert into LeaveType (LeaveName,IsAllowToBringForward,IsAllowToAccumulate,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('OverTime Leave',0,1,1,now(),'admin',now(),'admin')",
+        "insert into LeaveType (LeaveName,IsAllowToBringForward,IsAllowToAccumulate,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Outstation Leave',0,0,1,now(),'admin',now(),'admin')",
         
         "insert into LeaveAccess (RoleId,LeaveAccessAttributes,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (1,'{\"LeaveTypeIds\":\"1,2,3,4,5\"}',1,now(),'admin',now(),'admin')",
         "insert into LeaveAccess (RoleId,LeaveAccessAttributes,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (2,'{\"LeaveTypeIds\":\"1,2,3,4\"}',1,now(),'admin',now(),'admin')",
