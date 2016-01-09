@@ -101,26 +101,6 @@
             return $dbOptResponse;
         }
         
-        public function AddAccumulativeLeave($userid, $leaveTypeId, $remarks, $year, $leaveNumber,$email){
-            $newAccumulativeLeave = new AccumulativeLeave;
-            $newAccumulativeLeave->UserId = $userid;
-            $newAccumulativeLeave->ExpiredYear = $year;
-            $newAccumulativeLeave->LeaveTypeId = $leaveTypeId;
-            $newAccumulativeLeave->Remarks = $remarks;
-            $newAccumulativeLeave->AccumulativeLeaveNumber = $leaveNumber;
-            
-            $newAccumulativeLeave->IsActive = true;
-            $newAccumulativeLeave->CreatedDate = date("Y-m-d H:i:s", time());
-			$newAccumulativeLeave->CreatedBy = $email;
-			$newAccumulativeLeave->UpdatedDate = date("Y-m-d H:i:s", time());
-			$newAccumulativeLeave->UpdatedBy = $email;
-
-            $dbOptResponse = $newAccumulativeLeave->Add($this->dbConnection, $newAccumulativeLeave);
-            $dbOptResponse->OptObj = $newAccumulativeLeave;
-			
-            return $dbOptResponse;
-        }
-        
         public function UpdateLeaveType($obj, $email){
             $dbOpt = new DbOpt;
 			$dbOpt->OptStatus = true;
@@ -303,5 +283,63 @@
 			$bringForward = $newBringForwardLeave->Gets($this->dbConnection,0, 999, $additionalParams);
 			return $bringForward;
         }
+        
+        //Accumulative Leave Section
+        public function AddAccumulativeLeave($userid, $leaveTypeId, $remarks, $year, $leaveNumber,$email){
+            $newAccumulativeLeave = new AccumulativeLeave;
+            $newAccumulativeLeave->UserId = $userid;
+            $newAccumulativeLeave->ExpiredYear = $year;
+            $newAccumulativeLeave->LeaveTypeId = $leaveTypeId;
+            $newAccumulativeLeave->Remarks = $remarks;
+            $newAccumulativeLeave->AccumulativeLeaveNumber = $leaveNumber;
+            
+            $newAccumulativeLeave->IsActive = true;
+            $newAccumulativeLeave->CreatedDate = date("Y-m-d H:i:s", time());
+			$newAccumulativeLeave->CreatedBy = $email;
+			$newAccumulativeLeave->UpdatedDate = date("Y-m-d H:i:s", time());
+			$newAccumulativeLeave->UpdatedBy = $email;
+
+            $dbOptResponse = $newAccumulativeLeave->Add($this->dbConnection, $newAccumulativeLeave);
+            $dbOptResponse->OptObj = $newAccumulativeLeave;
+			
+            return $dbOptResponse;
+        }
+        
+        public function GetAccumulativeLeave(){
+            $newAccumulativeLeave = new AccumulativeLeave;
+            
+			$accumulativeLeaveList = $newAccumulativeLeave->Gets($this->dbConnection,0, 999, null);
+			return $accumulativeLeaveList;
+        }
+        
+        public function GetAccumulativeLeaveById($id){
+            $newAccumulativeLeave = new AccumulativeLeave;
+            
+            $additionalParams = array(
+                array('table' => 'AccumulativeLeave', 'column' => 'Id', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
+		    );
+			
+			$accumulativeList = $newAccumulativeLeave->Gets($this->dbConnection,0, 999, $additionalParams);
+			return $accumulativeList;
+        }
+        
+        public function UpdateAccumulativeLeave($obj, $email){
+            $dbOpt = new DbOpt;
+			$dbOpt->OptStatus = true;
+			$dbOpt->OptMessage = "Success";
+			
+			if( $obj != null ){
+				$obj->UpdatedDate = date("Y-m-d H:i:s", time());
+				$obj->UpdatedBy = $email;
+				
+				$dbOpt = $obj->Update($this->dbConnection, $obj);
+			}else{
+				$dbOpt->OptStatus = false;
+				$dbOpt->OptMessage = "Error when updating leave type";
+			}
+			
+			return $dbOpt;
+        }
+        //Accumulative Leave Section
     }
 ?>

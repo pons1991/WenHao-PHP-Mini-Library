@@ -5,6 +5,9 @@
     
 	//php file
 	include_once "base/Error.php";
+    
+    EnableError();
+    
 	include_once "base/Const.php";
 	include_once "base/DbOpt.php";
 	include_once "base/DBModal.php";

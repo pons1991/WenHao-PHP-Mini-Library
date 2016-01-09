@@ -4,6 +4,16 @@
     $editingAccumulativeLeave = null;
     
     $accumulativeLeaveList = $leaveCtrl->GetAccumulativeLeaveType();
+    $userList = $userCtrl->GetUsers();
+    
+    if( isset($_GET["id"]) && $_GET["id"] !== '0' ){
+        //To edit
+        $isEditing = true;
+        $accumList = $leaveCtrl->GetAccumulativeLeaveById($_GET["id"]);
+        if( $accumList != null && count($accumList) == 1){
+            $editingAccumulativeLeave = $accumList[0];
+        }
+    }
     
     if (isset($_POST["submit"])){
         $userid = $_POST["userid"];
@@ -13,6 +23,22 @@
         $leaveNumber = $_POST["leaveNumber"];
         
         $dbOptResp = $leaveCtrl->AddAccumulativeLeave($userid,$leaveType,$remark,$expiredYear,$leaveNumber,$loginCtrl->GetUserId());
+    }
+    
+    if (isset($_POST["update"])){
+        $userid = $_POST["userid"];
+        $leaveType = $_POST["leaveType"];
+        $remark = isset($_POST["remark"]) ? $_POST["remark"] : 'N/A' ;
+        $expiredYear = date('Y');
+        $leaveNumber = $_POST["leaveNumber"];
+        
+        $editingAccumulativeLeave->UserId = $userid;
+        $editingAccumulativeLeave->LeaveTypeId = $leaveType;
+        $editingAccumulativeLeave->Remarks = $remark;
+        $editingAccumulativeLeave->ExpiredYear = $expiredYear;
+        $editingAccumulativeLeave->AccumulativeLeaveNumber = $leaveNumber;
+        
+        $dbOptResp = $leaveCtrl->UpdateAccumulativeLeave($editingAccumulativeLeave, $loginCtrl->GetUserName());
     }
     
 ?>
@@ -48,8 +74,12 @@
                 <select id="userid" name="userid" class="form-control">
                     <option value="-1"> -- Please select -- </option>
                     <?php
-                        foreach( $userCtrl->GetUsers() as $usr ){
-                            echo '<option value="'.$usr->Id.'">'.$usr->Email.'</option>';
+                        foreach( $userList as $usr ){
+                            if( $isEditing && $editingAccumulativeLeave->UserId == $usr->Id ){
+                                echo '<option value="'.$usr->Id.'" selected>'.$usr->Email.'</option>';
+                            }else{
+                                echo '<option value="'.$usr->Id.'">'.$usr->Email.'</option>';
+                            }
                         }
                     ?>
                 </select>
@@ -65,7 +95,11 @@
                     <option value="-1"> -- Please select -- </option>
                     <?php
                         foreach( $accumulativeLeaveList as $leave ){
-                            echo '<option value="'.$leave->Id.'">'.$leave->LeaveName.'</option>';
+                            if( $isEditing && $editingAccumulativeLeave->LeaveTypeId == $leave->Id ){
+                                echo '<option value="'.$leave->Id.'" selected>'.$leave->LeaveName.'</option>';
+                            }else{
+                                echo '<option value="'.$leave->Id.'">'.$leave->LeaveName.'</option>';
+                            }
                         }
                     ?>
                 </select>
@@ -77,7 +111,14 @@
         <div class="col-sm-12 form-group">
             <div class="col-sm-2"><label for="leaveNumber">Leave Number</label></div>
             <div class="col-sm-5">
-                <input type="text" id="leaveNumber" name="leaveNumber" class="form-control" />
+                <?php 
+                    if( $isEditing ){
+                        echo '<input type="text" id="leaveNumber" name="leaveNumber" class="form-control" value="'.$editingAccumulativeLeave->AccumulativeLeaveNumber.'" />';
+                    }else{
+                        echo '<input type="text" id="leaveNumber" name="leaveNumber" class="form-control" />';
+                    }
+                ?>
+                
             </div>
         </div>
     </div>
@@ -86,7 +127,7 @@
         <div class="col-sm-12 form-group">
             <div class="col-sm-2"><label for="remark">Remarks</label></div>
             <div class="col-sm-5">
-                <textarea id="remark" name="remark" class="form-control"></textarea>
+                <textarea id="remark" name="remark" class="form-control"><?php if( $isEditing ){ echo $editingAccumulativeLeave->Remarks; } ?></textarea>
             </div>
         </div>
     </div>

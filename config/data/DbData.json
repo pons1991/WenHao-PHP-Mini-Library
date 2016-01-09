@@ -4,7 +4,6 @@
         "insert into Role (RoleName,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('staff',1,now(),'admin',now(),'admin')",
 		"insert into Role (RoleName,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('assistant manager',1,now(),'admin',now(),'admin')",
 		"insert into Role (RoleName,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('manager',1,now(),'admin',now(),'admin')",
-        
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Dashboard','/shell/dashboard/index.php',0,1,1,now(),'admin',now(),'admin')",
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Users','/shell/user/users.php',1,1,1,now(),'admin',now(),'admin')",
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Profile','/shell/user/users.php?action=profile',1,1,1,now(),'admin',now(),'admin')",
@@ -56,6 +55,10 @@
         "insert into LeaveStatus (StatusName,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('New',1,now(),'admin',now(),'admin')",
         "insert into LeaveStatus (StatusName,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Approved',1,now(),'admin',now(),'admin')",
         "insert into LeaveStatus (StatusName,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Rejected',1,now(),'admin',now(),'admin')",
-        "insert into BringForwardLeave (UserId,BringForwardFromYear,BringForwardAttributes,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (2,'2015','{\"1\":\"10\"}',1,now(),'admin',now(),'admin')"
+        "insert into BringForwardLeave (UserId,BringForwardFromYear,BringForwardAttributes,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (2,'2015','{\"1\":\"10\"}',1,now(),'admin',now(),'admin')",
+        
+        "insert into AccumulativeLeave (UserId,ExpiredYear,LeaveTypeId,Remarks,AccumulativeLeaveNumber,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (2,'2016',4,'N/A',1,1,now(),'admin',now(),'admin')",
+        "insert into AccumulativeLeave (UserId,ExpiredYear,LeaveTypeId,Remarks,AccumulativeLeaveNumber,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (2,'2016',4,'N/A',2,1,now(),'admin',now(),'admin')",
+        "insert into AccumulativeLeave (UserId,ExpiredYear,LeaveTypeId,Remarks,AccumulativeLeaveNumber,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (3,'2016',4,'N/A',3,1,now(),'admin',now(),'admin')"
 	]
 }
