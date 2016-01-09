@@ -8,6 +8,8 @@
     $userRoleList = null;
     
     $appliedLeaveList = $leaveCtrl->GetNonRejectedLeaveApplication($loginCtrl->GetUserId(), date('Y'));
+    $accumulatedLeaveList = $leaveCtrl->GetAccumulativeLeaveByUserIdAndYear($loginCtrl->GetUserId(), date('Y'));
+    
     $appliedLeaveSummary_approved = array();
     $forwardLeaveSummary_approved = array();
     $appliedLeaveSummary_pending = array();
@@ -72,6 +74,17 @@
     if( !empty($leaveAttributeString) ){
         $leaveAttributeArray = json_decode($leaveAttributeString, true);
     }
+    
+    if( $accumulatedLeaveList != null && count($accumulatedLeaveList) > 0 ){
+        foreach($accumulatedLeaveList as $acc){
+            if( array_key_exists($acc->LeaveTypeId, $leaveAttributeArray) ){
+                $leaveAttributeArray[$acc->LeaveTypeId] = $leaveAttributeArray[$acc->LeaveTypeId] + $acc->AccumulativeLeaveNumber;
+            }else{
+                $leaveAttributeArray[$acc->LeaveTypeId] = $acc->AccumulativeLeaveNumber;
+            }
+        }
+    }
+    
 ?>
 
 <div class="panel panel-success">
