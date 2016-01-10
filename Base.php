@@ -23,6 +23,7 @@
     include_once "pipeline/PHPSelf.php";
     include_once "pipeline/LinkManager.php";
     include_once "pipeline/SessionHelper.php";
+    include_once "pipeline/LeaveHelper.php";
     
 	//Load modal
 	include_once "base/modal/AccessUser.php";

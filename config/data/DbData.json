@@ -12,9 +12,10 @@
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Leave','/shell/leave/index.php',1,1,1,now(),'admin',now(),'admin')",
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Pro Rate Leave','/shell/prorate/index.php',1,1,1,now(),'admin',now(),'admin')",
         "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Leave Application','/shell/leave-application/index.php',1,1,1,now(),'admin',now(),'admin')",
+        "insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Admin Leave Application','/shell/leave-application/index.php?action=admin',1,1,1,now(),'admin',now(),'admin')",
 		"insert into Pages (PageName,Path,IsCRUD,ShowInSideNavi,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values ('Accumulate Leave','/shell/accumulate/index.php',1,1,1,now(),'admin',now(),'admin')",
         
-        "insert into RoleAccess (RoleId,RoleAccessAttributes,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (1,'{\"PageIds\":\"1,2,3,4,5,6,7,8\"}',1,now(),'admin',now(),'admin')",
+        "insert into RoleAccess (RoleId,RoleAccessAttributes,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (1,'{\"PageIds\":\"1,2,3,4,5,6,7,8,9\"}',1,now(),'admin',now(),'admin')",
         "insert into RoleAccess (RoleId,RoleAccessAttributes,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (2,'{\"PageIds\":\"1,3,7\"}',1,now(),'admin',now(),'admin')",
         "insert into RoleAccess (RoleId,RoleAccessAttributes,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (3,'{\"PageIds\":\"1,3,7\"}',1,now(),'admin',now(),'admin')",
         "insert into RoleAccess (RoleId,RoleAccessAttributes,IsActive,CreatedDate,CreatedBy,UpdatedDate,UpdatedBy) values (4,'{\"PageIds\":\"1,3,7\"}',1,now(),'admin',now(),'admin')",

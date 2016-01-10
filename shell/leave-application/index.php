@@ -24,6 +24,8 @@
                 include_once "apply.php";
             }else if($action == "approval"){
                 include_once "approval.php";
+            }else if($action == "admin"){
+                include_once "admin.php";
             }else{
                 include_once "list.php";
             }
