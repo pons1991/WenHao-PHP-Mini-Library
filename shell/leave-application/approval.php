@@ -246,7 +246,7 @@
         }
         
         isValidated = true; //Set to true if pass all the required validation
-        
+        TriggerLoadingGif();
         return isValidated; 
     }
 

@@ -85,10 +85,11 @@
 			return $dbOpt;
         }
         
-        public function AddLeaveType($leaveName, $bringForward, $email){
+        public function AddLeaveType($leaveName, $bringForward, $accumulative, $email){
             $newLeaveType = new LeaveType;
             $newLeaveType->LeaveName = $leaveName;
             $newLeaveType->IsAllowToBringForward = $bringForward;
+            $newLeaveType->IsAllowToAccumulate = $accumulative;
             $newLeaveType->IsActive = true;
             $newLeaveType->CreatedDate = date("Y-m-d H:i:s", time());
 			$newLeaveType->CreatedBy = $email;

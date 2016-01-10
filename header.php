@@ -20,9 +20,17 @@
 	
         <link rel="stylesheet" href="<?php echo $GLOBALS["DOMAIN_NAME"]; ?>/Themes/css/signin.css" />
         <link rel="stylesheet" href="<?php echo $GLOBALS["DOMAIN_NAME"]; ?>/Themes/css/dashboard.css" />
+        
+        <script src="<?php echo $GLOBALS["DOMAIN_NAME"]; ?>/Themes/js/index.js"></script>
     </head>
 	<body>
-        
+ 
+ <!--<div class="loadingOverlay">
+       <div class="overlayContent">
+           
+       </div>
+    </div>-->
+ 
     <?php 
         include "TopNavigation.php";
     ?>

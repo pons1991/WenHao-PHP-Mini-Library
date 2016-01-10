@@ -17,15 +17,18 @@
     if (isset($_POST["submit"])){
         $leaveName = $_POST["leaveName"];
         $bringForward = isset($_POST["bringForward"]) ? 1 : 0;
-        $dbOptResp = $leaveCtrl->AddLeaveType($leaveName,$bringForward,$loginCtrl->GetUserId());
+        $accumulative = isset($_POST["accumulate"]) ? 1 : 0;
+        $dbOptResp = $leaveCtrl->AddLeaveType($leaveName,$bringForward,$accumulative,$loginCtrl->GetUserId());
     }
     
     if (isset($_POST["update"])){
         $leaveName = $_POST["leaveName"];
         $bringForward = isset($_POST["bringForward"]) ? 1 : 0;
+        $accumulative = isset($_POST["accumulate"]) ? 1 : 0;
         
         $editingLeaveType->LeaveName = $leaveName;
         $editingLeaveType->IsAllowToBringForward = $bringForward;
+        $editingLeaveType->IsAllowToAccumulate = $accumulative;
 
         $dbOptResp = $leaveCtrl->UpdateLeaveType($editingLeaveType,$loginCtrl->GetUserId());
     }
@@ -132,6 +135,7 @@
         }
         
         isValidated = true;
+        TriggerLoadingGif();
         return isValidated;
     }
 

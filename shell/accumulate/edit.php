@@ -187,6 +187,7 @@
         }
         
         isValidated = true;
+        TriggerLoadingGif();
         return isValidated;
     }
     
