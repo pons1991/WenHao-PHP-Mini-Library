@@ -17,11 +17,10 @@
 	include_once "base/database/Connection.php";
 	
     //Load pipeline function
-	include_once "pipeline/GetQueryString.php";
+	include_once "pipeline/LinkManager.php";
 	include_once "pipeline/Redirection.php";
 	include_once "pipeline/RequiredLogin.php";
     include_once "pipeline/PHPSelf.php";
-    include_once "pipeline/LinkManager.php";
     include_once "pipeline/SessionHelper.php";
     include_once "pipeline/LeaveHelper.php";
     include_once "pipeline/Pagination.php";

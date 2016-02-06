@@ -12,7 +12,7 @@
         </thead>
         <tbody>
                 <?php 
-                    foreach( $userCtrl->GetUsers(GetPageSize()) as $usr ){
+                    foreach( $userCtrl->GetUsers(GetPageIndex(), GetPageSize()) as $usr ){
                         echo '<tr>';
                         echo '<td>'.$usr->Id.'</td>';
                         echo '<td>'.$usr->Email.'</td>';
@@ -23,11 +23,25 @@
                 ?>
         </tbody>
     </table>
+    
+    <?php 
+        $pageIndex = GetPageIndex();
+        $prevIndex = $pageIndex == 1 ? 1 : $pageIndex - 1;
+        $nextIndex = $pageIndex + 1;
+    ?>
     <nav>
         <ul class="pager">
-            <li><a href="#" class="btn-primary">Previous</a></li>
-            <li> Page : <input type="number" min="1" class="paginationTextBox" /> <a href="#">Go</a></li>
-            <li><a href="#" class="btn-primary">Next</a></li>
+            <?php 
+                $qsArray["page"] = $prevIndex;
+                echo '<li><a href="'.BuildQueryString($qsArray).'">Previous</a></li>';
+                
+                $qsArray["page"] = 'page-index';
+                echo '<li> Page : <input type="number" min="1" id="paginationTB" class="paginationTextBox" value="'.GetPageIndex().'" /> <a href="#" data-paginationhref="?'.BuildQueryString($qsArray).'" id="goButton" onclick="TriggerPagination(\'paginationTB\', $(this))" >Go</a></li>';
+                
+                $qsArray["page"] = $nextIndex;
+                echo '<li><a href="'.BuildQueryString($qsArray).'" >Next</a></li>';
+            ?>
+            
         </ul>
     </nav>
 </div>
