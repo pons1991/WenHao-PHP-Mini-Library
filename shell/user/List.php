@@ -12,7 +12,7 @@
         </thead>
         <tbody>
                 <?php 
-                    foreach( $userCtrl->GetUsers() as $usr ){
+                    foreach( $userCtrl->GetUsers(GetPageSize()) as $usr ){
                         echo '<tr>';
                         echo '<td>'.$usr->Id.'</td>';
                         echo '<td>'.$usr->Email.'</td>';
@@ -23,4 +23,11 @@
                 ?>
         </tbody>
     </table>
+    <nav>
+        <ul class="pager">
+            <li><a href="#" class="btn-primary">Previous</a></li>
+            <li> Page : <input type="number" min="1" class="paginationTextBox" /> <a href="#">Go</a></li>
+            <li><a href="#" class="btn-primary">Next</a></li>
+        </ul>
+    </nav>
 </div>

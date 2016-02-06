@@ -108,3 +108,7 @@ body {
 .hide{
     display:none;
 }
+
+input.paginationTextBox{
+    width: 50px;
+}

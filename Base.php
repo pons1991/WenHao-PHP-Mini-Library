@@ -24,6 +24,7 @@
     include_once "pipeline/LinkManager.php";
     include_once "pipeline/SessionHelper.php";
     include_once "pipeline/LeaveHelper.php";
+    include_once "pipeline/Pagination.php";
     
 	//Load modal
 	include_once "base/modal/AccessUser.php";

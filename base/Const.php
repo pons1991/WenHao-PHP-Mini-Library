@@ -4,6 +4,7 @@
     
     $BRING_FORWARD_EXPIRE_DATE_DAYS = 31;
     $BRING_FORWARD_EXPIRE_DATE_MONTH = 3;
+    $PAGE_SIZE = 15;
     
     //development configuration
 	$DOMAIN_NAME = "http://localhost:8888/whLibrary/";

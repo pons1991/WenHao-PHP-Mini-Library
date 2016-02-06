@@ -92,9 +92,9 @@
 			}
 		}
 		
-		public function GetUsers(){
+		public function GetUsers($pageSize){
 			$accessUser = new AccessUser;
-			return $accessUser->Gets($this->dbConnection, 0, 999, null);
+			return $accessUser->Gets($this->dbConnection, 0, $pageSize, null);
 		}
 		
 		public function GetUserById($id){
