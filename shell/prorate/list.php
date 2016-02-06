@@ -11,7 +11,7 @@
         </thead>
         <tbody>
                 <?php
-                    $proratedList = $leaveCtrl->GetProRatedLeaveList();
+                    $proratedList = $leaveCtrl->GetProRatedLeaveList(GetPageIndex(), GetPageSize());
                     foreach( $proratedList as $pl ){
                         echo '<tr>';
                         echo '<td>'.$pl->AccessUser->Email.'</td>';
@@ -22,4 +22,5 @@
                 ?>
         </tbody>
     </table>
+    <?php include "../_shared/pagination.php" ?>
 </div>

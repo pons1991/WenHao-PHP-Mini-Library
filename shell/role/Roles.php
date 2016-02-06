@@ -5,7 +5,7 @@
     $action = '';
 
 	$qsArray = GetQueryString();
-	if( $qsArray != null && count($qsArray) > 0 ){
+	if( array_key_exists("action", $qsArray)){
 		$action = strtolower($qsArray["action"]);
 	}else{
 		$action = 'list';

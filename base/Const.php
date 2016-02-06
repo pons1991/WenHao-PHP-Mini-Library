@@ -4,6 +4,9 @@
     
     $BRING_FORWARD_EXPIRE_DATE_DAYS = 31;
     $BRING_FORWARD_EXPIRE_DATE_MONTH = 3;
+    
+    $DEFAULT_PAGE_INDEX = 1;
+    $DEFAULT_MAX_PAGE_INDEX = 999;
     $PAGE_SIZE = 15;
     
     //development configuration

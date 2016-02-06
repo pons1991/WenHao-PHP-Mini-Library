@@ -1,5 +1,5 @@
 <?php
-    $leaveTypeList = $leaveCtrl->GetLeaveTypes();
+    $leaveTypeList = $leaveCtrl->GetLeaveTypes($GLOBALS["DEFAULT_PAGE_INDEX"], $GLOBALS["DEFAULT_MAX_PAGE_INDEX"]);
     
     $isEditing = false;
     $editingProRatedLeave = null;
@@ -85,7 +85,7 @@
                 <select id="userId" name="userId" class="form-control">
                     <option value="-1"> -- Please select -- </option>
                     <?php
-                        foreach( $userCtrl->GetUsers() as $usr ){
+                        foreach( $userCtrl->GetUsers($GLOBALS["DEFAULT_PAGE_INDEX"], $GLOBALS["DEFAULT_MAX_PAGE_INDEX"]) as $usr ){
                             if( $isEditing && $editingProRatedLeave->UserId == $usr->Id ){
                                 echo '<option value="'.$usr->Id.'" selected>'.$usr->Email.'</option>';
                             }else{

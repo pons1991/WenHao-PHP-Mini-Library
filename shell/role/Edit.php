@@ -1,5 +1,5 @@
 <?php
-    $leaveTypeList = $leaveCtrl->GetLeaveTypes();
+    $leaveTypeList = $leaveCtrl->GetLeaveTypes($GLOBALS["DEFAULT_PAGE_INDEX"], $GLOBALS["DEFAULT_MAX_PAGE_INDEX"]);
     $pageList = $pageCtrl->GetPages();
     
     $isEditing = false;

@@ -139,7 +139,7 @@
                 <select name="role" id="role" class="form-control" required>
                     <option value="-1"> -- Please select -- </option>
                     <?php 
-                        foreach($roleCtrl->GetRoles() as $role ){
+                        foreach($roleCtrl->GetRoles($GLOBALS["DEFAULT_PAGE_INDEX"], $GLOBALS["DEFAULT_MAX_PAGE_INDEX"]) as $role ){
                             if( $isEditing && $editingUserRole->RoleId == $role->Id ){
                                 echo '<option value="'.$role->Id.'" selected>'.$role->RoleName.'</option>';
                             }else{
@@ -159,7 +159,7 @@
                 <select name="reportingTo" id="reportingTo" class="form-control" required>
                     <option value="-1"> -- Please select -- </option>
                     <?php 
-                        foreach($userCtrl->GetUsers() as $user ){
+                        foreach($userCtrl->GetUsers($GLOBALS["DEFAULT_PAGE_INDEX"], $GLOBALS["DEFAULT_MAX_PAGE_INDEX"]) as $user ){
                             if( $isEditing && $editingUser->SuperiorUserId == $user->Id ){
                                 echo '<option value="'.$user->Id.'" selected>'.$user->Email.'</option>';
                             }else if($user->Id == $editingUser->UserId){

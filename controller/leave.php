@@ -11,10 +11,10 @@ class LeaveController extends BaseController {
         }
     }
 
-    public function GetProRatedLeaveList() {
+    public function GetProRatedLeaveList($pageIndex, $pageSize) {
         $newProRatedLeave = new ProRatedLeave;
 
-        $returnProRatedLeave = $newProRatedLeave->Gets($this->dbConnection, 0, 999, null);
+        $returnProRatedLeave = $newProRatedLeave->Gets($this->dbConnection, $pageIndex-1, $pageSize, null);
         return $returnProRatedLeave;
     }
 
@@ -144,9 +144,9 @@ class LeaveController extends BaseController {
         return $returnLeaveTypeList;
     }
 
-    public function GetLeaveTypes() {
+    public function GetLeaveTypes($pageIndex, $pageSize) {
         $newLeaveType = new LeaveType;
-        return $newLeaveType->Gets($this->dbConnection, 0, 999, null);
+        return $newLeaveType->Gets($this->dbConnection, $pageIndex-1, $pageSize, null);
     }
 
     public function GetLeaveAccess() {
@@ -308,10 +308,10 @@ class LeaveController extends BaseController {
         return $dbOptResponse;
     }
 
-    public function GetAccumulativeLeave() {
+    public function GetAccumulativeLeave($pageIndex, $pageSize) {
         $newAccumulativeLeave = new AccumulativeLeave;
 
-        $accumulativeLeaveList = $newAccumulativeLeave->Gets($this->dbConnection, 0, 999, null);
+        $accumulativeLeaveList = $newAccumulativeLeave->Gets($this->dbConnection, $pageIndex-1, $pageSize, null);
         return $accumulativeLeaveList;
     }
 

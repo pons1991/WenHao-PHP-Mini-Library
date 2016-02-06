@@ -10,7 +10,7 @@
         </thead>
         <tbody>
                 <?php
-                    $roleLeaveList = $roleCtrl->GetRoleLeaveList();
+                    $roleLeaveList = $roleCtrl->GetRoleLeaveList(GetPageIndex(), GetPageSize());
                     foreach( $roleLeaveList as $roleLeave ){
                         echo '<tr>';
                         echo '<td>'.$roleLeave->Role->RoleName.'</td>';
@@ -20,4 +20,6 @@
                 ?>
         </tbody>
     </table>
+    
+    <?php include "../_shared/pagination.php" ?>
 </div>

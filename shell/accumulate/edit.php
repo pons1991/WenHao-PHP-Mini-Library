@@ -4,7 +4,7 @@
     $editingAccumulativeLeave = null;
     
     $accumulativeLeaveList = $leaveCtrl->GetAccumulativeLeaveType();
-    $userList = $userCtrl->GetUsers();
+    $userList = $userCtrl->GetUsers($GLOBALS["DEFAULT_PAGE_INDEX"], $GLOBALS["DEFAULT_MAX_PAGE_INDEX"]);
     
     if( isset($_GET["id"]) && $_GET["id"] !== '0' ){
         //To edit

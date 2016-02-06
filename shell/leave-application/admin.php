@@ -1,8 +1,9 @@
 <?php
 $dbOptResp = null;
 
-$leaveTypeList = $leaveCtrl->GetLeaveTypes();
-$userList = $userCtrl->GetUsers();
+$leaveTypeList = $leaveCtrl->GetLeaveTypes($GLOBALS["DEFAULT_PAGE_INDEX"], $GLOBALS["DEFAULT_MAX_PAGE_INDEX"]);
+$userList = $userCtrl->GetUsers($GLOBALS["DEFAULT_PAGE_INDEX"], $GLOBALS["DEFAULT_MAX_PAGE_INDEX"]);
+
 $leaveStatusList = $leaveCtrl->GetLeaveStatus();
 
 if (isset($_POST["submit"])) {

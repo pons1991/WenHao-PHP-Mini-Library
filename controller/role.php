@@ -20,10 +20,10 @@
 			return $returnRoleAccessList;
         }
         
-        public function GetRoleLeaveList(){
+        public function GetRoleLeaveList($pageIndex, $pageSize){
             $newRoleLeave = new RoleLeave;
             
-            $returnRoleLeave = $newRoleLeave->Gets($this->dbConnection,0, 999, null);
+            $returnRoleLeave = $newRoleLeave->Gets($this->dbConnection,$pageIndex-1, $pageSize, null);
 			return $returnRoleLeave;
         }
         
@@ -110,9 +110,9 @@
 			return $dbOpt;
 		}
 		
-		public function GetRoles(){
+		public function GetRoles($pageIndex, $pageSize){
 			$newRole = new Role;
-			return $newRole->Gets($this->dbConnection, 0, 999, null);
+			return $newRole->Gets($this->dbConnection, $pageIndex-1, $pageSize, null);
 		}
 		
         public function GetRoleLeaveById($id){

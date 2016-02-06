@@ -11,7 +11,7 @@
         </thead>
         <tbody>
                 <?php 
-                    foreach( $leaveCtrl->GetLeaveTypes() as $lv ){
+                    foreach( $leaveCtrl->GetLeaveTypes(GetPageIndex(), GetPageSize()) as $lv ){
                         echo '<tr>';
                         echo '<td>'.$lv->Id.'</td>';
                         echo '<td>'.$lv->LeaveName.'</td>';
@@ -21,4 +21,6 @@
                 ?>
         </tbody>
     </table>
+    
+    <?php include "../_shared/pagination.php" ?>
 </div>
