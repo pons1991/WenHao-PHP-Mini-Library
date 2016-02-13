@@ -106,7 +106,6 @@
 ?>
 
 <form method="post">
-    
     <div class="row" >
         <div class="col-sm-12 form-group">
             <div class="alert alert-danger hide" role="alert" id="prorateErrorMessage">

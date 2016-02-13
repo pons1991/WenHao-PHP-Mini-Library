@@ -1,5 +1,5 @@
 <?php
-    $leaveTypeList = $leaveCtrl->GetLeaveTypes();
+    $leaveTypeList = $leaveCtrl->GetLeaveTypes($GLOBALS["DEFAULT_PAGE_INDEX"], $GLOBALS["DEFAULT_MAX_PAGE_INDEX"]);
     $currentYear = intval(date('Y'));
     $previousYear = $currentYear - 1;
     $leaveAttributeString = '';

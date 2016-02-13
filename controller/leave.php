@@ -164,6 +164,24 @@ class LeaveController extends BaseController {
         $returnLeave = $newLeaveApplication->Gets($this->dbConnection, 0, 999, $additionalParams);
         return $returnLeave;
     }
+    
+    public function GetLeaveByUserIdAndYear($userId, $year) {
+        $currentYear = intval($year);
+        $nextYear = $currentYear + 1;
+        $startDate = new DateTime('1/1/'.$currentYear);
+        $endDate = new DateTime('1/1/'.$nextYear);
+        
+        $newLeaveApplication = new LeaveApplication;
+
+        $additionalParams = array(
+            array('table' => 'LeaveApplication', 'column' => 'UserId', 'value' => $userId, 'type' => PDO::PARAM_INT, 'condition' => 'and'),
+            array('table' => 'LeaveApplication', 'column' => 'LeaveDateFrom', 'value' => $startDate->format('Y-m-d 00:00:00'), 'type' => PDO::PARAM_STR, 'condition' => 'and', 'operator' => '>='),
+            array('table' => 'LeaveApplication', 'column' => 'LeaveDateTo', 'value' => $endDate->format('Y-m-d 00:00:00'), 'type' => PDO::PARAM_STR, 'condition' => 'and', 'operator' => '<')
+        );
+
+        $returnLeave = $newLeaveApplication->Gets($this->dbConnection, 0, 999, $additionalParams);
+        return $returnLeave;
+    }
 
     public function GetLeaveByid($id) {
         $newLeaveApplication = new LeaveApplication;
