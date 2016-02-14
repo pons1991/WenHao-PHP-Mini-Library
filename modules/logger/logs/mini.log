@@ -61,3 +61,9 @@ FATAL - My sixth message.
 2016-01-02T18:40:08+01:00 [mini] [WARN] My fourth message.
 2016-01-02T18:40:08+01:00 [mini] [ERROR] My fifth message.
 2016-01-02T18:40:08+01:00 [mini] [FATAL] My sixth message.
+2016-02-13T14:48:37+01:00 [mini] [TRACE] My first message.
+2016-02-13T14:48:37+01:00 [mini] [DEBUG] My second message.
+2016-02-13T14:48:37+01:00 [mini] [INFO] My third message.
+2016-02-13T14:48:37+01:00 [mini] [WARN] My fourth message.
+2016-02-13T14:48:37+01:00 [mini] [ERROR] My fifth message.
+2016-02-13T14:48:37+01:00 [mini] [FATAL] My sixth message.

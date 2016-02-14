@@ -154,6 +154,17 @@ class LeaveController extends BaseController {
         return $newLeaveAccess->Gets($this->dbConnection, 0, 999, null);
     }
 
+    public function GetLeaveByStatus($statusId) {
+        $newLeaveApplication = new LeaveApplication;
+
+        $additionalParams = array(
+            array('table' => 'LeaveApplication', 'column' => 'Status', 'value' => $statusId, 'type' => PDO::PARAM_INT, 'condition' => 'and')
+        );
+
+        $returnLeave = $newLeaveApplication->Gets($this->dbConnection, 0, 999, $additionalParams);
+        return $returnLeave;
+    }
+
     public function GetLeaveByUserId($userId) {
         $newLeaveApplication = new LeaveApplication;
 

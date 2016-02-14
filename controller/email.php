@@ -7,7 +7,9 @@
                 array_push($to, $toEmail);
                 
                 $cc = array();
-                array_push($cc, $ccEmail);
+                if( !empty($ccEmail) ){
+                    array_push($cc, $ccEmail);
+                }
                 
                 $body = '<table border="1">';
                 
