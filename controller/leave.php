@@ -42,7 +42,7 @@ class LeaveController extends BaseController {
             array('table' => 'ProRatedLeave', 'column' => 'Id', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
         );
 
-        $returnProRatedLeave = $newProRatedLeave->Gets($this->dbConnection, 0, 1, $additionalParams);
+        $returnProRatedLeave = $newProRatedLeave->Gets($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["PAGE_SINGLE_ITEM"], $additionalParams);
         return $returnProRatedLeave;
     }
 
@@ -53,7 +53,7 @@ class LeaveController extends BaseController {
             array('table' => 'ProRatedLeave', 'column' => 'UserId', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
         );
 
-        $returnProRatedLeave = $newProRatedLeave->Gets($this->dbConnection, 0, 1, $additionalParams);
+        $returnProRatedLeave = $newProRatedLeave->Gets($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["PAGE_SINGLE_ITEM"], $additionalParams);
         return $returnProRatedLeave;
     }
 
@@ -65,7 +65,7 @@ class LeaveController extends BaseController {
             array('table' => 'ProRatedLeave', 'column' => 'ProRatedYear', 'value' => $year, 'type' => PDO::PARAM_STR, 'condition' => 'and')
         );
 
-        $returnProRatedLeave = $newProRatedLeave->Gets($this->dbConnection, 0, 1, $additionalParams);
+        $returnProRatedLeave = $newProRatedLeave->Gets($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["PAGE_SINGLE_ITEM"], $additionalParams);
         return $returnProRatedLeave;
     }
 
@@ -129,7 +129,7 @@ class LeaveController extends BaseController {
             array('table' => 'LeaveType', 'column' => 'Id', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
         );
 
-        $returnLeaveTypeList = $newLeaveType->Gets($this->dbConnection, 0, 1, $additionalParams);
+        $returnLeaveTypeList = $newLeaveType->Gets($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["PAGE_SINGLE_ITEM"], $additionalParams);
         return $returnLeaveTypeList;
     }
 
@@ -140,7 +140,7 @@ class LeaveController extends BaseController {
             array('table' => 'LeaveType', 'column' => 'IsAllowToAccumulate', 'value' => 1, 'type' => PDO::PARAM_INT, 'condition' => 'and')
         );
 
-        $returnLeaveTypeList = $newLeaveType->Gets($this->dbConnection, 0, 1, $additionalParams);
+        $returnLeaveTypeList = $newLeaveType->Gets($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["PAGE_SINGLE_ITEM"], $additionalParams);
         return $returnLeaveTypeList;
     }
 
@@ -151,7 +151,7 @@ class LeaveController extends BaseController {
 
     public function GetLeaveAccess() {
         $newLeaveAccess = new LeaveAccess;
-        return $newLeaveAccess->Gets($this->dbConnection, 0, 999, null);
+        return $newLeaveAccess->Gets($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["DEFAULT_MAX_PAGE_INDEX"], null);
     }
 
     public function GetLeaveByStatus($statusId) {
@@ -161,7 +161,7 @@ class LeaveController extends BaseController {
             array('table' => 'LeaveApplication', 'column' => 'Status', 'value' => $statusId, 'type' => PDO::PARAM_INT, 'condition' => 'and')
         );
 
-        $returnLeave = $newLeaveApplication->Gets($this->dbConnection, 0, 999, $additionalParams);
+        $returnLeave = $newLeaveApplication->Gets($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["DEFAULT_MAX_PAGE_INDEX"], $additionalParams);
         return $returnLeave;
     }
 
@@ -172,7 +172,7 @@ class LeaveController extends BaseController {
             array('table' => 'LeaveApplication', 'column' => 'UserId', 'value' => $userId, 'type' => PDO::PARAM_INT, 'condition' => 'and')
         );
 
-        $returnLeave = $newLeaveApplication->Gets($this->dbConnection, 0, 999, $additionalParams);
+        $returnLeave = $newLeaveApplication->Gets($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["DEFAULT_MAX_PAGE_INDEX"], $additionalParams);
         return $returnLeave;
     }
     
@@ -190,7 +190,7 @@ class LeaveController extends BaseController {
             array('table' => 'LeaveApplication', 'column' => 'LeaveDateTo', 'value' => $endDate->format('Y-m-d 00:00:00'), 'type' => PDO::PARAM_STR, 'condition' => 'and', 'operator' => '<')
         );
 
-        $returnLeave = $newLeaveApplication->Gets($this->dbConnection, 0, 999, $additionalParams);
+        $returnLeave = $newLeaveApplication->Gets($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["DEFAULT_MAX_PAGE_INDEX"], $additionalParams);
         return $returnLeave;
     }
 
@@ -201,7 +201,7 @@ class LeaveController extends BaseController {
             array('table' => 'LeaveApplication', 'column' => 'Id', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
         );
 
-        $returnLeave = $newLeaveApplication->Gets($this->dbConnection, 0, 1, $additionalParams);
+        $returnLeave = $newLeaveApplication->Gets($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["PAGE_SINGLE_ITEM"], $additionalParams);
         return $returnLeave;
     }
 
@@ -226,7 +226,7 @@ class LeaveController extends BaseController {
                 $i += 1;
             }
 
-            $returnLeave = $newLeaveApplication->Gets($this->dbConnection, 0, 999, $additionalParams);
+            $returnLeave = $newLeaveApplication->Gets($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["DEFAULT_MAX_PAGE_INDEX"], $additionalParams);
             return $returnLeave;
         } else {
             return null;
@@ -289,18 +289,18 @@ class LeaveController extends BaseController {
             array('table' => 'LeaveApplication', 'column' => 'LeaveDateFrom', 'value' => '%' . $year . '%', 'operator' => 'like', 'type' => PDO::PARAM_STR, 'condition' => 'and')
         );
 
-        $returnLeave = $newLeaveApplication->Gets($this->dbConnection, 0, 999, $additionalParams);
+        $returnLeave = $newLeaveApplication->Gets($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["DEFAULT_MAX_PAGE_INDEX"], $additionalParams);
         return $returnLeave;
     }
 
     public function CheckDuplicateLeave($from, $userId) {
         $newLeaveType = new LeaveType;
-        return $newLeaveType->IsLeaveDateValid($this->dbConnection, 0, 999, null);
+        return $newLeaveType->IsLeaveDateValid($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["DEFAULT_MAX_PAGE_INDEX"], null);
     }
 
     public function GetLeaveStatus() {
         $newLeaveStatus = new LeaveStatus;
-        $returnLeaveStatus = $newLeaveStatus->Gets($this->dbConnection, 0, 999, null);
+        $returnLeaveStatus = $newLeaveStatus->Gets($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["DEFAULT_MAX_PAGE_INDEX"], null);
         return $returnLeaveStatus;
     }
 
@@ -312,7 +312,7 @@ class LeaveController extends BaseController {
             array('table' => 'BringForwardLeave', 'column' => 'BringForwardFromYear', 'value' => $year, 'type' => PDO::PARAM_STR, 'condition' => 'and')
         );
 
-        $bringForward = $newBringForwardLeave->Gets($this->dbConnection, 0, 999, $additionalParams);
+        $bringForward = $newBringForwardLeave->Gets($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["DEFAULT_MAX_PAGE_INDEX"], $additionalParams);
         return $bringForward;
     }
 
@@ -351,7 +351,7 @@ class LeaveController extends BaseController {
             array('table' => 'AccumulativeLeave', 'column' => 'Id', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
         );
 
-        $accumulativeList = $newAccumulativeLeave->Gets($this->dbConnection, 0, 999, $additionalParams);
+        $accumulativeList = $newAccumulativeLeave->Gets($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["DEFAULT_MAX_PAGE_INDEX"], $additionalParams);
         return $accumulativeList;
     }
 
@@ -363,7 +363,7 @@ class LeaveController extends BaseController {
             array('table' => 'AccumulativeLeave', 'column' => 'ExpiredYear', 'value' => $year, 'type' => PDO::PARAM_STR, 'condition' => 'and')
         );
 
-        $accumulativeList = $newAccumulativeLeave->Gets($this->dbConnection, 0, 999, $additionalParams);
+        $accumulativeList = $newAccumulativeLeave->Gets($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["DEFAULT_MAX_PAGE_INDEX"], $additionalParams);
         return $accumulativeList;
     }
 
@@ -376,7 +376,7 @@ class LeaveController extends BaseController {
             array('table' => 'AccumulativeLeave', 'column' => 'LeaveTypeId', 'value' => $leaveType, 'type' => PDO::PARAM_INT, 'condition' => 'and')
         );
 
-        $accumulativeList = $newAccumulativeLeave->Gets($this->dbConnection, 0, 999, $additionalParams);
+        $accumulativeList = $newAccumulativeLeave->Gets($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["DEFAULT_MAX_PAGE_INDEX"], $additionalParams);
         return $accumulativeList;
     }
 

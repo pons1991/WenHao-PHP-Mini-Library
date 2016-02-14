@@ -104,7 +104,7 @@
 		    );
             
 			$accessUser = new AccessUser;
-			return $accessUser->Gets($this->dbConnection,0, 1, $additionalParams);
+			return $accessUser->Gets($this->dbConnection,$GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["PAGE_SINGLE_ITEM"], $additionalParams);
 		}
         
         public function GetUserOrgRel($id){
@@ -113,12 +113,12 @@
 		    );
             
 			$newOrgRel = new OrgRel;
-			return $newOrgRel->Gets($this->dbConnection,0, 1, $additionalParams);
+			return $newOrgRel->Gets($this->dbConnection,$GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["PAGE_SINGLE_ITEM"], $additionalParams);
         }
 		
         public function GetOrgRel(){
             $newOrgRel = new OrgRel;
-            return $newOrgRel->Gets($this->dbConnection, 0,999,null);
+            return $newOrgRel->Gets($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["DEFAULT_MAX_PAGE_INDEX"],null);
         }
         
         public function GetOrgRelBySupervisorId($id){
@@ -127,7 +127,7 @@
 		    );
             
 			$newOrgRel = new OrgRel;
-			return $newOrgRel->Gets($this->dbConnection,0, 999, $additionalParams);
+			return $newOrgRel->Gets($this->dbConnection,$GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["DEFAULT_MAX_PAGE_INDEX"], $additionalParams);
         }
         
 		public function UpdateUser($usrObj, $email, $password, $userid, $currentUser){

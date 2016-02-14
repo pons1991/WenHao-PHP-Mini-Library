@@ -11,7 +11,7 @@
         
         public function GetPages(){
 			$newPage = new Pages;
-			return $newPage->Gets($this->dbConnection, 0, 999, null);
+			return $newPage->Gets($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["DEFAULT_MAX_PAGE_INDEX"], null);
 		}
         
         public function GetUserAccessPages(){

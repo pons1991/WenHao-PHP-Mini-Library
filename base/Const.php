@@ -8,6 +8,7 @@
     $DEFAULT_PAGE_INDEX = 1;
     $DEFAULT_MAX_PAGE_INDEX = 999;
     $PAGE_SIZE = 15;
+    $PAGE_SINGLE_ITEM = 1;
     
     //development configuration
 	$DOMAIN_NAME = "http://localhost:8888/whLibrary/";

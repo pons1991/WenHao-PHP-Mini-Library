@@ -16,7 +16,7 @@
                 array('table' => 'RoleAccess', 'column' => 'RoleId', 'value' => $roleId, 'type' => PDO::PARAM_INT, 'condition' => 'and')
 		    );
 			
-			$returnRoleAccessList = $newRoleAccess->Gets($this->dbConnection,0, 1, $additionalParams);
+			$returnRoleAccessList = $newRoleAccess->Gets($this->dbConnection,$GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["PAGE_SINGLE_ITEM"], $additionalParams);
 			return $returnRoleAccessList;
         }
         
@@ -122,7 +122,7 @@
                 array('table' => 'RoleLeave', 'column' => 'Id', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
 		    );
 			
-			$returnLeave = $newRoleLeave->Gets($this->dbConnection,0, 1, $additionalParams);
+			$returnLeave = $newRoleLeave->Gets($this->dbConnection,$GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["PAGE_SINGLE_ITEM"], $additionalParams);
 			return $returnLeave;
         }
 		
@@ -133,7 +133,7 @@
                 array('table' => 'UserRole', 'column' => 'UserId', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
 		    );
 			
-			$returnRoleLeave = $newUserRole->Gets($this->dbConnection,0, 1, $additionalParams);
+			$returnRoleLeave = $newUserRole->Gets($this->dbConnection,$GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["PAGE_SINGLE_ITEM"], $additionalParams);
 			return $returnRoleLeave;
         }
         
@@ -144,7 +144,7 @@
                 array('table' => 'LeaveAccess', 'column' => 'RoleId', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
             );
             
-            $returnLeaveAccessList = $newLeaveAccess->Gets($this->dbConnection,0, 1, $additionalParams);
+            $returnLeaveAccessList = $newLeaveAccess->Gets($this->dbConnection,$GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["PAGE_SINGLE_ITEM"], $additionalParams);
 			return $returnLeaveAccessList;
         }
         
@@ -155,7 +155,7 @@
                 array('table' => 'RoleAccess', 'column' => 'RoleId', 'value' => $id, 'type' => PDO::PARAM_INT, 'condition' => 'and')
 		    );
 			
-			$returnRoleAccessList = $newRoleAccess->Gets($this->dbConnection,0, 1, $additionalParams);
+			$returnRoleAccessList = $newRoleAccess->Gets($this->dbConnection,$GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["PAGE_SINGLE_ITEM"], $additionalParams);
 			return $returnRoleAccessList;
         }
 		
