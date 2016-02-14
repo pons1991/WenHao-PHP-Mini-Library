@@ -193,6 +193,25 @@ class LeaveController extends BaseController {
         $returnLeave = $newLeaveApplication->Gets($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["DEFAULT_MAX_PAGE_INDEX"], $additionalParams);
         return $returnLeave;
     }
+    
+    public function GetLeaveByUserIdYearLeaveType($userId, $year, $leaveType) {
+        $currentYear = intval($year);
+        $nextYear = $currentYear + 1;
+        $startDate = new DateTime('1/1/'.$currentYear);
+        $endDate = new DateTime('1/1/'.$nextYear);
+        
+        $newLeaveApplication = new LeaveApplication;
+
+        $additionalParams = array(
+            array('table' => 'LeaveApplication', 'column' => 'UserId', 'value' => $userId, 'type' => PDO::PARAM_INT, 'condition' => 'and'),
+            array('table' => 'LeaveApplication', 'column' => 'LeaveDateFrom', 'value' => $startDate->format('Y-m-d 00:00:00'), 'type' => PDO::PARAM_STR, 'condition' => 'and', 'operator' => '>='),
+            array('table' => 'LeaveApplication', 'column' => 'LeaveDateTo', 'value' => $endDate->format('Y-m-d 00:00:00'), 'type' => PDO::PARAM_STR, 'condition' => 'and', 'operator' => '<'),
+            array('table' => 'LeaveApplication', 'column' => 'LeaveTypeId', 'value' => $leaveType, 'type' => PDO::PARAM_INT, 'condition' => 'and', 'operator' => '=')
+        );
+
+        $returnLeave = $newLeaveApplication->Gets($this->dbConnection, $GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["DEFAULT_MAX_PAGE_INDEX"], $additionalParams);
+        return $returnLeave;
+    }
 
     public function GetLeaveByid($id) {
         $newLeaveApplication = new LeaveApplication;
@@ -399,6 +418,26 @@ class LeaveController extends BaseController {
     }
 
     //Accumulative Leave Section
+    
+    
+    //Bringforward leave section
+    public function AddBringforwardLeave($userid,$year, $bringforwardAttribute, $email) {
+        $newBringforward = new BringForwardLeave;
+        $newBringforward->UserId = $userid;
+        $newBringforward->BringForwardFromYear = $year;
+        $newBringforward->BringForwardAttributes = $bringforwardAttribute;
+
+        $newBringforward->IsActive = true;
+        $newBringforward->CreatedDate = date("Y-m-d H:i:s", time());
+        $newBringforward->CreatedBy = $email;
+        $newBringforward->UpdatedDate = date("Y-m-d H:i:s", time());
+        $newBringforward->UpdatedBy = $email;
+
+        $dbOptResponse = $newBringforward->Add($this->dbConnection, $newBringforward);
+        $dbOptResponse->OptObj = $newBringforward;
+
+        return $dbOptResponse;
+    }
 }
 
 ?>

@@ -115,6 +115,13 @@
 			return $newRole->Gets($this->dbConnection, $pageIndex-1, $pageSize, null);
 		}
 		
+        public function GetRoleLeave(){
+            $newRoleLeave = new RoleLeave;
+            
+			$returnLeave = $newRoleLeave->Gets($this->dbConnection,$GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["DEFAULT_MAX_PAGE_INDEX"], null);
+			return $returnLeave;
+        }
+        
         public function GetRoleLeaveById($id){
             $newRoleLeave = new RoleLeave;
             

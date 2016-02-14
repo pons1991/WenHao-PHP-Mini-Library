@@ -10,6 +10,10 @@
     $PAGE_SIZE = 15;
     $PAGE_SINGLE_ITEM = 1;
     
+    $AUTO_LEAVESTATUS = 2;
+    $SYSTEM_USER_ID = 1;
+    $SYSTEM_USER_EMAIL = 'admin';
+    
     //development configuration
 	$DOMAIN_NAME = "http://localhost:8888/whLibrary/";
 	$DATABASE_NAME = "whMiniLibrary";
