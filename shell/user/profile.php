@@ -4,6 +4,9 @@
    $editingUser = null;
    $editingUserRole = null;
    
+   $urlPath = "uploads/profile/";
+   $target_dir = "../../uploads/profile/";
+   
    //Get current user via session
    $editingUserId = $loginCtrl->GetUserId();
    
@@ -29,7 +32,17 @@
 		$role = $_POST["role"];
         $reportingTo = $_POST["reportingTo"];
         
-	    $dbOptResp = $userCtrl->UpdateUser($editingUser->User, $email, $password, $userid, $loginCtrl->GetUserName());
+        $target_file = "";
+        $target_url = "";
+        if( isset($_FILES["profileImage"]) ){
+            $imageFileType = pathinfo($_FILES["profileImage"]["name"],PATHINFO_EXTENSION);
+            $uId = uniqid();
+            $target_file = $target_dir . $uId . "." . $imageFileType;
+            $target_url = $urlPath .$uId. "." . $imageFileType;
+            move_uploaded_file($_FILES["profileImage"]["tmp_name"], $target_file);
+        }
+        
+	    $dbOptResp = $userCtrl->UpdateUser($editingUser->User, $email, $password, $userid,$target_url, $loginCtrl->GetUserName());
 		if( $dbOptResp->OptStatus ){
             $dbOptResp  = $roleCtrl->UpdateRole($editingUserRole, $role,$loginCtrl->GetUserName() );
 		    if( $dbOptResp->OptStatus ){
@@ -39,7 +52,7 @@
     }
 ?>
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     <div class="row" >
         <div class="col-sm-12 form-group">
             <div class="alert alert-danger hide" role="alert" id="userErrorMessage">
@@ -58,6 +71,20 @@
                     }
                 }
             ?>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <div class="col-sm-2"><label for="userid">User Profile</label></div>
+            <div class="col-sm-5">
+                <?php 
+                    if( $isEditing ){
+                        echo '<img src="'.GetFriendlyUrl($editingUser->User->ProfileImagePath).'" width="150" height="150" />';
+                        echo '<input type="file" class="form-control" name="profileImage" id="profileImage" accept=".png,.gif,.jpg,.jpeg"/>';
+                    }
+                ?>
+            </div>
         </div>
     </div>
     
@@ -117,7 +144,7 @@
                 <select class="form-control" required disabled>
                     <option value="-1"> -- Please select -- </option>
                     <?php 
-                        foreach($roleCtrl->GetRoles() as $role ){
+                        foreach($roleCtrl->GetRoles($GLOBALS["DEFAULT_PAGE_INDEX"], $GLOBALS["DEFAULT_MAX_PAGE_INDEX"]) as $role ){
                             if( $isEditing && $editingUserRole->RoleId == $role->Id ){
                                 echo '<option value="'.$role->Id.'" selected>'.$role->RoleName.'</option>';
                             }else{
@@ -140,7 +167,7 @@
                 <select  class="form-control" required disabled>
                     <option value="-1"> -- Please select -- </option>
                     <?php 
-                        foreach($userCtrl->GetUsers() as $user ){
+                        foreach($userCtrl->GetUsers($GLOBALS["DEFAULT_PAGE_INDEX"], $GLOBALS["DEFAULT_MAX_PAGE_INDEX"]) as $user ){
                             if( $isEditing && $editingUser->SuperiorUserId == $user->Id ){
                                 echo '<option value="'.$user->Id.'" selected>'.$user->Email.'</option>';
                             }else if($user->Id == $editingUser->UserId){
@@ -159,11 +186,7 @@
         <div class="col-sm-12 form-group">
             <div class="col-sm-2"></div>
             <div class="col-sm-5">
-                <?php 
-                    if($isEditing){
-                        echo '<button class="btn btn-primary btn-sm" id="update" name="update" type="submit" onclick="return ValidateUser();">Update</button>';
-                    }
-                ?>
+                <button class="btn btn-primary btn-sm" id="update" name="update" type="submit" onclick="return ValidateUser();">Update</button>
                 <button class="btn btn-danger btn-sm" type="button">Cancel</button>
             </div>
         </div>
@@ -179,13 +202,24 @@
         var password = $('#password').val();
         var roleId = $('#role').val();
         var reportingToId = $('#reportingTo').val();
-        
+        var profileImage = $('#profileImage').val();
         var isValidated = false;
         
         userId = userId.trim();
         $('#userid').val(userId);
         email = email.trim();
         $('#email').val(email);
+        
+        <?php 
+            if( !$isEditing ){
+                ?>
+                    if( profileImage == "" ){
+                        ShowErrorMessage('Please select a valid profile image');
+                        return isValidated;
+                    }
+                <?php
+            }
+        ?>
         
         if( userId == "" ){
             ShowErrorMessage('Please insert a valid user id');

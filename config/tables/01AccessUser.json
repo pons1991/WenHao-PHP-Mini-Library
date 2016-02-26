@@ -27,6 +27,14 @@
 			],
 			"Constraints":[]
 		},
+        {
+			"Name": "ProfileImagePath",
+			"Type": "varchar(100)",
+			"Attributes":[
+				"NOT NULL"
+			],
+			"Constraints":[]
+		},
 		{
 			"Name": "CustomAttribute",
 			"Type": "text",

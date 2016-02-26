@@ -14,5 +14,5 @@
     $miniEmail->subject = 'Test email from EM';
     $miniEmail->message = 'Another test message only, no worry';
     
-    $em->SendEmail($miniEmail);
+    $em->SendEmail($addressArray, null, 'Test email from EM', 'Another test message only, no worry');
 ?>

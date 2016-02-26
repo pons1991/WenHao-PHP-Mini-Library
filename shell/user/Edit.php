@@ -4,6 +4,10 @@
    $editingUser = null;
    $editingUserRole = null;
    
+   $urlPath = "uploads/profile/";
+   $target_dir = "../../uploads/profile/";
+   
+   
    if( isset($_GET["id"]) && $_GET["id"] !== '0' ){
         //To edit
         $isEditing = true;
@@ -20,13 +24,22 @@
    
    if (isset($_POST["submit"])){
 		//create new user
+        $target_file = $target_dir . basename($_FILES["profileImage"]["name"]);
 		$email = $_POST["email"];
 		$password = $_POST["password"];
 		$userid = $_POST["userid"];
 		$role = $_POST["role"];
         $reportingTo = $_POST["reportingTo"];
 		
-		$dbOptResp = $userCtrl->RegisterNewUser($email, $password, $userid,$loginCtrl->GetUserName());
+        $target_file = "";
+        $target_url = "";
+            $imageFileType = pathinfo($_FILES["profileImage"]["name"],PATHINFO_EXTENSION);
+            $uId = uniqid();
+            $target_file = $target_dir . $uId . "." . $imageFileType;
+            $target_url = $urlPath .$uId. "." . $imageFileType;
+            move_uploaded_file($_FILES["profileImage"]["tmp_name"], $target_file);
+        
+		$dbOptResp = $userCtrl->RegisterNewUser($email, $password, $userid,$target_url,$loginCtrl->GetUserName());
 		if( $dbOptResp->OptStatus ){
             //Assign role to users
             $dbOptResp = $roleCtrl->AssignRoleToUser($dbOptResp->OptObj->Id, $role, $loginCtrl->GetUserName());
@@ -44,8 +57,18 @@
 		$userid = $_POST["userid"];
 		$role = $_POST["role"];
         $reportingTo = $_POST["reportingTo"];
+        $target_file = "";
+        $target_url = "";
+        if( isset($_FILES["profileImage"]) ){
+            $imageFileType = pathinfo($_FILES["profileImage"]["name"],PATHINFO_EXTENSION);
+            $uId = uniqid();
+            $target_file = $target_dir . $uId . "." . $imageFileType;
+            $target_url = $urlPath .$uId. "." . $imageFileType;
+            move_uploaded_file($_FILES["profileImage"]["tmp_name"], $target_file);
+        }
         
-	    $dbOptResp = $userCtrl->UpdateUser($editingUser->User, $email, $password, $userid, $loginCtrl->GetUserName());
+        
+	    $dbOptResp = $userCtrl->UpdateUser($editingUser->User, $email, $password, $userid,$target_url, $loginCtrl->GetUserName());
 		if( $dbOptResp->OptStatus ){
             $dbOptResp  = $roleCtrl->UpdateRole($editingUserRole, $role,$loginCtrl->GetUserName() );
 		    if( $dbOptResp->OptStatus ){
@@ -55,7 +78,7 @@
     }
 ?>
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     <div class="row" >
         <div class="col-sm-12 form-group">
             <div class="alert alert-danger hide" role="alert" id="userErrorMessage">
@@ -74,6 +97,22 @@
                     }
                 }
             ?>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <div class="col-sm-2"><label for="userid">User Profile</label></div>
+            <div class="col-sm-5">
+                <?php 
+                    if( $isEditing ){
+                        echo '<img src="'.GetFriendlyUrl($editingUser->User->ProfileImagePath).'" width="150" height="150" />';
+                        echo '<input type="file" class="form-control" name="profileImage" id="profileImage" accept=".png,.gif,.jpg,.jpeg"/>';
+                    }else{
+                        echo '<input type="file" class="form-control" name="profileImage" id="profileImage" accept=".png,.gif,.jpg,.jpeg"/>';
+                    }
+                ?>
+            </div>
         </div>
     </div>
     
@@ -200,13 +239,25 @@
         var password = $('#password').val();
         var roleId = $('#role').val();
         var reportingToId = $('#reportingTo').val();
-        
+        var profileImage = $('#profileImage').val();
         var isValidated = false;
         
         userId = userId.trim();
         $('#userid').val(userId);
         email = email.trim();
         $('#email').val(email);
+        
+        <?php 
+            if( !$isEditing ){
+                ?>
+                    if( profileImage == "" ){
+                        ShowErrorMessage('Please select a valid profile image');
+                        return isValidated;
+                    }
+                <?php
+            }
+        ?>
+        
         
         if( userId == "" ){
             ShowErrorMessage('Please insert a valid user id');

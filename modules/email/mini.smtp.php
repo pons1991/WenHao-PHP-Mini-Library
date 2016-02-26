@@ -6,7 +6,6 @@
         var $isAuth;
         var $username;
         var $password;
-        var $secure;
         var $debug;
         var $isHtml;
         

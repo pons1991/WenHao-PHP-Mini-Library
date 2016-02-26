@@ -16,6 +16,7 @@
                         <ul class="nav navbar-nav navbar-right">
                             <?php 
                                 $loginCtrl = new LoginController(null);
+                                echo '<li><img style="border-radius: 50%; margin-top: 5px; margin-bottom: 5px;" width="50" height="50" src="'.GetFriendlyUrl($loginCtrl->GetUseProfileImagePath()).'" /></li>';
                                 echo '<li><a href="#">Welcome back, '.$loginCtrl->GetUserName().'</a></li>';
                                 echo '<li><a href="'.GetFriendlyUrl("/logout.php").'">Logout</a></li>';
                             ?>

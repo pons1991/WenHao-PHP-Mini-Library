@@ -31,10 +31,7 @@
             
             // SMTP password
             $this->mail->Password = $this->smtp->password;
-            
-            // Enable TLS encryption, `ssl` also accepted
-            $this->mail->SMTPSecure = $this->smtp->secure;
-            
+
             // TCP port to connect to
             $this->mail->Port = $this->smtp->port;
             
@@ -63,8 +60,7 @@
                     $this->mail->Body    = $body;
                     
                     if(!$this->mail->send()) {
-                        $miniLoggerManager = new MiniLoggerManager;
-                        $miniLoggerManager->log->fatal($this->mail->ErrorInfo);
+                        ;
                     } else {
                         return true;
                     }

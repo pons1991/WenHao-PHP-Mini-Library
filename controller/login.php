@@ -105,6 +105,14 @@
 			}
 		}
         
+        public function GetUseProfileImagePath(){
+            $user = $this->GetUserSession();
+			$accessUser = $user->AccessUser;
+			if( $accessUser != null ){
+				return $accessUser->ProfileImagePath;
+			}
+		}
+        
         public function GetUserId(){
             $user = $this->GetUserSession();
 			$accessUser = $user->AccessUser;

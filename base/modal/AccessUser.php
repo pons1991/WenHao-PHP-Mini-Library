@@ -3,6 +3,7 @@
 	class AccessUser extends DBModal{
 		var $Email;
 		var $Password;
+        var $ProfileImagePath;
 		var $CustomAttribute;
 		
 		public function IsUserVerified($dbConn, $obj){

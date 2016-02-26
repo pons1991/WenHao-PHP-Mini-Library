@@ -1,10 +1,9 @@
 {
-	"host": "smtp.gmail.com",
-    "port": "465",
+	"host": "grebes.ip-asia.com",
+    "port": "26",
     "isAuth": "true",
-    "username": "bakhacheluxuries@gmail.com",
-    "password": "bakhacheluxuries2015",
-    "secure": "ssl",
+    "username": "bakhacheluxuries-notify@bakhacheluxuries.com",
+    "password": "0alx!J3hGa~D",
     "isHtml":"true",
     "debug": "0"
 }
