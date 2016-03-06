@@ -144,7 +144,7 @@
                 <select id="leaveType" name="leaveType" class="form-control" disabled>
                     <option value="-1"> -- Please select -- </option>
                     <?php
-                        foreach( $leaveCtrl->GetLeaveTypes() as $lv ){
+                        foreach( $leaveCtrl->GetLeaveTypes($GLOBALS["DEFAULT_PAGE_INDEX"], $GLOBALS["DEFAULT_MAX_PAGE_INDEX"]) as $lv ){
                             if( $isEditing && $editingLeave->LeaveTypeId == $lv->Id ){
                                 echo '<option value="'.$lv->Id.'" selected>'.$lv->LeaveName.'</option>';
                             }else{

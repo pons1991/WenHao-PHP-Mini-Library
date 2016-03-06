@@ -28,6 +28,30 @@
 			"Constraints":[]
 		},
         {
+			"Name": "FullName",
+			"Type": "varchar(100)",
+			"Attributes":[
+				"NOT NULL"
+			],
+			"Constraints":[]
+		},
+        {
+			"Name": "ContactNumber",
+			"Type": "varchar(100)",
+			"Attributes":[
+				"NOT NULL"
+			],
+			"Constraints":[]
+		},
+        {
+			"Name": "Address",
+			"Type": "text",
+			"Attributes":[
+				"NOT NULL"
+			],
+			"Constraints":[]
+		},
+        {
 			"Name": "ProfileImagePath",
 			"Type": "varchar(100)",
 			"Attributes":[

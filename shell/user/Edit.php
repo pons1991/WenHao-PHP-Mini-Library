@@ -29,6 +29,9 @@
 		$password = $_POST["password"];
 		$userid = $_POST["userid"];
 		$role = $_POST["role"];
+        $fullName = $_POST["fullName"];
+        $contactNumber = $_POST["contactNumber"];
+        $userAddress = $_POST["userAddress"];
         $reportingTo = $_POST["reportingTo"];
 		
         $target_file = "";
@@ -39,7 +42,7 @@
             $target_url = $urlPath .$uId. "." . $imageFileType;
             move_uploaded_file($_FILES["profileImage"]["tmp_name"], $target_file);
         
-		$dbOptResp = $userCtrl->RegisterNewUser($email, $password, $userid,$target_url,$loginCtrl->GetUserName());
+		$dbOptResp = $userCtrl->RegisterNewUser($email, $password, $userid,$fullName,$contactNumber, $userAddress,$target_url,$loginCtrl->GetUserName());
 		if( $dbOptResp->OptStatus ){
             //Assign role to users
             $dbOptResp = $roleCtrl->AssignRoleToUser($dbOptResp->OptObj->Id, $role, $loginCtrl->GetUserName());
@@ -56,6 +59,9 @@
 		$password = $_POST["password"];
 		$userid = $_POST["userid"];
 		$role = $_POST["role"];
+        $fullName = $_POST["fullName"];
+        $contactNumber = $_POST["contactNumber"];
+        $userAddress = $_POST["userAddress"];
         $reportingTo = $_POST["reportingTo"];
         $target_file = "";
         $target_url = "";
@@ -68,7 +74,7 @@
         }
         
         
-	    $dbOptResp = $userCtrl->UpdateUser($editingUser->User, $email, $password, $userid,$target_url, $loginCtrl->GetUserName());
+	    $dbOptResp = $userCtrl->UpdateUser($editingUser->User, $email, $password, $userid,$fullName,$contactNumber, $userAddress,$target_url, $loginCtrl->GetUserName());
 		if( $dbOptResp->OptStatus ){
             $dbOptResp  = $roleCtrl->UpdateRole($editingUserRole, $role,$loginCtrl->GetUserName() );
 		    if( $dbOptResp->OptStatus ){
@@ -173,6 +179,51 @@
     
     <div class="row">
         <div class="col-sm-12 form-group">
+            <div class="col-sm-2"><label for="fullName">Full Name</label></div>
+            <div class="col-sm-5">
+                <?php 
+                    if( $isEditing ){
+                        echo '<input type="text" name="fullName" id="fullName" class="form-control" value="'.$editingUser->User->FullName.'" />';
+                    }else{
+                        echo '<input type="text" name="fullName" id="fullName" class="form-control" />';
+                    }
+                ?>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <div class="col-sm-2"><label for="fullName">Contact Number</label></div>
+            <div class="col-sm-5">
+                <?php 
+                    if( $isEditing ){
+                        echo '<input type="text" name="contactNumber" id="contactNumber" class="form-control" value="'.$editingUser->User->ContactNumber.'" />';
+                    }else{
+                        echo '<input type="text" name="contactNumber" id="contactNumber" class="form-control" />';
+                    }
+                ?>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <div class="col-sm-2"><label for="fullName">Address</label></div>
+            <div class="col-sm-5">
+                <?php 
+                    if( $isEditing ){
+                        echo '<textarea id="contactNumber" name="userAddress" class="form-control">'.$editingUser->User->Address.'</textarea>';
+                    }else{
+                        echo '<textarea id="contactNumber" name="userAddress" class="form-control"></textarea>';
+                    }
+                ?>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-12 form-group">
             <div class="col-sm-2"><label for="role">Role</label></div>
             <div class="col-sm-5">
                 <select name="role" id="role" class="form-control" required>
@@ -240,6 +291,9 @@
         var roleId = $('#role').val();
         var reportingToId = $('#reportingTo').val();
         var profileImage = $('#profileImage').val();
+        var fullName = $('#fullName').val();
+        var contactNumber = $('#contactNumber').val();
+        var userAddress = $('#userAddress').val();
         var isValidated = false;
         
         userId = userId.trim();
@@ -276,6 +330,21 @@
         
         if( password == "" ){
             ShowErrorMessage('Please insert a valid password');
+            return isValidated;
+        }
+        
+        if( fullName == "" ){
+            ShowErrorMessage('Please insert a valid full name');
+            return isValidated;
+        }
+        
+        if( contactNumber == "" ){
+            ShowErrorMessage('Please insert a valid contact number');
+            return isValidated;
+        }
+        
+        if( userAddress == "" ){
+            ShowErrorMessage('Please insert a valid address');
             return isValidated;
         }
         

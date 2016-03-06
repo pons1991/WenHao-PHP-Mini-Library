@@ -3,6 +3,9 @@
 	class AccessUser extends DBModal{
 		var $Email;
 		var $Password;
+        var $FullName;
+        var $ContactNumber;
+        var $Address;
         var $ProfileImagePath;
 		var $CustomAttribute;
 		

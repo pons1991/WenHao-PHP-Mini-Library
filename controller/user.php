@@ -9,7 +9,7 @@
 			}
 		}
 		
-		public function RegisterNewUser($email, $password, $userid, $profileImagePath, $createdBy){
+		public function RegisterNewUser($email, $password, $userid, $fullName, $contactNumber, $userAddress, $profileImagePath, $createdBy){
 			$dbOpt = new DbOpt;
 			$dbOpt->OptStatus = true;
 			$dbOpt->OptMessage = "Done";
@@ -18,6 +18,9 @@
 				$accessUser = new AccessUser;
 				$accessUser->Email = $email;
 				$accessUser->Password = $password;
+                $accessUser->FullName = $fullName;
+                $accessUser->ContactNumber = $contactNumber;
+                $accessUser->Address = $userAddress;
 				$accessUser->ProfileImagePath = $profileImagePath;
                 
 				$outputArray = array();
@@ -131,7 +134,7 @@
 			return $newOrgRel->Gets($this->dbConnection,$GLOBALS["DEFAULT_PAGE_INDEX"]-1, $GLOBALS["DEFAULT_MAX_PAGE_INDEX"], $additionalParams);
         }
         
-		public function UpdateUser($usrObj, $email, $password, $userid, $profileImage, $currentUser){
+		public function UpdateUser($usrObj, $email, $password, $userid,$fullName,$contactNumber, $userAddress, $profileImage, $currentUser){
 			$dbOpt = new DbOpt;
 			$dbOpt->OptStatus = true;
 			$dbOpt->OptMessage = "Done";
@@ -141,6 +144,11 @@
                 if( $profileImage != "" ){
                     $usrObj->ProfileImagePath = $profileImage;
                 }
+                
+                $usrObj->FullName = $fullName;
+                $usrObj->ContactNumber = $contactNumber;
+                $usrObj->Address = $userAddress;
+                
 			    $outputArray = array();
                 $outputArray["userid"] = $userid;
                 $jsonEncodedArray = json_encode($outputArray);
