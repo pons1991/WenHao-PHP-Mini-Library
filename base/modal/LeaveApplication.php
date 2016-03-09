@@ -2,6 +2,7 @@
     class LeaveApplication extends DBModal{
         var $UserId;
         var $LeaveTypeId;
+        var $OffDayRemarks;
         var $Remarks;
         var $SupervisorRemarks;
         var $LeaveDateFrom;

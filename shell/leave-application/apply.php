@@ -39,6 +39,55 @@
             $dateDiff = 0.5;
         }
         
+        $mondayCB = isset($_POST["mondayCB"]) ? true : false;
+        $tuesdayCB = isset($_POST["tuesdayCB"]) ? true : false;
+        $wednesdayCB = isset($_POST["wednesdayCB"]) ? true : false;
+        $thursdayCB = isset($_POST["thursdayCB"]) ? true : false;
+        $fridayCB = isset($_POST["fridayCB"]) ? true : false;
+        $saturdayCB = isset($_POST["saturdayCB"]) ? true : false;
+        $sundayCB = isset($_POST["sundayCB"]) ? true : false;
+        
+        $offDayRemarkArray = array();
+        $offDayRemarkArray["Monday"] = $mondayCB ? 1 : 0;
+        $offDayRemarkArray["Tuesday"] = $tuesdayCB ? 1 : 0;
+        $offDayRemarkArray["Wednesday"] = $wednesdayCB ? 1 : 0;
+        $offDayRemarkArray["Thursday"] = $thursdayCB ? 1 : 0;
+        $offDayRemarkArray["Friday"] = $fridayCB ? 1 : 0;
+        $offDayRemarkArray["Saturday"] = $saturdayCB ? 1 : 0;
+        $offDayRemarkArray["Sunday"] = $sundayCB ? 1 : 0;
+        $jsonEncodedOffDayRemarkArray = json_encode($offDayRemarkArray);
+        
+        $totalOffDay = 0;
+        $interval = DateInterval::createFromDateString('1 day');
+        $incrementalDate = $fromDateObj;
+        for( ; $incrementalDate <= $toDateObj ; $incrementalDate->add($interval) ){
+            $dayNumeric = $incrementalDate->format('N');
+            switch( $dayNumeric ){
+                case 1:
+                    $totalOffDay = $mondayCB ? $totalOffDay + 1 : $totalOffDay;
+                    break;
+                case 2:
+                    $totalOffDay = $tuesdayCB ? $totalOffDay + 1 : $totalOffDay;
+                    break;
+                case 3:
+                    $totalOffDay = $wednesdayCB ? $totalOffDay + 1 : $totalOffDay;
+                    break;
+                case 4:
+                    $totalOffDay = $thursdayCB ? $totalOffDay + 1 : $totalOffDay;
+                    break;
+                case 5:
+                    $totalOffDay = $fridayCB ? $totalOffDay + 1 : $totalOffDay;
+                    break;
+                case 6:
+                    $totalOffDay = $saturdayCB ? $totalOffDay + 1 : $totalOffDay;
+                    break;
+                case 7:
+                    $totalOffDay = $sundayCB ? $totalOffDay + 1 : $totalOffDay;
+                    break;
+                       
+            }
+        }
+        
         $currentYearStr = date('Y');
         $currentYear = intval(date('Y'));
         $previousYear = $currentYear - 1;
@@ -56,69 +105,79 @@
         $totalBringForwardToApply = 0.0;
         $totalCurrentToApply = 0.0;
         $totalBringForwardToApply = $totalAvailableBringForward - $totalUsedBringForwardDay;
-        CalculateLeave($totalBringForwardToApply,$totalCurrentToApply,$totalAvailableBringForward,$totalUsedBringForwardDay,$dateDiff,$fromDateObj,$toDateObj);
+        CalculateLeave($totalBringForwardToApply,$totalCurrentToApply,$totalAvailableBringForward,$totalUsedBringForwardDay,$dateDiff,$fromDateObj,$toDateObj, $totalOffDay);
         
-        $leaveTypeNumber = 0;
-        //check leave type
-        $leaveTypeNumber += GetAccumulativeLeave($leaveTypeList,$leaveCtrl,$userId,$currentYearStr,$leaveType );
         
-        //validation on pro rated leave
-        $proRatedList = $leaveCtrl->GetProRatedLeaveByUserIdAndYear($userId,$currentYear);
-        if( $proRatedList != null && count($proRatedList) == 1 ){
-            $proRated = $proRatedList[0];
-            $proRatedLeaveArray = json_decode($proRated->ProRatedAttributes, true);
-            if( array_key_exists($leaveType, $proRatedLeaveArray) ){
-                $leaveTypeNumber += $proRatedLeaveArray[$leaveType];
-            }
-            if ( ($totalAppliedDay + $totalCurrentToApply) > $leaveTypeNumber){
-                //error
-                $dbOptResp = new DbOpt;
-                $dbOptResp->OptStatus = false;
-                $dbOptResp->OptMessage = 'Your applied leave has exceed your available leave';
-            }else{
-                //proceed
-                $dbOptResp = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $totalCurrentToApply,$totalBringForwardToApply, $leaveType, $remarks,$approvalRemarks,1, $userId, $userEmail);
-            }
-        }else{
-            //validation on role leave
-            $userRoleList = $roleCtrl->GetRoleLeaveByUserId($userId);
-            if( $userRoleList != null && count($userRoleList) == 1 ){
-                $userRole = $userRoleList[0];
-                $roleLeaveList = $roleCtrl->GetRoleLeaveById($userRole->Role->Id);
-                if( $roleLeaveList != null && count($roleLeaveList) == 1 ){
-                    $roleLeave = $roleLeaveList[0];
-                    $roleLeaveArray = json_decode($roleLeave->LeaveAttribute, true);
-                    if( array_key_exists($leaveType, $roleLeaveArray) ){
-                        $leaveTypeNumber += $roleLeaveArray[$leaveType];
-                    }
-                    if( ($totalAppliedDay + $totalCurrentToApply) > $leaveTypeNumber ){
-                        //error
-                        $dbOptResp = new DbOpt;
-                        $dbOptResp->OptStatus = false;
-                        $dbOptResp->OptMessage = 'Your applied leave has exceed your available leave';
-                    }else{
-                        //proceed
-                        $dbOptResp = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $totalCurrentToApply,$totalBringForwardToApply, $leaveType, $remarks,$approvalRemarks,1, $userId, $userEmail);
-                    }
+        if( $totalCurrentToApply > 0 ){
+            $leaveTypeNumber = 0;
+            //check leave type
+            $leaveTypeNumber += GetAccumulativeLeave($leaveTypeList,$leaveCtrl,$userId,$currentYearStr,$leaveType );
+            
+            //validation on pro rated leave
+            $proRatedList = $leaveCtrl->GetProRatedLeaveByUserIdAndYear($userId,$currentYear);
+            if( $proRatedList != null && count($proRatedList) == 1 ){
+                $proRated = $proRatedList[0];
+                $proRatedLeaveArray = json_decode($proRated->ProRatedAttributes, true);
+                if( array_key_exists($leaveType, $proRatedLeaveArray) ){
+                    $leaveTypeNumber += $proRatedLeaveArray[$leaveType];
                 }
-            }
-        }
-        
-        if( $dbOptResp != null && $dbOptResp->OptStatus && $dbOptResp->OptObj != null ){
-            $leaveTypeName = '';
-            foreach( $leaveTypeList as $lv ){
-                if( $lv->Id == $leaveType ){
-                    $leaveTypeName = $lv->LeaveName;
-                    break;
+                if ( ($totalAppliedDay + $totalCurrentToApply) > $leaveTypeNumber){
+                    //error
+                    $dbOptResp = new DbOpt;
+                    $dbOptResp->OptStatus = false;
+                    $dbOptResp->OptMessage = 'Your applied leave has exceed your available leave';
+                }else{
+                    //proceed
+                    $dbOptResp = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $totalCurrentToApply,$totalBringForwardToApply, $leaveType,$jsonEncodedOffDayRemarkArray, $remarks,$approvalRemarks,1, $userId, $userEmail);
+                }
+            }else{
+                //validation on role leave
+                $userRoleList = $roleCtrl->GetRoleLeaveByUserId($userId);
+                if( $userRoleList != null && count($userRoleList) == 1 ){
+                    $userRole = $userRoleList[0];
+                    $roleLeaveList = $roleCtrl->GetRoleLeaveById($userRole->Role->Id);
+                    if( $roleLeaveList != null && count($roleLeaveList) == 1 ){
+                        $roleLeave = $roleLeaveList[0];
+                        $roleLeaveArray = json_decode($roleLeave->LeaveAttribute, true);
+                        if( array_key_exists($leaveType, $roleLeaveArray) ){
+                            $leaveTypeNumber += $roleLeaveArray[$leaveType];
+                        }
+                        if( ($totalAppliedDay + $totalCurrentToApply) > $leaveTypeNumber ){
+                            //error
+                            $dbOptResp = new DbOpt;
+                            $dbOptResp->OptStatus = false;
+                            $dbOptResp->OptMessage = 'Your applied leave has exceed your available leave';
+                        }else{
+                            //proceed
+                            $dbOptResp = $leaveCtrl->ApplyLeave($fromDateFormat,$toDateFormat, $totalCurrentToApply,$totalBringForwardToApply, $leaveType,$jsonEncodedOffDayRemarkArray, $remarks,$approvalRemarks,1, $userId, $userEmail);
+                        }
+                    }
                 }
             }
             
-            $orgRelList = $userCtrl->GetUserOrgRel($userId);
-            if( $orgRelList != null && count($orgRelList) == 1){
-                $orgRel = $orgRelList[0];
-                $subject = 'New leave application - '.$userEmail;
-                $emailCtrl->SendLeaveApplicationEmail($orgRel->SuperiorUser->Email,$userEmail,$subject,$userEmail,$fromDate,$toDate,$leaveTypeName,$remarks,$totalCurrentToApply,$totalBringForwardToApply,'New','' );
+            if( $dbOptResp != null && $dbOptResp->OptStatus && $dbOptResp->OptObj != null ){
+                $leaveTypeName = '';
+                foreach( $leaveTypeList as $lv ){
+                    if( $lv->Id == $leaveType ){
+                        $leaveTypeName = $lv->LeaveName;
+                        break;
+                    }
+                }
+                
+                //Send Email - start
+                $orgRelList = $userCtrl->GetUserOrgRel($userId);
+                if( $orgRelList != null && count($orgRelList) == 1){
+                    $orgRel = $orgRelList[0];
+                    $subject = 'New leave application - '.$userEmail;
+                    $emailCtrl->SendLeaveApplicationEmail($orgRel->SuperiorUser->Email,$userEmail,$subject,$userEmail,$fromDate,$toDate,$leaveTypeName,$jsonEncodedOffDayRemarkArray,$remarks,$totalCurrentToApply,$totalBringForwardToApply,'New','' );
+                }
+                //Send Email - End
             }
+        }else{
+            //The code should not reach here
+           $dbOptResp = new DbOpt;
+           $dbOptResp->OptStatus = false;
+           $dbOptResp->OptMessage = 'Total Off Day cannot be greater than Total Applied Leave'; 
         }
     }
 ?>
@@ -146,6 +205,84 @@
             ?>
         </div>
     </div>
+    
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <div class="col-sm-2">
+                <label for="leaveDate">Off Day</label>
+                <p><small>* System will not include selected off day when registering your leave</small></p>
+            </div>
+            <div class="col-sm-2">
+                <!-- Monday -->
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <input type="checkbox" id="mondayCB" name="mondayCB" aria-label="...">
+                    </span>
+                    <input type="text" class="form-control" readonly="true" value="Monday" />
+                </div>
+                
+                <!-- Friday -->
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <input type="checkbox" id="fridayCB" name="fridayCB" aria-label="...">
+                    </span>
+                    <input type="text" class="form-control" readonly="true" value="Friday" />
+                </div>
+                
+                
+                
+            </div>
+            <div class="col-sm-2">
+                <!-- Tuesday -->
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <input type="checkbox" id="tuesdayCB" name="tuesdayCB" aria-label="...">
+                    </span>
+                    <input type="text" class="form-control" readonly="true" value="Tuesday" />
+                </div>
+                
+                <!-- Saturday -->
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <input type="checkbox" id="saturdayCB" name="saturdayCB" aria-label="...">
+                    </span>
+                    <input type="text" class="form-control" readonly="true" value="Saturday" />
+                </div>
+                
+                
+            </div>
+            <div class="col-sm-2">
+                <!-- Wednesday -->
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <input type="checkbox" id="wednesdayCB" name="wednesdayCB" aria-label="...">
+                    </span>
+                    <input type="text" class="form-control" readonly="true" value="Wednesday" />
+                </div>
+                
+                
+                <!-- Sunday -->
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <input type="checkbox" id="sundayCB" name="sundayCB" aria-label="...">
+                    </span>
+                    <input type="text" class="form-control" readonly="true" value="Sunday" />
+                </div>
+                
+            </div>
+            
+            <div class="col-sm-2">
+                <!-- Thursday -->
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <input type="checkbox" id="thursdayCB" name="thursdayCB" aria-label="...">
+                    </span>
+                    <input type="text" class="form-control" readonly="true" value="Thursday" />
+                </div>
+            </div>
+        </div>
+    </div>
+    
     
     <div class="row">
         <div class="col-sm-12 form-group">
@@ -266,6 +403,7 @@
             </div>
         </div>
     </div>
+    
     
     <div class="row">
         <div class="col-sm-12 form-group">
@@ -388,7 +526,7 @@
         $('#leaveApplicationErrorMessage').removeClass('hide');
         $('#leaveApplicationErrorMessage > span').html(errorMessage);
     }
-
+    
     $(document).ready(function(){
         var currentYear = (new Date).getFullYear();;
         $('#datepickerFrom').datepicker({

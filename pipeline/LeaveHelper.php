@@ -45,7 +45,7 @@
         return $leaveTypeNumber;
     }
     
-    function CalculateLeave(&$totalBringForwardToApply,&$totalCurrentToApply,$totalAvailableBringForward,$totalUsedBringForwardDay,$dateDiff,$fromDateObj,$toDateObj){
+    function CalculateLeave(&$totalBringForwardToApply,&$totalCurrentToApply,$totalAvailableBringForward,$totalUsedBringForwardDay,$dateDiff,$fromDateObj,$toDateObj,$totalOffDay){
         
         //Expired date object for bring forward leave 
         $expiryDateString = $GLOBALS['BRING_FORWARD_EXPIRE_DATE_MONTH'].'/'.$GLOBALS['BRING_FORWARD_EXPIRE_DATE_DAYS'].'/'.date('Y');
@@ -87,5 +87,7 @@
                 $totalCurrentToApply = $dateDiff - $totalBringForwardToApply;
             }
         }
+        
+        $totalCurrentToApply = $totalCurrentToApply - $totalOffDay;
     }
 ?>

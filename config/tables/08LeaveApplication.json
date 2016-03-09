@@ -22,6 +22,14 @@
 				"constraint LeaveApplication_fk_user_id FOREIGN KEY (UserId) REFERENCES AccessUser(Id)"
 			]
 		},
+        {
+			"Name": "OffDayRemarks",
+			"Type": "varchar(100)",
+			"Attributes":[
+				"NOT NULL"
+			],
+			"Constraints":[]
+		},
 		{
 			"Name": "LeaveTypeId",
 			"Type": "int",

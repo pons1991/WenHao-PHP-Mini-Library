@@ -252,13 +252,14 @@ class LeaveController extends BaseController {
         }
     }
 
-    public function ApplyLeave($from, $to, $diff, $totalBringFoward, $type, $remarks, $approvalRemarks, $status ,$userId, $email) {
+    public function ApplyLeave($from, $to, $diff, $totalBringFoward, $type, $offDayRemarks, $remarks, $approvalRemarks, $status ,$userId, $email) {
 
         $dbOptResponse = new DbOpt;
 
         $newLeave = new LeaveApplication;
         $newLeave->UserId = $userId;
         $newLeave->LeaveTypeId = $type;
+        $newLeave->OffDayRemarks = $offDayRemarks;
         $newLeave->Remarks = $remarks;
         $newLeave->SupervisorRemarks = $approvalRemarks;
         $newLeave->LeaveDateFrom = $from;

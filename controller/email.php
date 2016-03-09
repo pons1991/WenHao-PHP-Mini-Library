@@ -1,6 +1,6 @@
 <?php 
     class EmailController extends BaseController{
-        function SendLeaveApplicationEmail($toEmail, $ccEmail,$subject, $applicantEmail, $fromDate, $toDate, $leaveTypeName,$remarks,$totalLeave,$bringForward,$status,$sRemarks){
+        function SendLeaveApplicationEmail($toEmail, $ccEmail,$subject, $applicantEmail, $fromDate, $toDate, $leaveTypeName,$jsonOffDayRemarkString,$remarks,$totalLeave,$bringForward,$status,$sRemarks){
             $miniEmailManager = new MiniEmailManager;
                 
                 $to = array();
@@ -18,6 +18,69 @@
                 $body .= '<td>Email</td>';
                 $body .= '<td>'.$applicantEmail.'</td>';
                 $body .= '</tr>';
+                
+                //Off Day
+                $jsonArr = json_decode($jsonOffDayRemarkString, true);
+                if( $jsonArr != null ){
+                    $offDayRemark = '';
+                    
+                    if( $jsonArr['Monday'] == '1' ){
+                        if( !empty($offDayRemark)){
+                            $offDayRemark = $offDayRemark . ', ';
+                        }
+                        $offDayRemark = $offDayRemark. 'Monday';
+                    }
+                    
+                    if( $jsonArr['Tuesday'] == '1' ){
+                        if( !empty($offDayRemark)){
+                            $offDayRemark = $offDayRemark . ', ';
+                        }
+                        $offDayRemark = $offDayRemark. 'Tuesday';
+                    }
+                    
+                    if( $jsonArr['Wednesday'] == '1' ){
+                        if( !empty($offDayRemark)){
+                            $offDayRemark = $offDayRemark . ', ';
+                        }
+                        $offDayRemark = $offDayRemark. 'Wednesday';
+                    }
+                    
+                    if( $jsonArr['Thursday'] == '1' ){
+                        if( !empty($offDayRemark)){
+                            $offDayRemark = $offDayRemark . ', ';
+                        }
+                        $offDayRemark = $offDayRemark. 'Thursday';
+                    }
+                    
+                    if( $jsonArr['Friday'] == '1' ){
+                        if( !empty($offDayRemark)){
+                            $offDayRemark = $offDayRemark . ', ';
+                        }
+                        $offDayRemark = $offDayRemark. 'Friday';
+                    }
+                    
+                    if( $jsonArr['Saturday'] == '1' ){
+                        if( !empty($offDayRemark)){
+                            $offDayRemark = $offDayRemark . ', ';
+                        }
+                        $offDayRemark = $offDayRemark. 'Saturday';
+                    }
+                    
+                    if( $jsonArr['Sunday'] == '1' ){
+                        if( !empty($offDayRemark)){
+                            $offDayRemark = $offDayRemark . ', ';
+                        }
+                        $offDayRemark = $offDayRemark. 'Sunday';
+                    }
+                    
+                    $offDayRemark = empty($offDayRemark) ? 'N/A' : $offDayRemark;
+                    
+                    $body .= '<tr>';
+                    $body .= '<td>Off Day</td>';
+                    $body .= '<td>'.$offDayRemark.'</td>';
+                    $body .= '</tr>';
+                }
+                
                 
                 //leave from - to
                 $body .= '<tr>';
