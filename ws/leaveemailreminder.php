@@ -29,6 +29,7 @@
                     datetime::createfromformat('Y-m-d 00:00:00',$pendingLeave->LeaveDateFrom)->format('m/d/Y'),
                     datetime::createfromformat('Y-m-d 00:00:00',$pendingLeave->LeaveDateTo)->format('m/d/Y'),
                     $pendingLeave->LeaveType->LeaveName,
+                    $pendingLeave->LeaveType->OffDayRemarks,
                     $pendingLeave->Remarks,
                     $pendingLeave->TotalLeave,
                     $pendingLeave->TotalBringForwardLeave,

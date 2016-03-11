@@ -40,7 +40,7 @@
         </div>
         <div class="col-md-6">
             <form class="form-signin" method="post" action="login.php">
-                <h2 class="form-signin-heading">Leave System Login</h2>
+                <h2 class="form-signin-heading">Bakhache Luxuries System Login</h2>
                 <label for="inputEmail" class="sr-only">Email address</label>
                 <input type="email" id="email" name="email" class="form-control" placeholder="Email address" required="" autofocus="">
                 <label for="inputPassword" class="sr-only">Password</label>
@@ -66,4 +66,4 @@
     </div>
     </div>
 		
-<?php include_once "footer.php"; ?>
+<?php include_once "BaseAppFooter.php"; ?>

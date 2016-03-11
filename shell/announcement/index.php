@@ -1,0 +1,6 @@
+<?php
+
+    pipeline\SessionManager::RequiredLogin();
+
+
+?>

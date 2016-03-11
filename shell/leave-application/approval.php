@@ -44,6 +44,7 @@
                 datetime::createfromformat('Y-m-d 00:00:00',$editingLeave->LeaveDateFrom)->format('m/d/Y'),
                 datetime::createfromformat('Y-m-d 00:00:00',$editingLeave->LeaveDateTo)->format('m/d/Y'),
                 $editingLeave->LeaveType->LeaveName,
+                $editingLeave->LeaveType->OffDayRemarks,
                 $editingLeave->Remarks,
                 $editingLeave->TotalLeave,
                 $editingLeave->TotalBringForwardLeave,
