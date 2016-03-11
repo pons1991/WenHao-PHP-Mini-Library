@@ -1,7 +1,10 @@
 <?php 
-	include "Base.php";
-	EnableError();
-	
+    include_once "BaseAppHeader.php";
+	//include "Base.php";
+	//EnableError();
+    
+    use Controllers as Controller;
+    
 	$loginCtrl = null;
 	$loginPageErrorMessage = '';
     
@@ -11,7 +14,7 @@
 		
 		if( !empty($email) && !empty($password)){
 			
-			$loginCtrl = new LoginController($dbConn);
+			$loginCtrl = new Controller\LoginController($dbConn);
 			$loginResp = $loginCtrl->VerifyUser($email,$password);
 			
             if( $loginResp-> OptStatus){
@@ -25,9 +28,18 @@
 	}
 	
 	if( $loginCtrl == null ){
-		$loginCtrl = new LoginController(null);
+		$loginCtrl = new Controller\LoginController(null);
 		//echo $loginCtrl->GetUserName();
 	}
+    
+    //ExecuteSelectPrepare($sqlQuery,$sqlMap)
+    /*$sqlQuery = 'select * from from AccessUser where Email = :Email';
+    $sqlParamArray = array(':Email' => 'programmerpig@gmail.com');
+    $result = $dbConn->ExecuteSelectPrepare($sqlQuery, $sqlParamArray);
+    echo print_r($result);
+    */
+    
+    
 ?>
 
 <?php include_once "header.php"; ?>

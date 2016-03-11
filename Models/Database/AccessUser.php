@@ -1,6 +1,7 @@
 <?php
     namespace Models\Database;
-
+    use PDO;
+    
 	class AccessUser extends DBModal{
 		var $Email;
 		var $Password;

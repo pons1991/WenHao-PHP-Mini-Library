@@ -1,9 +1,7 @@
 <?php 
     require_once "mini.smtp.php";
-    //require_once "mini.email.php";
     require_once "class.smtp.php";
     require_once "class.phpmailer.php";
-    include_once "../logger/mini.loggermanager.php";
     
     class MiniEmailManager {
         

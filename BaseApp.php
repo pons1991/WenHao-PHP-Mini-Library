@@ -11,7 +11,7 @@
     
     //DB Connection open
     $dbConn = new Database\Connection\Connection();
-    //$dbConn->OpenConnection();
+    $dbConn->OpenConnection();
     
     
     //Model Response

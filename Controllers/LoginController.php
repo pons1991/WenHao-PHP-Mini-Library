@@ -2,7 +2,8 @@
 
     namespace Controllers;
 
-    use Models\Database;
+    use Models\Database as DbModel;
+    use Models\Response as DbResponse;
 
 	class LoginController{
 		var $dbConnection;
@@ -16,12 +17,12 @@
 		}
 		
 		public function VerifyUser($username, $password){
-			$resp = new DbOpt;
+			$resp = new DbResponse\DbOpt;
 			$resp->OptStatus = true;
 			$resp->OptMessage = "Verified";
 		
 			if( $this->dbConnection != null ){
-				$accessUser = new AccessUser;
+				$accessUser = new DbModel\AccessUser;
 				
 				$accessUser->Email = $username;
 				$accessUser->Password = $password;

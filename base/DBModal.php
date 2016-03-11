@@ -416,6 +416,9 @@
             $joinStatement .= " order by ".$queryMeta[$className].".Id desc ";
             $joinStatement .= " limit :start , :end"; //limit constraint
             
+            echo '<p>'.print_r($joinStatement).'</p>';
+            echo '<p>'.print_r($queryParamValue).'</p>';
+            
             $result = $dbConn->ExecuteSelectPrepare($joinStatement,$queryParamValue);
             
             if( $result != null ){

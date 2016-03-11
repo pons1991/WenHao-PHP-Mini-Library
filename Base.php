@@ -1,6 +1,6 @@
 <?php
     //Register external module
-    include_once "modules/logger/mini.loggermanager.php";   //Register logger manager module
+    //include_once "modules/logger/mini.loggermanager.php";   //Register logger manager module
     include_once "modules/email/mini.emailmanager.php";     //Register email manager module
     
     

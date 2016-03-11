@@ -1,7 +1,9 @@
 <?php
 
     namespace Models\Database;
-
+    use PDO;
+    use ReflectionClass;
+    
 	class DBModal{
 		
 		//Properties
@@ -75,7 +77,7 @@
 			if( $this->ConstraintValid()){
 				try{
 					$currentObjInst = new ReflectionClass($obj);
-					$className = $currentObjInst->getName();
+					$className = $currentObjInst->getShortName();
 					$queryParamValue = array(
 						':IsActive' => array('value' => $obj->IsActive, 'type' => PDO::PARAM_BOOL),
 						':Id' => array('value' => $obj->Id, 'type' => PDO::PARAM_INT)
@@ -108,7 +110,7 @@
 				if( $dbConn != null && $obj != null  ){
 					$currentObjInst = new ReflectionClass($obj);
 					$props  = $currentObjInst->getProperties();
-					$updateSqlStr = "update ".$currentObjInst->getName()." set ";
+					$updateSqlStr = "update ".$currentObjInst->getShortName()." set ";
 					$updateSqlFieldStr = "";
 					
 					for ($i = 0 ; $i < count($props); $i++) {
@@ -203,7 +205,7 @@
                             }
                         }
 					}
-					$insertSqlStr = "Insert into ".$currentObjInst->getName()." (".$insertColumnNameSqlStr.") values(".$insertColumnSqlStr.")";
+					$insertSqlStr = "Insert into ".$currentObjInst->getShortName()." (".$insertColumnNameSqlStr.") values(".$insertColumnSqlStr.")";
 					
 					if( !empty($insertSqlStr) && $dbConn->IsConnectionEstablished()){
 						$dbConn->ExecuteQuery($insertSqlStr);
@@ -271,6 +273,7 @@
             $whereStatement = "";
             $previousColumnName = "";
             $additionalParamIndex = 0;
+            
 				foreach($additionalParams as $valueArr ){
                     $tableKey = $valueArr["table"];
                     $asciiLabel = $queryMeta[$tableKey];
@@ -325,7 +328,7 @@
 			);
             
             $currentObjInst = new ReflectionClass($this);
-			$className = $currentObjInst->getName();
+			$className = $currentObjInst->getShortName();
             $props  = $currentObjInst->getProperties();
             
             $referenceByList = array();
@@ -420,7 +423,6 @@
             $joinStatement .= " limit :start , :end"; //limit constraint
             
             $result = $dbConn->ExecuteSelectPrepare($joinStatement,$queryParamValue);
-            
             if( $result != null ){
 				//Loop through the array of records
 				foreach($result as $k=>$v){
@@ -432,13 +434,16 @@
 				}
 			}
             
+            
+            
             return $arrayObject;
 		}
 		
 		//To convert raw db value into obj instance
 		public function Conversion($pdoRecord, $metaList, $metaValue, $queryMeta){
 			$currentObjInst = new ReflectionClass($this);
-			$className = $currentObjInst->getName();
+			$className = $currentObjInst->getName(); //Use qualified name (namespace + class name) when converting
+            $shortClassName = $currentObjInst->getShortName();
 			$props  = $currentObjInst->getProperties();
 			$tempObj = new $className;
 			
@@ -452,7 +457,7 @@
                     }else{
                         if( in_array($propName,$metaList ) ){
                             if( !array_key_exists("ReferenceBy",$metaValue[$propName] ) ){
-                                $pdoTitle = $queryMeta[$className]."_".$propName;
+                                $pdoTitle = $queryMeta[$shortClassName]."_".$propName;
                                 $propValue = $pdoRecord[$pdoTitle];
                                 //reflection set value to object
                                 $prop->setValue($tempObj, $propValue);
@@ -470,7 +475,7 @@
                                 }
                             }
                         }else{
-                            $pdoTitle = $queryMeta[$className]."_".$propName;
+                            $pdoTitle = $queryMeta[$shortClassName]."_".$propName;
                             $propValue = $pdoRecord[$pdoTitle];
                             //reflection set value to object
                             $prop->setValue($tempObj, $propValue);
@@ -484,7 +489,7 @@
         public function ReferenceConversion($pdoRecord,$propName,$queryMeta, $queryMetaUniqueKey){
             $referenceReflectionClass = new ReflectionClass($propName);
             $referenceReflectionClassProps  = $referenceReflectionClass->getProperties();
-            $referenceReflectionClassName = $referenceReflectionClass->getName();
+            $referenceReflectionClassName = $referenceReflectionClass->getShortName();
             
             //query meta unique key will hold variable_table name
             $queryMetaUniqueKey = empty($queryMetaUniqueKey) ? $referenceReflectionClassName : $queryMetaUniqueKey;
@@ -495,7 +500,7 @@
             for ($i = 0 ; $i < count($referenceReflectionClassProps); $i++) {
                 $referenceReflectionClassProp = $referenceReflectionClassProps[$i];
                 if( $referenceReflectionClassProp != null ){
-                    $referenceReflectionClassPropName = $referenceReflectionClassProp->getName();
+                    $referenceReflectionClassPropName = $referenceReflectionClassProp->getShortName();
                     if (strpos($referenceReflectionClassPropName,'_META') !== false) {
                         $explodeToken = explode("_",$referenceReflectionClassPropName);
                         array_push($tempMetaList,$explodeToken[0]);

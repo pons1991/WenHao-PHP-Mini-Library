@@ -55,10 +55,10 @@
 		
 		function ExecuteSelectPrepare($sqlQuery,$sqlMap){
 			$prepareStatement = $this->ExecutePrepare($sqlQuery,$sqlMap);
-			if( $prepareStatement != null ){
+            if( $prepareStatement != null ){
 				$prepareStatement->setFetchMode(PDO::FETCH_ASSOC);
 				$result = $prepareStatement->fetchAll();
-				return $result;
+                return $result;
 			}
 		}
 		
