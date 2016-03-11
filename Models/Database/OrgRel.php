@@ -1,4 +1,5 @@
 <?php
+    namespace Models\Database;
 	class OrgRel extends DBModal{
 		
 		var $SuperiorUserId;

@@ -1,9 +1,10 @@
 <?php
-	class BringForwardLeave extends DBModal{
+    namespace Models\Database;
+	class ProRatedLeave extends DBModal{
 		
 		var $UserId;
-        var $BringForwardFromYear;
-        var $BringForwardAttributes;
+        var $ProRatedYear;
+        var $ProRatedAttributes;
         
         var $AccessUser_META = '{"ReferenceBy":"UserId","Ignore":"true"}';
         var $AccessUser;

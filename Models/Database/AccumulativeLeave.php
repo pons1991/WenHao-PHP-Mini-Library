@@ -1,4 +1,5 @@
 <?php
+    namespace Models\Database;
 	class AccumulativeLeave extends DBModal{
 		var $UserId;
         var $ExpiredYear;

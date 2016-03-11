@@ -273,7 +273,7 @@
             $whereStatement = "";
             $previousColumnName = "";
             $additionalParamIndex = 0;
-            
+
 				foreach($additionalParams as $valueArr ){
                     $tableKey = $valueArr["table"];
                     $asciiLabel = $queryMeta[$tableKey];
@@ -423,6 +423,7 @@
             $joinStatement .= " limit :start , :end"; //limit constraint
             
             $result = $dbConn->ExecuteSelectPrepare($joinStatement,$queryParamValue);
+            
             if( $result != null ){
 				//Loop through the array of records
 				foreach($result as $k=>$v){
@@ -434,16 +435,14 @@
 				}
 			}
             
-            
-            
             return $arrayObject;
 		}
 		
 		//To convert raw db value into obj instance
 		public function Conversion($pdoRecord, $metaList, $metaValue, $queryMeta){
 			$currentObjInst = new ReflectionClass($this);
-			$className = $currentObjInst->getName(); //Use qualified name (namespace + class name) when converting
-            $shortClassName = $currentObjInst->getShortName();
+			$className = $currentObjInst->getName();
+            $classShortName = $currentObjInst->getShortName();
 			$props  = $currentObjInst->getProperties();
 			$tempObj = new $className;
 			
@@ -457,7 +456,7 @@
                     }else{
                         if( in_array($propName,$metaList ) ){
                             if( !array_key_exists("ReferenceBy",$metaValue[$propName] ) ){
-                                $pdoTitle = $queryMeta[$shortClassName]."_".$propName;
+                                $pdoTitle = $queryMeta[$classShortName]."_".$propName;
                                 $propValue = $pdoRecord[$pdoTitle];
                                 //reflection set value to object
                                 $prop->setValue($tempObj, $propValue);
@@ -475,7 +474,7 @@
                                 }
                             }
                         }else{
-                            $pdoTitle = $queryMeta[$shortClassName]."_".$propName;
+                            $pdoTitle = $queryMeta[$classShortName]."_".$propName;
                             $propValue = $pdoRecord[$pdoTitle];
                             //reflection set value to object
                             $prop->setValue($tempObj, $propValue);
@@ -500,7 +499,7 @@
             for ($i = 0 ; $i < count($referenceReflectionClassProps); $i++) {
                 $referenceReflectionClassProp = $referenceReflectionClassProps[$i];
                 if( $referenceReflectionClassProp != null ){
-                    $referenceReflectionClassPropName = $referenceReflectionClassProp->getShortName();
+                    $referenceReflectionClassPropName = $referenceReflectionClassProp->getName();
                     if (strpos($referenceReflectionClassPropName,'_META') !== false) {
                         $explodeToken = explode("_",$referenceReflectionClassPropName);
                         array_push($tempMetaList,$explodeToken[0]);

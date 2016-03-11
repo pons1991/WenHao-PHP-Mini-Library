@@ -1,5 +1,5 @@
 <?php
-
+    namespace Models\Database;
 	class UserRole extends DBModal{
 		var $RoleId;
 		var $UserId;

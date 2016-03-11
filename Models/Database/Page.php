@@ -1,4 +1,5 @@
 <?php
+    namespace Models\Database;
 	class Pages extends DBModal{
 		
 		var $PageName;

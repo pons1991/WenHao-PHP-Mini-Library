@@ -1,7 +1,8 @@
 <?php
-	class RoleAccess extends DBModal{
+    namespace Models\Database;
+	class LeaveAccess extends DBModal{
 		var $RoleId;
-        var $RoleAccessAttributes;
+        var $LeaveAccessAttributes;
         
         var $Role_META = '{"ReferenceBy":"RoleId","Ignore":"true"}';
         var $Role;

@@ -1,4 +1,6 @@
 <?php
+    namespace Models\Database;
+    
     class LeaveApplication extends DBModal{
         var $UserId;
         var $LeaveTypeId;
