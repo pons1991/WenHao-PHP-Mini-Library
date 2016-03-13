@@ -347,7 +347,6 @@
 				$prop = $props[$i];
 				if( $prop != null ){
 					$propName = $prop->getName();
-                    
                     if (strpos($propName,'_META') !== false) {
                         $explodeToken = explode("_",$propName);
                         $jsonString = $prop->getValue($this);
@@ -423,7 +422,7 @@
             
             $joinStatement .= " order by ".$queryMeta[$className].".Id desc ";
             $joinStatement .= " limit :start , :end"; //limit constraint
-            
+
             $result = $dbConn->ExecuteSelectPrepare($joinStatement,$queryParamValue);
             
             if( $result != null ){
