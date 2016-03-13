@@ -7,10 +7,10 @@
         var $Remarks;
         var $AccumulativeLeaveNumber;
         
-        var $AccessUser_META = '{"ReferenceBy":"UserId","Ignore":"true"}';
+        var $AccessUser_META = '{"ReferenceBy":"UserId","Ignore":"true","QualifiedClassName":"Models\\\Database\\\AccessUser"}';
         var $AccessUser;
         
-        var $LeaveType_META = '{"ReferenceBy":"LeaveTypeId","Ignore":"true"}';
+        var $LeaveType_META = '{"ReferenceBy":"LeaveTypeId","Ignore":"true","QualifiedClassName":"Models\\\Database\\\LeaveType"}';
         var $LeaveType;
 	}
 ?>

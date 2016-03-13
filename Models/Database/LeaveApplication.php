@@ -15,16 +15,16 @@
         var $ApprovedBy;
         
         //Reference class which need will be ignored when constructing the query :)
-        var $LeaveStatus_META = '{"ReferenceBy":"Status","Ignore":"true"}';
+        var $LeaveStatus_META = '{"ReferenceBy":"Status","Ignore":"true","QualifiedClassName":"Models\\\Database\\\LeaveStatus"}';
         var $LeaveStatus;
         
-        var $LeaveType_META = '{"ReferenceBy":"LeaveTypeId","Ignore":"true"}';
+        var $LeaveType_META = '{"ReferenceBy":"LeaveTypeId","Ignore":"true","QualifiedClassName":"Models\\\Database\\\LeaveType"}';
         var $LeaveType;
         
-        var $AccessUser_META = '{"ReferenceBy":"UserId","Ignore":"true"}';
+        var $AccessUser_META = '{"ReferenceBy":"UserId","Ignore":"true","QualifiedClassName":"Models\\\Database\\\AccessUser"}';
         var $AccessUser;
         
-        var $ApprovedByUser_META = '{"ReferenceBy":"ApprovedBy","Ignore":"true", "table":"AccessUser"}';
+        var $ApprovedByUser_META = '{"ReferenceBy":"ApprovedBy","Ignore":"true", "table":"AccessUser","QualifiedClassName":"Models\\\Database\\\AccessUser"}';
         var $ApprovedByUser;
         
         public function IsLeaveDateValid($dbConn, $obj){

@@ -4,7 +4,7 @@
 		var $RoleId;
         var $LeaveAttribute;
         
-        var $Role_META = '{"ReferenceBy":"RoleId","Ignore":"true", "QualifiedClassName":"Models\Database\Role"}';
+        var $Role_META = '{"ReferenceBy":"RoleId","Ignore":"true","QualifiedClassName":"Models\\\Database\\\Role"}';
         var $Role;
 	}
 ?>

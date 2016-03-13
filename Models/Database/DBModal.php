@@ -225,8 +225,8 @@
 			
 		}
 
-        public function ConstructReferenceQueryString($asciiIndex,$referenceClassName,$referenceByName){
-            $referenceReflectionClass = new ReflectionClass($referenceClassName);
+        public function ConstructReferenceQueryString($asciiIndex,$referenceClassName,$referenceQualifiedClassName, $referenceByName){
+            $referenceReflectionClass = new ReflectionClass($referenceQualifiedClassName);
                 $referenceProps  = $referenceReflectionClass->getProperties();
                 $referenceClassReferenceByList = array();
                 $referenceClassReferenceByListMeta = array();
@@ -399,7 +399,9 @@
                     }
                     
                     $referenceByName = $referenceByListMeta[$referenceClassName]["ReferenceBy"];
-                    $tempSelectStr = $this->ConstructReferenceQueryString($asciiIndex,$referenceTable,$referenceByName);
+                    $referenceQualifiedClassName = $referenceByListMeta[$referenceClassName]["QualifiedClassName"];
+                    
+                    $tempSelectStr = $this->ConstructReferenceQueryString($asciiIndex,$referenceTable,$referenceQualifiedClassName,$referenceByName);
                     $selectColumn = empty($selectColumn) ? ($tempSelectStr) : ($selectColumn.",".$tempSelectStr);
                     
                     //Variable name can different from table name
@@ -461,14 +463,21 @@
                                 //reflection set value to object
                                 $prop->setValue($tempObj, $propValue);
                             }else{
+                                $qualifiedClassName = array_key_exists("QualifiedClassName",$metaValue[$propName]) ? $metaValue[$propName]["QualifiedClassName"] : '';
+                                echo print_r($qualifiedClassName).'<br/>';
                                 
                                 if( !array_key_exists("table",$metaValue[$propName] ) ){
-                                    $tempReflectionObj = $this->ReferenceConversion($pdoRecord,$propName,$queryMeta, '');
+                                    //If qualified class name is empty, then use prop name as fallback class name
+                                    $qualifiedClassName = empty($qualifiedClassName) ? $propName : $qualifiedClassName;
+                                    echo print_r($qualifiedClassName).'<br/>';
+                                    $tempReflectionObj = $this->ReferenceConversion($pdoRecord,$propName,$qualifiedClassName,$queryMeta, '');
                                     //reference object assignment to the base object
                                     $prop->setValue($tempObj, $tempReflectionObj);
                                 }else{
                                     $tempPropName = $metaValue[$propName]["table"];
-                                    $tempReflectionObj = $this->ReferenceConversion($pdoRecord,$tempPropName,$queryMeta,$propName.'_'.$tempPropName );
+                                    //If qualified class name is empty, then use table name as fallback class name (Same as above)
+                                    $qualifiedClassName = empty($qualifiedClassName) ? $tempPropName : $qualifiedClassName;
+                                    $tempReflectionObj = $this->ReferenceConversion($pdoRecord,$tempPropName,$qualifiedClassName,$queryMeta,$propName.'_'.$tempPropName );
                                     //reference object assignment to the base object
                                     $prop->setValue($tempObj, $tempReflectionObj);
                                 }
@@ -485,10 +494,10 @@
 			return $tempObj;
 		}
         
-        public function ReferenceConversion($pdoRecord,$propName,$queryMeta, $queryMetaUniqueKey){
-            $referenceReflectionClass = new ReflectionClass($propName);
+        public function ReferenceConversion($pdoRecord,$propName,$qualifiedClassName,$queryMeta, $queryMetaUniqueKey){
+            $referenceReflectionClass = new ReflectionClass($qualifiedClassName);
             $referenceReflectionClassProps  = $referenceReflectionClass->getProperties();
-            $referenceReflectionClassName = $referenceReflectionClass->getShortName();
+            $referenceReflectionClassName = $referenceReflectionClass->getName();
             
             //query meta unique key will hold variable_table name
             $queryMetaUniqueKey = empty($queryMetaUniqueKey) ? $referenceReflectionClassName : $queryMetaUniqueKey;
