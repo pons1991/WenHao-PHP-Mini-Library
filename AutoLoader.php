@@ -1,9 +1,11 @@
 <?php
     class Autoloader {
         static public function loader($className) {
-            $fileName = str_replace('\\', '//', $className).'.php';
-            if (file_exists($fileName)) {
-                include_once $fileName;
+            $fileName = str_replace("\\", "//", $className).'.php';
+            $fullFilePath = dirname(__FILE__).'/'.$fileName;
+            if (file_exists($fullFilePath)) {
+                
+                include_once $fullFilePath;
                 if (class_exists($className)) {
                     return true;
                 }else{

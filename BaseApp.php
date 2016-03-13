@@ -1,4 +1,6 @@
 <?php 
+    error_reporting(-1);
+			ini_set('display_errors', 'On');
     include_once("Const.php");
     include_once("AutoLoader.php");
     

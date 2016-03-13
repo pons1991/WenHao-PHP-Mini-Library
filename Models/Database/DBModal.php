@@ -464,12 +464,9 @@
                                 $prop->setValue($tempObj, $propValue);
                             }else{
                                 $qualifiedClassName = array_key_exists("QualifiedClassName",$metaValue[$propName]) ? $metaValue[$propName]["QualifiedClassName"] : '';
-                                echo print_r($qualifiedClassName).'<br/>';
-                                
                                 if( !array_key_exists("table",$metaValue[$propName] ) ){
                                     //If qualified class name is empty, then use prop name as fallback class name
                                     $qualifiedClassName = empty($qualifiedClassName) ? $propName : $qualifiedClassName;
-                                    echo print_r($qualifiedClassName).'<br/>';
                                     $tempReflectionObj = $this->ReferenceConversion($pdoRecord,$propName,$qualifiedClassName,$queryMeta, '');
                                     //reference object assignment to the base object
                                     $prop->setValue($tempObj, $tempReflectionObj);
@@ -497,12 +494,13 @@
         public function ReferenceConversion($pdoRecord,$propName,$qualifiedClassName,$queryMeta, $queryMetaUniqueKey){
             $referenceReflectionClass = new ReflectionClass($qualifiedClassName);
             $referenceReflectionClassProps  = $referenceReflectionClass->getProperties();
-            $referenceReflectionClassName = $referenceReflectionClass->getName();
+            $referenceReflectionQualifiedClassName = $referenceReflectionClass->getName();
+            $referenceReflectionClassName = $referenceReflectionClass->getShortName();
             
             //query meta unique key will hold variable_table name
             $queryMetaUniqueKey = empty($queryMetaUniqueKey) ? $referenceReflectionClassName : $queryMetaUniqueKey;
                             
-            $tempReflectionObj = new $referenceReflectionClassName;
+            $tempReflectionObj = new $referenceReflectionQualifiedClassName;
             $tempMetaList = array();
             $tempMetaValue = array();
             for ($i = 0 ; $i < count($referenceReflectionClassProps); $i++) {

@@ -2,9 +2,9 @@
     namespace pipeline;
     
     class QueryStringManager{
-        public function GetActionQueryString(){
+        public static function GetActionQueryString(){
             $action = '';
-            $qsArray = GetQueryString();
+            $qsArray = QueryStringManager::GetQueryString();
             
             if( array_key_exists("action", $qsArray) ){
                 $action = strtolower($qsArray["action"]);
@@ -14,7 +14,7 @@
         }
         
         
-        public function GetQueryString(){
+        public static function GetQueryString(){
             $output;
             $qs = $_SERVER['QUERY_STRING'];
             

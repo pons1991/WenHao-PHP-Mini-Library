@@ -1,20 +1,19 @@
 <?php
-    include_once "../../header.php"; 
-	RequiredLogin();
-    
+    include_once "../../BaseAppHeader.php";
+    $sessionManager->RequiredLogin();
     $action = '';
-
-	$qsArray = GetQueryString();
-	if( array_key_exists("action", $qsArray) ){
+    $qsArray = pipeline\QueryStringManager::GetActionQueryString();
+    if( $qsArray != null && array_key_exists("action", $qsArray) ){
 		$action = strtolower($qsArray["action"]);
 	}else{
 		$action = 'list';
 	}
     
-    $loginCtrl = new LoginController(null);
-    $userCtrl = new UserController($dbConn);
-	$leaveCtrl = new LeaveController($dbConn);
-    $roleCtrl = new RoleController($dbConn);
+    $loginCtrl = new Controllers\LoginController(null);
+    $userCtrl = new Controllers\UserController($dbConn);
+	$leaveCtrl = new Controllers\LeaveController($dbConn);
+    $roleCtrl = new Controllers\RoleController($dbConn);
+    
 ?>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h2 class="sub-header">Leave Application</h2>
@@ -25,4 +24,4 @@
           ?>
         </div>
       
-<?php include_once "../../footer.php"; ?>
+<?php include_once "../../BaseAppFooter.php"; ?>

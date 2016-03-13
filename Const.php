@@ -20,6 +20,7 @@
     
     //development configuration
 	$DOMAIN_NAME = "http://localhost:8888/whLibrary/";
+    $FOLDER_PATH = "/whLibrary";
 	$DATABASE_NAME = "whMiniLibrary";
     
     //production configuration

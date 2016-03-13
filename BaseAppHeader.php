@@ -31,12 +31,12 @@
     </div>-->
  
     <?php 
-        //include "TopNavigation.php";
+        include "TopNavigation.php";
     ?>
     
     <!-- boostrap placeholder - start -->
 <div class="container-fluid">
       <div class="row">
           <?php 
-            //include_once "SideNavigation.php"; 
+            include_once "SideNavigation.php"; 
             ?>
